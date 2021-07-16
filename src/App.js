@@ -10,7 +10,7 @@ const CanvasContainer = styled.div`
 `;
 
 function App() {
-  // id속성에는 공백이나 .이 들어가면
+  // id속성에는 공백이나 .이 들어가면 X
   const [elements, setElements] = useState({
     nodes: [
       { data: { id: "1", label: "IP 1", type: "ip" } },
@@ -115,6 +115,12 @@ function App() {
         ]}
         style={{ width: "100vh", height: "100vh" }}
         layout={layout}
+        cy={(cy) => {
+          console.log("EVT", cy);
+          cy.on("mouseover", "node", (e) => {
+            console.log(e.target);
+          });
+        }}
       />
     </CanvasContainer>
   );

@@ -225,11 +225,10 @@ function App() {
         layout={layout}
         cy={(cy) => {
           cy.on("tap", (e) => {
-            // const url = e.target.data("url");
-            // if (url && url !== "") {
-            //   window.open(url);
-            // }
-            console.log(e.target);
+            const url = e.target.data("url");
+            if (url && url !== "") {
+              window.open(url);
+            }
           });
         }}
       />

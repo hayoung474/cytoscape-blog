@@ -181,9 +181,12 @@ function App() {
   const pageRank = cyForRank.elements().pageRank();
 
   const nodeMaxSize = 50;
-  const nodeMinSize = 5;
+  const nodeMinSize = 10;
   const fontMaxSize = 8;
   const fontMinSize = 5;
+
+  console.log(pageRank.rank("#PJ-mindMap"));
+  console.log(pageRank.rank("#STUDY-jsBrowser"));
 
   return (
     <CanvasContainer>
@@ -195,20 +198,14 @@ function App() {
             style: {
               backgroundColor: "#666",
               label: "data(label)",
-              width: function (ele) {
-                return (
-                  nodeMaxSize * pageRank.rank("#" + ele.id()) + nodeMinSize
-                );
+              width: (el) => {
+                return nodeMaxSize * pageRank.rank("#" + el.id()) + nodeMinSize;
               },
-              height: function (ele) {
-                return (
-                  nodeMaxSize * pageRank.rank("#" + ele.id()) + nodeMinSize
-                );
+              height: (el) => {
+                return nodeMaxSize * pageRank.rank("#" + el.id()) + nodeMinSize;
               },
-              "font-size": function (ele) {
-                return (
-                  fontMaxSize * pageRank.rank("#" + ele.id()) + fontMinSize
-                );
+              "font-size": (el) => {
+                return fontMaxSize * pageRank.rank("#" + el.id()) + fontMinSize;
               },
             },
           },
@@ -227,11 +224,12 @@ function App() {
         style={{ width: "100vh", height: "100vh" }}
         layout={layout}
         cy={(cy) => {
-          cy.on("tap", function (e) {
-            const url = e.target.data("url");
-            if (url && url !== "") {
-              window.open(url);
-            }
+          cy.on("tap", (e) => {
+            // const url = e.target.data("url");
+            // if (url && url !== "") {
+            //   window.open(url);
+            // }
+            console.log(e.target);
           });
         }}
       />

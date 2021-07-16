@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
+import Cytoscape from "cytoscape";
+import CoseBillkent from "cytoscape-cose-bilkent";
 import styled from "styled-components";
 
 const CanvasContainer = styled.div`
@@ -8,6 +10,8 @@ const CanvasContainer = styled.div`
   left: 50%;
   transform: translateX(-50%);
 `;
+
+Cytoscape.use(CoseBillkent);
 
 function App() {
   // id속성에는 공백이나 .이 들어가면 X
@@ -167,8 +171,7 @@ function App() {
   });
 
   const layout = {
-    name: "grid",
-    rows: 5,
+    name: "cose",
   };
 
   return (
@@ -180,7 +183,7 @@ function App() {
             selector: "node",
             style: {
               backgroundColor: "#666",
-              label: "data(id)",
+              label: "data(label)",
             },
           },
           {
@@ -188,8 +191,9 @@ function App() {
             style: {
               width: 3,
               "line-color": "#ccc",
-              "target-arrow-color": "#ccc",
-              "target-arrow-shape": "triangle",
+              "source-arrow-color": "#ccc",
+              "source-arrow-shape": "vee",
+              // 이게 꼭 있어야하나..?
               "curve-style": "bezier",
             },
           },

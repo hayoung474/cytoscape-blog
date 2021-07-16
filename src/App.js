@@ -200,6 +200,14 @@ function App() {
         ]}
         style={{ width: "100vh", height: "100vh" }}
         layout={layout}
+        cy={(cy) => {
+          cy.on("tap", function (e) {
+            const url = e.target.data("url");
+            if (url && url !== "") {
+              window.open(url);
+            }
+          });
+        }}
       />
     </CanvasContainer>
   );

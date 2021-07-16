@@ -174,6 +174,17 @@ function App() {
     name: "cose",
   };
 
+  const cyForRank = Cytoscape({
+    elements: CytoscapeComponent.normalizeElements(graph),
+  });
+
+  const pageRank = cyForRank.elements().pageRank();
+
+  const nodeMaxSize = 50;
+  const nodeMinSize = 5;
+  const fontMaxSize = 8;
+  const fontMinSize = 5;
+
   return (
     <CanvasContainer>
       <CytoscapeComponent
@@ -184,6 +195,21 @@ function App() {
             style: {
               backgroundColor: "#666",
               label: "data(label)",
+              width: function (ele) {
+                return (
+                  nodeMaxSize * pageRank.rank("#" + ele.id()) + nodeMinSize
+                );
+              },
+              height: function (ele) {
+                return (
+                  nodeMaxSize * pageRank.rank("#" + ele.id()) + nodeMinSize
+                );
+              },
+              "font-size": function (ele) {
+                return (
+                  fontMaxSize * pageRank.rank("#" + ele.id()) + fontMinSize
+                );
+              },
             },
           },
           {

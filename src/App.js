@@ -11,103 +11,184 @@ const CanvasContainer = styled.div`
 
 function App() {
   // id속성에는 공백이나 .이 들어가면 X
-  const [elements, setElements] = useState({
+  const [graph, setGraph] = useState({
     nodes: [
-      { data: { id: "1", label: "IP 1", type: "ip" } },
-      { data: { id: "2", label: "Device 1", type: "device" } },
-      { data: { id: "3", label: "IP 2", type: "ip" } },
-      { data: { id: "4", label: "Device 2", type: "device" } },
-      { data: { id: "5", label: "Device 3", type: "device" } },
-      { data: { id: "6", label: "IP 3", type: "ip" } },
-      { data: { id: "7", label: "Device 5", type: "device" } },
-      { data: { id: "8", label: "Device 6", type: "device" } },
-      { data: { id: "9", label: "Device 7", type: "device" } },
-      { data: { id: "10", label: "Device 8", type: "device" } },
-      { data: { id: "11", label: "Device 9", type: "device" } },
-      { data: { id: "12", label: "IP 3", type: "ip" } },
-      { data: { id: "13", label: "Device 10", type: "device" } },
+      {
+        data: {
+          id: "PJ-mindMap",
+          url: "https://github.com/nomelancholy/js-project-driven-study-mind-map/projects/1?add_cards_query=is%3Aopen",
+          label: "Project Driven Study Map",
+        },
+      },
+      {
+        data: {
+          id: "ISSUE-packageJson",
+          url: "https://www.google.co.kr/search?newwindow=1&safe=off&sxsrf=ACYBGNQPahfceN-IrrIMqFcBxt0bBJxcog%3A1577373548670&source=hp&ei=bM8EXp3aJoKpoASW2InwAg&q=no+such+file+or+directory%2C+open+%27C%3A%5Cdev%5Cworkspace%5Cjs-seomal-clone%5Cpackage.json%27&oq=no+such+file+or+directory%2C+open+%27C%3A%5Cdev%5Cworkspace%5Cjs-seomal-clone%5Cpackage.json%27&gs_l=psy-ab.3...7437.7437..8911...1.0..0.95.95.1......0....2j1..gws-wiz.pzIrSS2UT84&ved=0ahUKEwidwK2wztPmAhWCFIgKHRZsAi4Q4dUDCAY&uact=5",
+          label: "package.json 에러",
+        },
+      },
+      {
+        data: {
+          id: "STUDY-npmInit",
+          url: "https://stackoverflow.com/questions/9484829/npm-cant-find-package-json",
+          label: "npm 패키지 설치 순서 숙지",
+        },
+      },
+      {
+        data: {
+          id: "ISSUE-outsideModule",
+          url: "https://www.google.co.kr/search?newwindow=1&safe=off&sxsrf=ACYBGNT3L0sknJfq3DO75H55Q5VQJODk-Q%3A1577373778729&ei=UtAEXvGVLMLh-AbOm7CYDA&q=Uncaught+SyntaxError%3A+Cannot+use+import+statement+outside+a+modul&oq=Uncaught+SyntaxError%3A+Cannot+use+import+statement+outside+a+modul&gs_l=psy-ab.3..35i39j0l2j0i203l7.513620.513620..514369...0.0..0.167.374.1j2......0....2j1..gws-wiz.gwgT-rwsfWw&ved=0ahUKEwjxhomez9PmAhXCMN4KHc4NDMMQ4dUDCAs&uact=5",
+          label: "script module 에러",
+        },
+      },
+      {
+        data: {
+          id: "STUDY-scriptModule",
+          url: "https://velog.io/@takeknowledge/%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8-%EB%AA%A8%EB%93%88-%ED%95%99%EC%8A%B5-%EB%82%B4%EC%9A%A9-%EC%9A%94%EC%95%BD-lwk4drjnni",
+          label: "js module 학습",
+        },
+      },
+      {
+        data: {
+          id: "STUDY-scriptPosition",
+          url: "https://velog.io/@takeknowledge/script-%ED%83%9C%EA%B7%B8%EB%8A%94-%EC%96%B4%EB%94%94%EC%97%90-%EC%9C%84%EC%B9%98%ED%95%B4%EC%95%BC-%ED%95%A0%EA%B9%8C%EC%9A%94",
+          label: "script 태그 위치 학습",
+        },
+      },
+
+      {
+        data: {
+          id: "ISSUE-localCORS",
+          url: "https://www.google.co.kr/search?newwindow=1&safe=off&sxsrf=ACYBGNSmKE1wN_fBQuRtT5pwz0hZ5JqldQ%3A1577374293889&ei=VdIEXtP7NY-lmAX82Z7oDg&q=Access+to+script+at+%27file%3A%2F%2F%2FC%3A%2Fdev%2Fworkspace%2Fjs-seomal-clone%2Fjs%2Fcyto.js%27+from+origin+%27null%27+has+been+blocked+by+CORS+policy%3A+Cross+origin+requests+are+only+supported+for+protocol+schemes%3A+http%2C+data%2C+chrome%2C+chrome-extension%2C+https.&oq=Access+to+script+at+%27file%3A%2F%2F%2FC%3A%2Fdev%2Fworkspace%2Fjs-seomal-clone%2Fjs%2Fcyto.js%27+from+origin+%27null%27+has+been+blocked+by+CORS+policy%3A+Cross+origin+requests+are+only+supported+for+protocol+schemes%3A+http%2C+data%2C+chrome%2C+chrome-extension%2C+https.&gs_l=psy-ab.3..35i39j0i20i263l2j0i203l7.516217.516217..516645...0.0..0.177.281.0j2......0....2j1..gws-wiz.JE3_EPpI5o4&ved=0ahUKEwiT-tuT0dPmAhWPEqYKHfysB-0Q4dUDCAs&uact=5",
+          label: "local 실행시 CORS 에러",
+        },
+      },
+      {
+        data: {
+          id: "STUDY-localCORS",
+          url: "https://velog.io/@takeknowledge/%EB%A1%9C%EC%BB%AC%EC%97%90%EC%84%9C-CORS-policy-%EA%B4%80%EB%A0%A8-%EC%97%90%EB%9F%AC%EA%B0%80-%EB%B0%9C%EC%83%9D%ED%95%98%EB%8A%94-%EC%9D%B4%EC%9C%A0-3gk4gyhreu",
+          label: "CORS & SOP 학습",
+        },
+      },
+      {
+        data: {
+          id: "ISSUE-moduleImport",
+          url: "https://goenning.net/2017/07/21/how-to-avoid-relative-path-hell-javascript-typescript-projects/",
+          label: "module import 경로 에러",
+        },
+      },
+      {
+        data: {
+          id: "STUDY-webpackBuild",
+          url: "https://github.com/nomelancholy/webpack-build-practice",
+          label: "webpack build 실습",
+        },
+      },
+      {
+        data: {
+          id: "STUDY-jsBrowser",
+          url: "https://github.com/nomelancholy/webpack-build-practice",
+          label: "js 엔진과 runtime 학습",
+        },
+      },
     ],
     edges: [
       {
-        data: { source: "1", target: "2", label: "Node2" },
+        data: {
+          id: "PJ-mindMap->ISSUE-packageJson",
+          source: "ISSUE-packageJson",
+          target: "PJ-mindMap",
+        },
       },
       {
-        data: { source: "3", target: "4", label: "Node4" },
+        data: {
+          id: "ISSUE-packageJson->STUDY-npmInit",
+          source: "STUDY-npmInit",
+          target: "ISSUE-packageJson",
+        },
       },
       {
-        data: { source: "3", target: "5", label: "Node5" },
+        data: {
+          id: "PJ-mindmap->ISSUE-outsideModule",
+          source: "ISSUE-outsideModule",
+          target: "PJ-mindMap",
+        },
       },
       {
-        data: { source: "6", target: "5", label: " 6 -> 5" },
+        data: {
+          id: "ISSUE-outsideModule->STUDY-scriptModule",
+          source: "STUDY-scriptModule",
+          target: "ISSUE-outsideModule",
+        },
       },
       {
-        data: { source: "6", target: "7", label: " 6 -> 7" },
+        data: {
+          id: "ISSUE-outsideModule->STUDY-scriptPosition",
+          source: "STUDY-scriptPosition",
+          target: "ISSUE-outsideModule",
+        },
       },
       {
-        data: { source: "6", target: "8", label: " 6 -> 8" },
+        data: {
+          id: "PJ-mindmap->ISSUE-localCORS",
+          source: "ISSUE-localCORS",
+          target: "PJ-mindMap",
+        },
       },
       {
-        data: { source: "6", target: "9", label: " 6 -> 9" },
+        data: {
+          id: "ISSUE-localCORS->STUDY-localCORS",
+          source: "STUDY-localCORS",
+          target: "ISSUE-localCORS",
+        },
       },
       {
-        data: { source: "3", target: "13", label: " 3 -> 13" },
+        data: {
+          id: "PJ-mindmap->ISSUE-moduleImport",
+          source: "ISSUE-moduleImport",
+          target: "PJ-mindMap",
+        },
+      },
+      {
+        data: {
+          id: "ISSUE-moduleImport->STUDY-webpackBuild",
+          source: "STUDY-webpackBuild",
+          target: "ISSUE-moduleImport",
+        },
+      },
+      {
+        data: {
+          id: "STUDY-webpackBuild->STUDY-jsBrowser",
+          source: "STUDY-jsBrowser",
+          target: "STUDY-webpackBuild",
+        },
       },
     ],
   });
 
   const layout = {
-    name: "concentric",
-
-    fit: true, // whether to fit the viewport to the graph
-    padding: 30, // the padding on fit
-    startAngle: (3 / 2) * Math.PI, // where nodes start in radians
-    clockwise: true, // whether the layout should go clockwise (true) or counterclockwise/anticlockwise (false)
-    equidistant: false, // whether levels have an equal radial distance betwen them, may cause bounding box overflow
-    minNodeSpacing: 50, // min spacing between outside of nodes (used for radius adjustment)
-    avoidOverlap: true, // prevents node overlap, may overflow boundingBox if not enough space
-    nodeDimensionsIncludeLabels: false, // Excludes the label when calculating node bounding boxes for the layout algorithm
+    name: "grid",
+    rows: 5,
   };
 
   return (
     <CanvasContainer>
       <CytoscapeComponent
-        elements={CytoscapeComponent.normalizeElements(elements)}
-        zoomingEnabled={true}
+        elements={CytoscapeComponent.normalizeElements(graph)}
         stylesheet={[
           {
             selector: "node",
             style: {
-              backgroundColor: "#4a56a6",
-              width: 30,
-              height: 30,
-              label: "data(label)",
-            },
-          },
-          {
-            selector: "node:selected",
-            style: {
-              "border-width": "6px",
-              "border-color": "#AAD8FF",
-              "border-opacity": "0.5",
-              "background-color": "#77828C",
-              width: 50,
-              height: 50,
-              "text-outline-color": "#77828C",
-              "text-outline-width": 8,
-            },
-          },
-          {
-            selector: "node[type='device']",
-            style: {
-              shape: "rectangle",
+              backgroundColor: "#666",
+              label: "data(id)",
             },
           },
           {
             selector: "edge",
             style: {
               width: 3,
-              "line-color": "#AAD8FF",
-              "target-arrow-color": "#6774cb",
+              "line-color": "#ccc",
+              "target-arrow-color": "#ccc",
               "target-arrow-shape": "triangle",
               "curve-style": "bezier",
             },
@@ -115,12 +196,6 @@ function App() {
         ]}
         style={{ width: "100vh", height: "100vh" }}
         layout={layout}
-        cy={(cy) => {
-          console.log("EVT", cy);
-          cy.on("mouseover", "node", (e) => {
-            console.log(e.target);
-          });
-        }}
       />
     </CanvasContainer>
   );

@@ -19,152 +19,337 @@ function App() {
     nodes: [
       {
         data: {
-          id: "PJ-mindMap",
-          url: "https://github.com/nomelancholy/js-project-driven-study-mind-map/projects/1?add_cards_query=is%3Aopen",
-          label: "Project Driven Study Map",
+          id: "node_1_python",
+          label: "파이썬",
         },
       },
       {
         data: {
-          id: "ISSUE-packageJson",
-          url: "https://www.google.co.kr/search?newwindow=1&safe=off&sxsrf=ACYBGNQPahfceN-IrrIMqFcBxt0bBJxcog%3A1577373548670&source=hp&ei=bM8EXp3aJoKpoASW2InwAg&q=no+such+file+or+directory%2C+open+%27C%3A%5Cdev%5Cworkspace%5Cjs-seomal-clone%5Cpackage.json%27&oq=no+such+file+or+directory%2C+open+%27C%3A%5Cdev%5Cworkspace%5Cjs-seomal-clone%5Cpackage.json%27&gs_l=psy-ab.3...7437.7437..8911...1.0..0.95.95.1......0....2j1..gws-wiz.pzIrSS2UT84&ved=0ahUKEwidwK2wztPmAhWCFIgKHRZsAi4Q4dUDCAY&uact=5",
-          label: "package.json 에러",
+          id: "node_2_package",
+          label: "패키지",
         },
       },
       {
         data: {
-          id: "STUDY-npmInit",
-          url: "https://stackoverflow.com/questions/9484829/npm-cant-find-package-json",
-          label: "npm 패키지 설치 순서 숙지",
+          id: "node_2_codeStructure",
+          label: "코드구조",
         },
       },
       {
         data: {
-          id: "ISSUE-outsideModule",
-          url: "https://www.google.co.kr/search?newwindow=1&safe=off&sxsrf=ACYBGNT3L0sknJfq3DO75H55Q5VQJODk-Q%3A1577373778729&ei=UtAEXvGVLMLh-AbOm7CYDA&q=Uncaught+SyntaxError%3A+Cannot+use+import+statement+outside+a+modul&oq=Uncaught+SyntaxError%3A+Cannot+use+import+statement+outside+a+modul&gs_l=psy-ab.3..35i39j0l2j0i203l7.513620.513620..514369...0.0..0.167.374.1j2......0....2j1..gws-wiz.gwgT-rwsfWw&ved=0ahUKEwjxhomez9PmAhXCMN4KHc4NDMMQ4dUDCAs&uact=5",
-          label: "script module 에러",
+          id: "node_2_install",
+          label: "설치",
         },
       },
       {
         data: {
-          id: "STUDY-scriptModule",
-          url: "https://velog.io/@takeknowledge/%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8-%EB%AA%A8%EB%93%88-%ED%95%99%EC%8A%B5-%EB%82%B4%EC%9A%A9-%EC%9A%94%EC%95%BD-lwk4drjnni",
-          label: "js module 학습",
+          id: "node_2_class",
+          label: "클래스",
         },
       },
       {
         data: {
-          id: "STUDY-scriptPosition",
-          url: "https://velog.io/@takeknowledge/script-%ED%83%9C%EA%B7%B8%EB%8A%94-%EC%96%B4%EB%94%94%EC%97%90-%EC%9C%84%EC%B9%98%ED%95%B4%EC%95%BC-%ED%95%A0%EA%B9%8C%EC%9A%94",
-          label: "script 태그 위치 학습",
+          id: "node_2_varAndType",
+          label: "변수와 타입",
         },
       },
 
       {
         data: {
-          id: "ISSUE-localCORS",
-          url: "https://www.google.co.kr/search?newwindow=1&safe=off&sxsrf=ACYBGNSmKE1wN_fBQuRtT5pwz0hZ5JqldQ%3A1577374293889&ei=VdIEXtP7NY-lmAX82Z7oDg&q=Access+to+script+at+%27file%3A%2F%2F%2FC%3A%2Fdev%2Fworkspace%2Fjs-seomal-clone%2Fjs%2Fcyto.js%27+from+origin+%27null%27+has+been+blocked+by+CORS+policy%3A+Cross+origin+requests+are+only+supported+for+protocol+schemes%3A+http%2C+data%2C+chrome%2C+chrome-extension%2C+https.&oq=Access+to+script+at+%27file%3A%2F%2F%2FC%3A%2Fdev%2Fworkspace%2Fjs-seomal-clone%2Fjs%2Fcyto.js%27+from+origin+%27null%27+has+been+blocked+by+CORS+policy%3A+Cross+origin+requests+are+only+supported+for+protocol+schemes%3A+http%2C+data%2C+chrome%2C+chrome-extension%2C+https.&gs_l=psy-ab.3..35i39j0i20i263l2j0i203l7.516217.516217..516645...0.0..0.177.281.0j2......0....2j1..gws-wiz.JE3_EPpI5o4&ved=0ahUKEwiT-tuT0dPmAhWPEqYKHfysB-0Q4dUDCAs&uact=5",
-          label: "local 실행시 CORS 에러",
+          id: "node_3_makeCustomModule",
+          label: "커스텀 모듈 만들기",
         },
       },
       {
         data: {
-          id: "STUDY-localCORS",
-          url: "https://velog.io/@takeknowledge/%EB%A1%9C%EC%BB%AC%EC%97%90%EC%84%9C-CORS-policy-%EA%B4%80%EB%A0%A8-%EC%97%90%EB%9F%AC%EA%B0%80-%EB%B0%9C%EC%83%9D%ED%95%98%EB%8A%94-%EC%9D%B4%EC%9C%A0-3gk4gyhreu",
-          label: "CORS & SOP 학습",
+          id: "node_3_3rdParty",
+          label: "3rd 파티",
         },
       },
       {
         data: {
-          id: "ISSUE-moduleImport",
-          url: "https://goenning.net/2017/07/21/how-to-avoid-relative-path-hell-javascript-typescript-projects/",
-          label: "module import 경로 에러",
+          id: "node_3_standardModule",
+          label: "표준 모듈",
         },
       },
       {
         data: {
-          id: "STUDY-webpackBuild",
-          url: "https://github.com/nomelancholy/webpack-build-practice",
-          label: "webpack build 실습",
+          id: "node_3_sequence",
+          label: "시퀸스",
         },
       },
       {
         data: {
-          id: "STUDY-jsBrowser",
-          url: "https://github.com/nomelancholy/webpack-build-practice",
-          label: "js 엔진과 runtime 학습",
+          id: "node_3_condition",
+          label: "조건",
+        },
+      },
+      {
+        data: {
+          id: "node_3_repeatAndTouring",
+          label: "반복과 순회",
+        },
+      },
+      {
+        data: {
+          id: "node_3_implication",
+          label: "함축",
+        },
+      },
+      {
+        data: {
+          id: "node_3_function",
+          label: "함수",
+        },
+      },
+      {
+        data: {
+          id: "node_3_virtualEnv",
+          label: "가상환경",
+        },
+      },
+      {
+        data: {
+          id: "node_3_anaconda",
+          label: "아나콘다",
+        },
+      },
+      {
+        data: {
+          id: "node_3_excute",
+          label: "실행",
+        },
+      },
+      {
+        data: {
+          id: "node_4_philosophy",
+          label: "철학",
+        },
+      },
+      {
+        data: {
+          id: "node_4_decorator",
+          label: "데커레이터",
+        },
+      },
+      {
+        data: {
+          id: "node_4_closer",
+          label: "클로져",
+        },
+      },
+      {
+        data: {
+          id: "node_4_generator",
+          label: "제너레이터",
+        },
+      },
+      {
+        data: {
+          id: "node_4_listAndTuple",
+          label: "리스트와 튜플",
+        },
+      },
+      {
+        data: {
+          id: "node_4_dict",
+          label: "딕셔너리",
+        },
+      },
+      {
+        data: {
+          id: "node_4_set",
+          label: "셋",
+        },
+      },
+      {
+        data: {
+          id: "node_5_functionalProgramming",
+          label: "함수형 프로그래밍",
+        },
+      },
+      {
+        data: {
+          id: "node_6_firstClassObject",
+          label: "일급객체",
         },
       },
     ],
     edges: [
       {
         data: {
-          id: "PJ-mindMap->ISSUE-packageJson",
-          source: "ISSUE-packageJson",
-          target: "PJ-mindMap",
+          id: "node_1_python->node_2_package",
+          source: "node_1_python",
+          target: "node_2_package",
         },
       },
       {
         data: {
-          id: "ISSUE-packageJson->STUDY-npmInit",
-          source: "STUDY-npmInit",
-          target: "ISSUE-packageJson",
+          id: "node_1_python->node_2_codeStructure",
+          source: "node_1_python",
+          target: "node_2_codeStructure",
         },
       },
       {
         data: {
-          id: "PJ-mindmap->ISSUE-outsideModule",
-          source: "ISSUE-outsideModule",
-          target: "PJ-mindMap",
+          id: "node_1_python->node_2_install",
+          source: "node_1_python",
+          target: "node_2_install",
         },
       },
       {
         data: {
-          id: "ISSUE-outsideModule->STUDY-scriptModule",
-          source: "STUDY-scriptModule",
-          target: "ISSUE-outsideModule",
+          id: "node_1_python->node_2_class",
+          source: "node_1_python",
+          target: "node_2_class",
+        },
+      },
+
+      {
+        data: {
+          id: "node_1_python->node_2_varAndType",
+          source: "node_1_python",
+          target: "node_2_varAndType",
         },
       },
       {
         data: {
-          id: "ISSUE-outsideModule->STUDY-scriptPosition",
-          source: "STUDY-scriptPosition",
-          target: "ISSUE-outsideModule",
+          id: "node_2_package->node_3_makeCustomModule",
+          source: "node_2_package",
+          target: "node_3_makeCustomModule",
         },
       },
       {
         data: {
-          id: "PJ-mindmap->ISSUE-localCORS",
-          source: "ISSUE-localCORS",
-          target: "PJ-mindMap",
+          id: "node_2_package->node_3_3rdParty",
+          source: "node_2_package",
+          target: "node_3_3rdParty",
         },
       },
       {
         data: {
-          id: "ISSUE-localCORS->STUDY-localCORS",
-          source: "STUDY-localCORS",
-          target: "ISSUE-localCORS",
+          id: "node_2_package->node_3_standardModule",
+          source: "node_2_package",
+          target: "node_3_standardModule",
         },
       },
       {
         data: {
-          id: "PJ-mindmap->ISSUE-moduleImport",
-          source: "ISSUE-moduleImport",
-          target: "PJ-mindMap",
+          id: "node_2_varAndType->node_3_sequence",
+          source: "node_2_varAndType",
+          target: "node_3_sequence",
         },
       },
       {
         data: {
-          id: "ISSUE-moduleImport->STUDY-webpackBuild",
-          source: "STUDY-webpackBuild",
-          target: "ISSUE-moduleImport",
+          id: "node_2_codeStructure->node_3_condition",
+          source: "node_2_codeStructure",
+          target: "node_3_condition",
         },
       },
       {
         data: {
-          id: "STUDY-webpackBuild->STUDY-jsBrowser",
-          source: "STUDY-jsBrowser",
-          target: "STUDY-webpackBuild",
+          id: "node_2_codeStructure->node_3_repeatAndTouring",
+          source: "node_2_codeStructure",
+          target: "node_3_repeatAndTouring",
+        },
+      },
+      {
+        data: {
+          id: "node_2_codeStructure->node_3_implication",
+          source: "node_2_codeStructure",
+          target: "node_3_implication",
+        },
+      },
+      {
+        data: {
+          id: "node_2_codeStructure->node_3_function",
+          source: "node_2_codeStructure",
+          target: "node_3_function",
+        },
+      },
+      {
+        data: {
+          id: "node_2_install->node_3_virtualEnv",
+          source: "node_2_install",
+          target: "node_3_virtualEnv",
+        },
+      },
+      {
+        data: {
+          id: "node_2_install->node_3_anaconda",
+          source: "node_2_install",
+          target: "node_3_anaconda",
+        },
+      },
+      {
+        data: {
+          id: "node_2_install->node_3_excute",
+          source: "node_2_install",
+          target: "node_3_excute",
+        },
+      },
+      {
+        data: {
+          id: "node_3_excute->node_4_philosophy",
+          source: "node_3_excute",
+          target: "node_4_philosophy",
+        },
+      },
+      {
+        data: {
+          id: "node_3_function->node_4_decorator",
+          source: "node_3_function",
+          target: "node_4_decorator",
+        },
+      },
+      {
+        data: {
+          id: "node_3_function->node_4_closer",
+          source: "node_3_function",
+          target: "node_4_closer",
+        },
+      },
+      {
+        data: {
+          id: "node_3_function->node_4_generator",
+          source: "node_3_function",
+          target: "node_4_generator",
+        },
+      },
+      {
+        data: {
+          id: "node_3_sequence->node_4_listAndTuple",
+          source: "node_3_sequence",
+          target: "node_4_listAndTuple",
+        },
+      },
+      {
+        data: {
+          id: "node_3_sequence->node_4_dict",
+          source: "node_3_sequence",
+          target: "node_4_dict",
+        },
+      },
+      {
+        data: {
+          id: "node_3_sequence->node_4_set",
+          source: "node_3_sequence",
+          target: "node_4_set",
+        },
+      },
+      {
+        data: {
+          id: "node_4_generator->node_5_functionalProgramming",
+          source: "node_4_generator",
+          target: "node_5_functionalProgramming",
+        },
+      },
+      {
+        data: {
+          id: "node_5_functionalProgramming->node_6_firstClassObject",
+          source: "node_5_functionalProgramming",
+          target: "node_6_firstClassObject",
         },
       },
     ],
@@ -185,8 +370,8 @@ function App() {
   const fontMaxSize = 8;
   const fontMinSize = 5;
 
-  console.log(pageRank.rank("#PJ-mindMap"));
-  console.log(pageRank.rank("#STUDY-jsBrowser"));
+  // console.log(pageRank.rank("#node_1_python"));
+  // console.log(pageRank.rank("#node_2_package"));
 
   return (
     <CanvasContainer>
@@ -214,10 +399,6 @@ function App() {
             style: {
               width: 3,
               "line-color": "#ccc",
-              "source-arrow-color": "#ccc",
-              "source-arrow-shape": "vee",
-              // 이게 꼭 있어야하나..?
-              "curve-style": "bezier",
             },
           },
         ]}
@@ -225,10 +406,11 @@ function App() {
         layout={layout}
         cy={(cy) => {
           cy.on("tap", (e) => {
-            const url = e.target.data("url");
-            if (url && url !== "") {
-              window.open(url);
-            }
+            // const url = e.target.data("url");
+            // if (url && url !== "") {
+            //   window.open(url);
+            // }
+            console.log(e.target);
           });
         }}
       />

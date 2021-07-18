@@ -163,6 +163,9 @@ function Graph({ graph }) {
         });
 
         cy.on("tapstart mouseover", "node", (e) => {
+          document.querySelector("body").style.cursor = "pointer";
+          document.querySelector("html").style.cursor = "pointer";
+
           setDimStyle(cy, {
             backgroundColor: dimColor,
             lineColor: dimColor,
@@ -178,6 +181,9 @@ function Graph({ graph }) {
         });
 
         cy.on("tapend mouseout", "node", (e) => {
+          document.querySelector("body").style.cursor = "default";
+          document.querySelector("html").style.cursor = "default";
+
           setResetFocus(e.cy);
         });
 

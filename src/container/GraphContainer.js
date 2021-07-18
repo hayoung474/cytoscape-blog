@@ -166,185 +166,185 @@ function GraphContainer() {
       {
         data: {
           id: "node_1_python->node_2_package",
-          source: "node_1_python",
-          target: "node_2_package",
+          source: "node_2_package",
+          target: "node_1_python",
         },
       },
       {
         data: {
           id: "node_1_python->node_2_codeStructure",
-          source: "node_1_python",
-          target: "node_2_codeStructure",
+          source: "node_2_codeStructure",
+          target: "node_1_python",
         },
       },
       {
         data: {
           id: "node_1_python->node_2_install",
-          source: "node_1_python",
-          target: "node_2_install",
+          source: "node_2_install",
+          target: "node_1_python",
         },
       },
       {
         data: {
           id: "node_1_python->node_2_class",
-          source: "node_1_python",
-          target: "node_2_class",
+          source: "node_2_class",
+          target: "node_1_python",
         },
       },
 
       {
         data: {
           id: "node_1_python->node_2_varAndType",
-          source: "node_1_python",
-          target: "node_2_varAndType",
+          source: "node_2_varAndType",
+          target: "node_1_python",
         },
       },
       {
         data: {
           id: "node_2_package->node_3_makeCustomModule",
-          source: "node_2_package",
-          target: "node_3_makeCustomModule",
+          source: "node_3_makeCustomModule",
+          target: "node_2_package",
         },
       },
       {
         data: {
           id: "node_2_package->node_3_3rdParty",
-          source: "node_2_package",
-          target: "node_3_3rdParty",
+          source: "node_3_3rdParty",
+          target: "node_2_package",
         },
       },
       {
         data: {
           id: "node_2_package->node_3_standardModule",
-          source: "node_2_package",
-          target: "node_3_standardModule",
+          source: "node_3_standardModule",
+          target: "node_2_package",
         },
       },
       {
         data: {
           id: "node_2_varAndType->node_3_sequence",
-          source: "node_2_varAndType",
-          target: "node_3_sequence",
+          source: "node_3_sequence",
+          target: "node_2_varAndType",
         },
       },
       {
         data: {
           id: "node_2_codeStructure->node_3_condition",
-          source: "node_2_codeStructure",
-          target: "node_3_condition",
+          source: "node_3_condition",
+          target: "node_2_codeStructure",
         },
       },
       {
         data: {
           id: "node_2_codeStructure->node_3_repeatAndTouring",
-          source: "node_2_codeStructure",
-          target: "node_3_repeatAndTouring",
+          source: "node_3_repeatAndTouring",
+          target: "node_2_codeStructure",
         },
       },
       {
         data: {
           id: "node_2_codeStructure->node_3_implication",
-          source: "node_2_codeStructure",
-          target: "node_3_implication",
+          source: "node_3_implication",
+          target: "node_2_codeStructure",
         },
       },
       {
         data: {
           id: "node_2_codeStructure->node_3_function",
-          source: "node_2_codeStructure",
-          target: "node_3_function",
+          source: "node_3_function",
+          target: "node_2_codeStructure",
         },
       },
       {
         data: {
           id: "node_2_install->node_3_virtualEnv",
-          source: "node_2_install",
-          target: "node_3_virtualEnv",
+          source: "node_3_virtualEnv",
+          target: "node_2_install",
         },
       },
       {
         data: {
           id: "node_2_install->node_3_anaconda",
-          source: "node_2_install",
-          target: "node_3_anaconda",
+          source: "node_3_anaconda",
+          target: "node_2_install",
         },
       },
       {
         data: {
           id: "node_2_install->node_3_excute",
-          source: "node_2_install",
-          target: "node_3_excute",
+          source: "node_3_excute",
+          target: "node_2_install",
         },
       },
       {
         data: {
           id: "node_3_anaconda-node_3_virtualEnv",
-          source: "node_3_anaconda",
-          target: "node_3_virtualEnv",
+          source: "node_3_virtualEnv",
+          target: "node_3_anaconda",
         },
       },
 
       {
         data: {
           id: "node_3_excute->node_4_philosophy",
-          source: "node_3_excute",
-          target: "node_4_philosophy",
+          source: "node_4_philosophy",
+          target: "node_3_excute",
         },
       },
       {
         data: {
           id: "node_3_function->node_4_decorator",
-          source: "node_3_function",
-          target: "node_4_decorator",
+          source: "node_4_decorator",
+          target: "node_3_function",
         },
       },
       {
         data: {
           id: "node_3_function->node_4_closer",
-          source: "node_3_function",
-          target: "node_4_closer",
+          source: "node_4_closer",
+          target: "node_3_function",
         },
       },
       {
         data: {
           id: "node_3_function->node_4_generator",
-          source: "node_3_function",
-          target: "node_4_generator",
+          source: "node_4_generator",
+          target: "node_3_function",
         },
       },
       {
         data: {
           id: "node_3_sequence->node_4_listAndTuple",
-          source: "node_3_sequence",
-          target: "node_4_listAndTuple",
+          source: "node_4_listAndTuple",
+          target: "node_3_sequence",
         },
       },
       {
         data: {
           id: "node_3_sequence->node_4_dict",
-          source: "node_3_sequence",
-          target: "node_4_dict",
+          source: "node_4_dict",
+          target: "node_3_sequence",
         },
       },
       {
         data: {
           id: "node_3_sequence->node_4_set",
-          source: "node_3_sequence",
-          target: "node_4_set",
+          source: "node_4_set",
+          target: "node_3_sequence",
         },
       },
       {
         data: {
           id: "node_4_generator->node_5_functionalProgramming",
-          source: "node_4_generator",
-          target: "node_5_functionalProgramming",
+          source: "node_5_functionalProgramming",
+          target: "node_4_generator",
         },
       },
       {
         data: {
           id: "node_5_functionalProgramming->node_6_firstClassObject",
-          source: "node_5_functionalProgramming",
-          target: "node_6_firstClassObject",
+          source: "node_6_firstClassObject",
+          target: "node_5_functionalProgramming",
         },
       },
     ],

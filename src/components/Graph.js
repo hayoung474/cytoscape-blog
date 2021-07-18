@@ -16,10 +16,6 @@ Cytoscape.use(CoseBillkent);
 function Graph({ graph }) {
   const layout = {
     name: "cose",
-    animate: true,
-    animationDuration: 5000,
-    avoidOverlap: true,
-    nodeDimensionsIncludeLabels: false,
   };
 
   const cyForRank = Cytoscape({
@@ -29,7 +25,9 @@ function Graph({ graph }) {
   const pageRank = cyForRank.elements().pageRank();
 
   const nodeMaxSize = 50;
+  const nodeMinSize = 5;
   const fontMaxSize = 8;
+  const fontMinSize = 5;
 
   return (
     <CanvasContainer>
@@ -42,19 +40,20 @@ function Graph({ graph }) {
               backgroundColor: "#666",
               label: "data(label)",
               width: (el) => {
-                return nodeMaxSize / (pageRank.rank("#" + el.id()) * 15);
+                return nodeMaxSize * pageRank.rank("#" + el.id()) + nodeMinSize;
               },
               height: (el) => {
-                return nodeMaxSize / (pageRank.rank("#" + el.id()) * 15);
+                return nodeMaxSize * pageRank.rank("#" + el.id()) + nodeMinSize;
               },
               "font-size": (el) => {
-                return fontMaxSize / (pageRank.rank("#" + el.id()) * 7.5);
+                return fontMaxSize * pageRank.rank("#" + el.id()) + fontMinSize;
               },
             },
           },
           {
             selector: "edge",
             style: {
+              width: 1,
               "line-color": "#ccc",
             },
           },

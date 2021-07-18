@@ -4,14 +4,11 @@ import Cytoscape from "cytoscape";
 import CoseBillkent from "cytoscape-cose-bilkent";
 import styled from "styled-components";
 
-const CanvasContainer = styled.div`
-  position: fixed;
-  border: 1px solid black;
-  left: 50%;
-  transform: translateX(-50%);
-`;
-
 Cytoscape.use(CoseBillkent);
+
+const CustomCytoscapeComponent = styled(CytoscapeComponent)`
+  margin: 0 auto;
+`;
 
 function Graph({ graph }) {
   const layout = {
@@ -124,70 +121,76 @@ function Graph({ graph }) {
   }
 
   return (
-    <CanvasContainer>
-      <CytoscapeComponent
-        elements={CytoscapeComponent.normalizeElements(graph)}
-        stylesheet={[
-          {
-            selector: "node",
-            style: {
-              // 노드색
-              backgroundColor: nodeColor,
-              label: "data(label)",
-              width: (el) => {
-                return nodeMaxSize * pageRank.rank("#" + el.id()) + nodeMinSize;
-              },
-              height: (el) => {
-                return nodeMaxSize * pageRank.rank("#" + el.id()) + nodeMinSize;
-              },
-              fontSize: (el) => {
-                return fontMaxSize * pageRank.rank("#" + el.id()) + fontMinSize;
-              },
-              // 글자색
-              color: nodeColor,
+    <CustomCytoscapeComponent
+      elements={CytoscapeComponent.normalizeElements(graph)}
+      stylesheet={[
+        {
+          selector: "node",
+          style: {
+            // 노드색
+            backgroundColor: nodeColor,
+            label: "data(label)",
+            width: (el) => {
+              return nodeMaxSize * pageRank.rank("#" + el.id()) + nodeMinSize;
             },
-          },
-          {
-            selector: "edge",
-            style: {
-              width: edgeWidth,
-              lineColor: edgeColor,
-              sourceArrowColor: edgeColor,
+            height: (el) => {
+              return nodeMaxSize * pageRank.rank("#" + el.id()) + nodeMinSize;
             },
+            fontSize: (el) => {
+              return fontMaxSize * pageRank.rank("#" + el.id()) + fontMinSize;
+            },
+            // 글자색
+            color: nodeColor,
           },
-        ]}
-        style={{ width: "100vh", height: "100vh" }}
-        layout={layout}
-        cy={(cy) => {
-          cy.on("tap", (e) => {
-            // const url = e.target.data("url");
-            // if (url && url !== "") {
-            //   window.open(url);
-            // }
-            console.log(e.target);
-          });
+        },
+        {
+          selector: "edge",
+          style: {
+            width: edgeWidth,
+            lineColor: edgeColor,
+            sourceArrowColor: edgeColor,
+          },
+        },
+      ]}
+      style={{ width: "100vh", height: "100vh" }}
+      layout={layout}
+      cy={(cy) => {
+        cy.on("tap", (e) => {
+          // const url = e.target.data("url");
+          // if (url && url !== "") {
+          //   window.open(url);
+          // }
+        });
 
-          cy.on("tapstart mouseover", "node", (e) => {
-            setDimStyle(cy, {
-              backgroundColor: dimColor,
-              lineColor: dimColor,
-              sourceArrowColor: dimColor,
-              color: dimColor,
-            });
-            setFocus(
-              e.target,
-              successorColor,
-              predecessorsColor,
-              edgeActiveWidth
-            );
+        cy.on("tapstart mouseover", "node", (e) => {
+          setDimStyle(cy, {
+            backgroundColor: dimColor,
+            lineColor: dimColor,
+            sourceArrowColor: dimColor,
+            color: dimColor,
           });
+          setFocus(
+            e.target,
+            successorColor,
+            predecessorsColor,
+            edgeActiveWidth
+          );
+        });
 
-          cy.on("tapend mouseout", "node", (e) => {
-            setResetFocus(e.cy);
-          });
-        }}
-      />
-    </CanvasContainer>
+        cy.on("tapend mouseout", "node", (e) => {
+          setResetFocus(e.cy);
+        });
+
+        let resizeTimer;
+
+        window.addEventListener("resize", function () {
+          this.clearTimeout(resizeTimer);
+          resizeTimer = this.setTimeout(function () {
+            cy.fit();
+          }, 200);
+        });
+      }}
+    />
   );
 }
 

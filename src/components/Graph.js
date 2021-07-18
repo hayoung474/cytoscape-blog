@@ -25,9 +25,103 @@ function Graph({ graph }) {
   const pageRank = cyForRank.elements().pageRank();
 
   const nodeMaxSize = 50;
-  const nodeMinSize = 5;
+  const nodeMinSize = 10;
+  const nodeActiveSize = 28;
   const fontMaxSize = 8;
   const fontMinSize = 5;
+  const fontActiveSize = 7;
+
+  const edgeWidth = "2px";
+  let edgeActiveWidth = "4px";
+
+  const dimColor = "#dfe4ea";
+  const edgeColor = "#ced6e0";
+  const nodeColor = "#57606f";
+  const nodeActiveColor = "#ffa502";
+
+  const successorColor = "#ff6348";
+  // 상위 node & edge color
+  const predecessorsColor = "#1e90ff";
+  // 하위 node & edge color
+
+  function setDimStyle(target_cy, style) {
+    target_cy.nodes().forEach(function (target) {
+      target.style(style);
+    });
+    target_cy.edges().forEach(function (target) {
+      target.style(style);
+    });
+  }
+
+  function setFocus(
+    target_element,
+    successorColor,
+    predecessorsColor,
+    edgeWidth
+  ) {
+    target_element.style("background-color", nodeActiveColor);
+    target_element.style("color", nodeColor);
+    target_element.successors().each(function (e) {
+      // 상위  엣지와 노드
+      if (e.isEdge()) {
+        e.style("width", edgeWidth);
+      }
+      e.style("color", nodeColor);
+      e.style("background-color", successorColor);
+      e.style("line-color", successorColor);
+      e.style("source-arrow-color", successorColor);
+      setOpacityElement(e, 0.5);
+    });
+    target_element.predecessors().each(function (e) {
+      // 하위 엣지와 노드
+      if (e.isEdge()) {
+        e.style("width", edgeWidth);
+      }
+      e.style("color", nodeColor);
+      e.style("background-color", predecessorsColor);
+      e.style("line-color", predecessorsColor);
+      e.style("source-arrow-color", predecessorsColor);
+      setOpacityElement(e, 0.5);
+    });
+    target_element.neighborhood().each(function (e) {
+      // 이웃한 엣지와 노드
+      setOpacityElement(e, 1);
+    });
+    target_element.style(
+      "width",
+      Math.max(parseFloat(target_element.style("width")), nodeActiveSize)
+    );
+    target_element.style(
+      "height",
+      Math.max(parseFloat(target_element.style("height")), nodeActiveSize)
+    );
+    target_element.style(
+      "font-size",
+      Math.max(parseFloat(target_element.style("font-size")), fontActiveSize)
+    );
+  }
+
+  function setOpacityElement(target_element, degree) {
+    target_element.style("opacity", degree);
+  }
+
+  function setResetFocus(target_cy) {
+    target_cy.nodes().forEach(function (target) {
+      target.style("background-color", nodeColor);
+      var rank = pageRank.rank(target);
+      target.style("width", nodeMaxSize * rank + nodeMinSize);
+      target.style("height", nodeMaxSize * rank + nodeMinSize);
+      target.style("font-size", fontMaxSize * rank + fontMinSize);
+      target.style("color", nodeColor);
+      target.style("opacity", 1);
+    });
+    target_cy.edges().forEach(function (target) {
+      target.style("line-color", edgeColor);
+      target.style("source-arrow-color", edgeColor);
+      target.style("width", edgeWidth);
+      target.style("opacity", 1);
+    });
+  }
 
   return (
     <CanvasContainer>
@@ -37,7 +131,8 @@ function Graph({ graph }) {
           {
             selector: "node",
             style: {
-              backgroundColor: "#666",
+              // 노드색
+              backgroundColor: nodeColor,
               label: "data(label)",
               width: (el) => {
                 return nodeMaxSize * pageRank.rank("#" + el.id()) + nodeMinSize;
@@ -45,16 +140,19 @@ function Graph({ graph }) {
               height: (el) => {
                 return nodeMaxSize * pageRank.rank("#" + el.id()) + nodeMinSize;
               },
-              "font-size": (el) => {
+              fontSize: (el) => {
                 return fontMaxSize * pageRank.rank("#" + el.id()) + fontMinSize;
               },
+              // 글자색
+              color: nodeColor,
             },
           },
           {
             selector: "edge",
             style: {
-              width: 1,
-              "line-color": "#ccc",
+              width: edgeWidth,
+              lineColor: edgeColor,
+              sourceArrowColor: edgeColor,
             },
           },
         ]}
@@ -67,6 +165,25 @@ function Graph({ graph }) {
             //   window.open(url);
             // }
             console.log(e.target);
+          });
+
+          cy.on("tapstart mouseover", "node", (e) => {
+            setDimStyle(cy, {
+              backgroundColor: dimColor,
+              lineColor: dimColor,
+              sourceArrowColor: dimColor,
+              color: dimColor,
+            });
+            setFocus(
+              e.target,
+              successorColor,
+              predecessorsColor,
+              edgeActiveWidth
+            );
+          });
+
+          cy.on("tapend mouseout", "node", (e) => {
+            setResetFocus(e.cy);
           });
         }}
       />

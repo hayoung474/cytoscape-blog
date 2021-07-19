@@ -1,10 +1,8 @@
 import React, { useState ,useEffect} from "react";
-import data from '../data/data.json'
+
 import Graph from "../components/Graph";
-
-function GraphContainer() {
-  const [graph, setGraph] = useState(data);
-
+import firebase from 'firebase';
+function GraphContainer({graph}) {
   return <Graph graph={graph} />;
 }
 

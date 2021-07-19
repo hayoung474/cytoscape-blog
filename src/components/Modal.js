@@ -67,7 +67,7 @@ const ModalSelect = styled.select`
     margin-bottom:5px;
     width:100%;
 `
-function Modal(){
+function Modal({graph}){
     const modalEl = useRef();
     const wrapperEl = useRef();
     const [isOpen,setIsOpen] = useState(false);
@@ -130,7 +130,7 @@ function Modal(){
                     </ModalSelect> */}
                     Target Node
                     <ModalSelect onChange={(e)=>{setTargetNodeId(e.target.options[e.target.selectedIndex].value)}}>
-                        {data.nodes.map((item,index)=>{
+                        {graph.nodes.map((item,index)=>{
                             return (<option value={item.data.id} key={index}>{item.data.label}</option>)
                         })}
                     </ModalSelect>

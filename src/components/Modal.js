@@ -75,6 +75,8 @@ function Modal(){
     const openModal = ()=>{setIsOpen(true);}
     const closeModal = ()=>{setIsOpen(false);}
 
+    const [newNodeLabel,setNewNodeLabel] = useState("");
+    const [targetNodeId,setTargetNodeId] = useState("");
     useEffect(()=>{
         window.addEventListener('click',handleClickOutside);
         return ()=>{
@@ -91,11 +93,27 @@ function Modal(){
             closeModal();
         }
       }
-    const addtest = (source,target) =>{
-        firebase.database().ref('node/data/').set({
-            id:"test",
-            label:""
+    const addNode = () =>{
+
+        const newNodeId = Math.random().toString(36).substr(2,11); // 대충 어딘가에서 퍼온 랜덤스트링 생성 구문
+        /* 랜덤 키를 생성하기 위하여 push 사용*/
+        /* leaf 노드 추가 가정. 추후 가운데 삽입 같은 것도 생각해야 함. */
+        firebase.database().ref('nodes/').push({
+            data:{
+                id:newNodeId,
+                label:newNodeLabel
+            }
         });
+
+        // targetNode 를 통해 egde 연결을 해 주어야 함.
+        firebase.database().ref('edges/').push({
+            data:{
+                id: newNodeId+"->"+targetNodeId,
+                source: newNodeId,
+                target: targetNodeId
+            }
+        });
+
     }
     return(
         <>
@@ -104,23 +122,22 @@ function Modal(){
             <ModalContent ref={modalEl}>
                 <ModalHeader>Add Node</ModalHeader>
                 <ModalBody>
-                    <ModalInput placeholder="Node Name" type="text"></ModalInput>
-                    Parent Node
-                    <ModalSelect >
+                    <ModalInput placeholder="Node Label" type="text" onChange={(e)=>{setNewNodeLabel(e.target.value)}}></ModalInput>
+                    {/* <ModalSelect >
                         {data.nodes.map((item,index)=>{
-                            return (<option key={index}>{item.data.label}</option>)
+                            return (<option onChange={(e)=>{setSourceNode(e.target.value)}} key={index} >{item.data.label}</option>)
                         })}
-                    </ModalSelect>
-                    Child Node
-                    <ModalSelect>
+                    </ModalSelect> */}
+                    Target Node
+                    <ModalSelect onChange={(e)=>{setTargetNodeId(e.target.options[e.target.selectedIndex].value)}}>
                         {data.nodes.map((item,index)=>{
-                            return (<option key={index}>{item.data.label}</option>)
+                            return (<option value={item.data.id} key={index}>{item.data.label}</option>)
                         })}
                     </ModalSelect>
                     child node 생략 시 리프 노드가 됩니다
                 </ModalBody>
                 <ModalFooter>
-                    <ModalButton onClick={addtest}>Add</ModalButton>
+                    <ModalButton onClick={addNode}>Add</ModalButton>
                 </ModalFooter>
             </ModalContent>
             </ModalWrapper> 

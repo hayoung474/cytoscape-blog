@@ -1,6 +1,7 @@
 import React , {useState,useEffect,useRef} from "react";
 import styled from "styled-components";
 import data from '../data/data.json'
+import firebase from 'firebase'
 
 const ModalButton = styled.button`
 background-color: grey;
@@ -90,7 +91,12 @@ function Modal(){
             closeModal();
         }
       }
-
+    const addtest = (source,target) =>{
+        firebase.database().ref('node/data/').set({
+            id:"test",
+            label:""
+        });
+    }
     return(
         <>
         <ModalButton onClick={openModal}>Add Node</ModalButton>
@@ -114,7 +120,7 @@ function Modal(){
                     child node 생략 시 리프 노드가 됩니다
                 </ModalBody>
                 <ModalFooter>
-                    <ModalButton>Add</ModalButton>
+                    <ModalButton onClick={addtest}>Add</ModalButton>
                 </ModalFooter>
             </ModalContent>
             </ModalWrapper> 

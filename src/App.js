@@ -5,32 +5,8 @@ import data from './data/data.json'
 import firebase from 'firebase'
 
 function App() {
-  const [graph, setGraph] = useState({
-    edges: [
-      {
-        data: {
-          id: "node_1_python->node_2_package",
-          source: "node_2_package",
-          target: "node_1_python"
-        }
-      }
-    ],
-    nodes: [
-        {
-          data: {
-            id: "node_1_python",
-            label: "파이썬"
-          }
-        },
-        {
-          data: {
-            id: "node_2_package",
-            label: "패키지"
-          }
-        }
-      ]
-  });
-  
+  const [graph, setGraph] = useState(data);
+
 
   useEffect(()=>{
     firebase.database().ref().on('value',(snapshot) => {
@@ -60,10 +36,8 @@ function App() {
 
   return (
     <>
-    <h1>SinaKim's DevBlog</h1>
       <Modal graph={graph}/>
       <GraphContainer graph={graph}/>
-      
     </>
 
   );

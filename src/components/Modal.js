@@ -1,15 +1,23 @@
 import React , {useState,useEffect,useRef} from "react";
 import styled from "styled-components";
 import firebase from 'firebase'
-
+import {GrAdd} from'react-icons/gr'
 const ModalButton = styled.button`
 background-color: grey;
   text-decoration: none;
   border: none;
   padding: 15px;
+  width:4rem;
+  height:4rem;
   color: white;
-  border-radius: 30px;
+  border-radius: 50px;
   cursor: pointer;
+  position:fixed;
+  bottom:20px;
+  right:20px;
+`
+const AddButton = styled.button` 
+
 `
 
 const ModalWrapper = styled.div`
@@ -117,7 +125,7 @@ function Modal({graph}){
     }
     return(
         <>
-        <ModalButton onClick={openModal}>Add Node</ModalButton>
+        <ModalButton onClick={openModal}><GrAdd/></ModalButton>
         {isOpen && (<ModalWrapper ref={wrapperEl}>
             <ModalContent ref={modalEl}>
                 <ModalHeader>Add Node</ModalHeader>
@@ -132,7 +140,7 @@ function Modal({graph}){
                     </ModalSelect>
                 </ModalBody>
                 <ModalFooter>
-                    <ModalButton onClick={addNode}>Add</ModalButton>
+                    <AddButton onClick={addNode}>Add</AddButton>
                 </ModalFooter>
             </ModalContent>
             </ModalWrapper> 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import Cytoscape from "cytoscape";
 import CoseBillkent from "cytoscape-cose-bilkent";
@@ -10,7 +10,7 @@ const CustomCytoscapeComponent = styled(CytoscapeComponent)`
   margin: 0 auto;
 `;
 
-function Graph({ graph }) {
+function Graph({ graph}) {
   const layout = {
     name: "cose",
     ready: function () {},
@@ -135,12 +135,17 @@ function Graph({ graph }) {
   function setResetFocus(target_cy) {
     target_cy.nodes().forEach(function (target) {
       target.style("background-color", nodeColor);
-      var rank = pageRank.rank(target);
+      //let rank =pageRank.rank(target.id());
+      //var rank = pageRank.rank(target); // index 오류의 원인
+      //console.log(rank);
+      var rank = pageRank.rank("#" + target.id());
       target.style("width", nodeMaxSize * rank + nodeMinSize);
       target.style("height", nodeMaxSize * rank + nodeMinSize);
       target.style("font-size", fontMaxSize * rank + fontMinSize);
       target.style("color", nodeColor);
       target.style("opacity", 1);
+      target.style("opacity", 1);
+      target.style("color", nodeColor);
     });
     target_cy.edges().forEach(function (target) {
       target.style("line-color", edgeColor);
@@ -185,14 +190,22 @@ function Graph({ graph }) {
       style={{ width: "100vh", height: "100vh" }}
       layout={layout}
       cy={(cy) => {
-        cy.on("tap", (e) => {
-          // const url = e.target.data("url");
-          // if (url && url !== "") {
-          //   window.open(url);
-          // }
-        });
-
+        // cy.on("tap", (e) => {
+        //   console.log(graph)
+        //   // const url = e.target.data("url");
+        //   // if (url && url !== "") {
+        //   //   window.open(url);
+        //   // }
+        // });
+      
+        cy.on("add","node",(e)=>{ // 노드가 추가될 때 마다 새로운 값이 세팅될 수 있도록 이전 graph값을 제거해주는 초기화 작업이 필요함.
+          graph={} // 노드 추가 마다 초기화
+        })
         cy.on("tapstart mouseover", "node", (e) => {
+
+          // 얘는 멀쩡한데 tapend 랑 mouseout은 왜 그런지 ,,
+          // 이 이벤트 함수도 똑같이 2번 발동됨.
+          
           document.querySelector("body").style.cursor = "pointer";
           document.querySelector("html").style.cursor = "pointer";
 
@@ -211,10 +224,14 @@ function Graph({ graph }) {
         });
 
         cy.on("tapend mouseout", "node", (e) => {
+          e.preventDefault();
+          // 이벤트 함수가 2번 발동되는 이유를 모르겠음.
+          // 또한 2번 실행되는 동안 graph 데이터가 초기값으로 돌아가는 경우 발생
           document.querySelector("body").style.cursor = "default";
           document.querySelector("html").style.cursor = "default";
-
-          setResetFocus(e.cy);
+          if(Object.keys(graph).length !== 0){ // 빈 객체는 아직 그래프 출력 준비가 덜 된 것으로 간주하고 함수를 실행시키지않음. 반면 빈 객체가 아니라면 출력 준비가 다 된 것으로 간주하고 함수를 실행시킴
+            setResetFocus(e.cy);
+          }
         });
 
         let resizeTimer;

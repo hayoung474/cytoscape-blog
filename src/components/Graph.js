@@ -202,6 +202,7 @@ function Graph({ graph}) {
           graph={} // 노드 추가 마다 초기화
         })
         cy.on("tapstart mouseover", "node", (e) => {
+
           // 얘는 멀쩡한데 tapend 랑 mouseout은 왜 그런지 ,,
           // 이 이벤트 함수도 똑같이 2번 발동됨.
           

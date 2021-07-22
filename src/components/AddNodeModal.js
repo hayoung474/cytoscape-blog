@@ -2,6 +2,7 @@ import React , {useState,useEffect,useRef} from "react";
 import styled from "styled-components";
 import firebase from 'firebase'
 import {GrAdd} from'react-icons/gr'
+import Graph from './Graph'
 const ModalButton = styled.button`
 background-color: grey;
   text-decoration: none;
@@ -74,7 +75,7 @@ const ModalSelect = styled.select`
     margin-bottom:5px;
     width:100%;
 `
-function Modal({graph}){
+function AddNodeModal({graph}){
     const modalEl = useRef();
     const wrapperEl = useRef();
     const [isOpen,setIsOpen] = useState(false);
@@ -149,4 +150,4 @@ function Modal({graph}){
     )
 }
 
-export default Modal;
+export default AddNodeModal;

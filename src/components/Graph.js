@@ -1,10 +1,87 @@
 import React, { useEffect } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import Cytoscape from "cytoscape";
+import contextMenus from 'cytoscape-context-menus';
 import CoseBillkent from "cytoscape-cose-bilkent";
 import styled from "styled-components";
+import Modal from './Modal'
 
 Cytoscape.use(CoseBillkent);
+// register extension
+Cytoscape.use(contextMenus);
+
+// import CSS as well
+import 'cytoscape-context-menus/cytoscape-context-menus.css';
+
+var options = {
+  // Customize event to bring up the context menu
+  // Possible options https://js.cytoscape.org/#events/user-input-device-events
+  evtType: 'cxttap', // 우클릭
+  // List of initial menu items
+  // A menu item must have either onClickFunction or submenu or both
+  menuItems: [
+    {
+      id: 'remove-node', // ID of menu item
+      content: '노드 삭제', // Display content of menu item
+      tooltipText: '현재 노드 삭제', // Tooltip text for menu item
+      image: {src : "../assets/image/remove.svg", width : 12, height : 12, x : 6, y : 4}, // menu icon
+      // Filters the elements to have this menu item on cxttap
+      // If the selector is not truthy no elements will have this menu item on cxttap
+      selector: 'node', 
+      onClickFunction: function (e) { // 클릭 시 실행할 함수
+        console.log(e.target);
+      },
+      disabled: false, //항목을 사용 안 함으로 만들 것인지 여부 
+      show: true, // 항목 표시 여부
+      hasTrailingDivider: false, // 항목에 후행 구분선이 있는지 여부
+      coreAsWell: false, // Whether core instance have this item on cxttap
+      submenu: [/* 이 곳에는 객체를 넣어주어야 함.*/] // Shows the listed menuItems as a submenu for this item. An item must have either submenu or onClickFunction or both.
+    },
+    {
+      id: 'modify-node',
+      content: '노드 수정',
+      tooltipText: '현재 노드 이름 수정',
+      image: {src : "add.svg", width : 12, height : 12, x : 6, y : 4},
+      selector: 'node',
+      coreAsWell: true,
+      onClickFunction: function () {
+        console.log('add node');
+      }
+    },
+    {
+      id: 'add-node',
+      content: '노드 추가',
+      tooltipText: '리프 노드 뒤에 노드 추가',
+      image: {src : "add.svg", width : 12, height : 12, x : 6, y : 4},
+      selector: 'node',
+      coreAsWell: true,
+      onClickFunction: function () {
+        console.log('add node');
+      }
+    },
+    {
+      id: 'add-node-between-node-and-node',
+      content: '간선에 노드 추가',
+      tooltipText: '간선에 노드 추가',
+      image: {src : "add.svg", width : 12, height : 12, x : 6, y : 4},
+      selector: 'edge',
+      coreAsWell: true,
+      onClickFunction: function () {
+        console.log('add node');
+      }
+    },
+  ],
+  // css classes that menu items will have
+  menuItemClasses: [
+    // add class names to this list
+  ],
+  // css classes that context menu will have
+  contextMenuClasses: [
+    // add class names to this list
+  ],
+  // Indicates that the menu item has a submenu. If not provided default one will be used
+  submenuIndicator: { src: 'assets/submenu-indicator-default.svg', width: 12, height: 12 }
+};
 
 const CustomCytoscapeComponent = styled(CytoscapeComponent)`
   margin: 0 auto;
@@ -197,6 +274,8 @@ function Graph({ graph}) {
         //   //   window.open(url);
         //   // }
         // });
+        cy.contextMenus(options); // menu 등록
+        
       
         cy.on("add","node",(e)=>{ // 노드가 추가될 때 마다 새로운 값이 세팅될 수 있도록 이전 graph값을 제거해주는 초기화 작업이 필요함.
           graph={} // 노드 추가 마다 초기화

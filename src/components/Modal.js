@@ -121,7 +121,7 @@ function Modal({
     const newNodeId = Math.random().toString(36).substr(2, 11); // 대충 어딘가에서 퍼온 랜덤스트링 생성 구문
 
     // setGraph 를 사용하여 graph 자체를 업데이트 해줌.
-    let newGraph = graph;
+    let newGraph = { ...graph }; // spread 안쓰면 useEffect가 발동 안되네? 참고참고 !!!
     newGraph["nodes"].push({ data: { id: newNodeId, label: newNodeLabel } });
     newGraph["edges"].push({
       data: {
@@ -136,8 +136,8 @@ function Modal({
   };
 
   const deleteNode = () => {
-      // nodeList의 id를 포함하는 모든 객체를 제거하도록 함.
-    let newGraph = graph;
+    // nodeList의 id를 포함하는 모든 객체를 제거하도록 함.
+    let newGraph = { ...graph };
     deleteNodeList.map((node, index) => {
       newGraph.nodes.map((item, index) => {
         if (item.data.id === node) {
@@ -158,31 +158,36 @@ function Modal({
     <>
       {isOpen && (
         <ModalWrapper ref={wrapperEl}>
-          {modalType==="리프노드추가" && <ModalContent ref={modalEl}>
-            <ModalHeader>새 노드 추가</ModalHeader>
-            <ModalBody>
-              추가할 노드의 이름을 작성해주세요
-              <ModalInput
-                placeholder="Node Label"
-                type="text"
-                onChange={(e) => {
-                  setNewNodeLabel(e.target.value);
-                }}
-              ></ModalInput>
-            </ModalBody>
-            <ModalFooter>
-              <ModalButton onClick={addNode}>Add</ModalButton>
-            </ModalFooter>
-          </ModalContent>}
-          {modalType==="노드삭제" && <ModalContent ref={modalEl}>
-            <ModalHeader>노드 및 엣지 삭제</ModalHeader>
-            <ModalBody>
-              해당 노드를 포함한 하위 노드 및 연결된 엣지가 모두 삭제됩니다. 삭제하시겠습니까?
-            </ModalBody>
-            <ModalFooter>
-              <ModalButton onClick={deleteNode}>OK</ModalButton>
-            </ModalFooter>
-          </ModalContent>}
+          {modalType === "리프노드추가" && (
+            <ModalContent ref={modalEl}>
+              <ModalHeader>새 노드 추가</ModalHeader>
+              <ModalBody>
+                추가할 노드의 이름을 작성해주세요
+                <ModalInput
+                  placeholder="Node Label"
+                  type="text"
+                  onChange={(e) => {
+                    setNewNodeLabel(e.target.value);
+                  }}
+                ></ModalInput>
+              </ModalBody>
+              <ModalFooter>
+                <ModalButton onClick={addNode}>Add</ModalButton>
+              </ModalFooter>
+            </ModalContent>
+          )}
+          {modalType === "노드삭제" && (
+            <ModalContent ref={modalEl}>
+              <ModalHeader>노드 및 엣지 삭제</ModalHeader>
+              <ModalBody>
+                해당 노드를 포함한 하위 노드 및 연결된 엣지가 모두 삭제됩니다.
+                삭제하시겠습니까?
+              </ModalBody>
+              <ModalFooter>
+                <ModalButton onClick={deleteNode}>OK</ModalButton>
+              </ModalFooter>
+            </ModalContent>
+          )}
         </ModalWrapper>
       )}
     </>

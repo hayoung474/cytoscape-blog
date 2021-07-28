@@ -79,6 +79,7 @@ function Modal({
   modalType,
   deleteNodeList,
   connectedNodes,
+  currentNodeLabel,
 }) {
   //const [isOpen, setIsOpen] = useState(false);
 
@@ -93,6 +94,7 @@ function Modal({
   const wrapperEl = useRef();
 
   const [newNodeLabel, setNewNodeLabel] = useState("");
+  const [changeNodeLabel, setChangeNodeLabel] = useState("");
   const [targetNodeId, setTargetNodeId] = useState("");
 
   useEffect(() => {
@@ -119,8 +121,17 @@ function Modal({
     }
   };
 
+  const changeLabel = () => {
+    let newGraph = { ...graph };
+    newGraph.nodes.map((item, index) => {
+      if (item.data.label === currentNodeLabel) {
+        item.data.label = changeNodeLabel;
+      }
+    });
+
+    setGraph(newGraph); // 덮어씌우기
+  };
   const addToEdgeNode = () => {
-    console.log(connectedNodes);
     const newNodeId = Math.random().toString(36).substr(2, 11); // 대충 어딘가에서 퍼온 랜덤스트링 생성 구문
 
     // setGraph 를 사용하여 graph 자체를 업데이트 해줌.
@@ -128,8 +139,7 @@ function Modal({
 
     // 두 노드가 연결된 엣지 제거
     newGraph.edges.map((item, index) => {
-        console.log(connectedNodes[1] + "->" + connectedNodes[0])
-      if (item.data.id === (connectedNodes[1] + "->" + connectedNodes[0])) {
+      if (item.data.id === connectedNodes[1] + "->" + connectedNodes[0]) {
         newGraph.edges.splice(index, 1);
       }
     });
@@ -241,6 +251,25 @@ function Modal({
               </ModalBody>
               <ModalFooter>
                 <ModalButton onClick={addToEdgeNode}>OK</ModalButton>
+              </ModalFooter>
+            </ModalContent>
+          )}
+          {modalType === "이름변경" && (
+            <ModalContent ref={modalEl}>
+              <ModalHeader>노드 이름 변경</ModalHeader>
+              <ModalBody>
+                변경할 노드의 이름을 작성해주세요
+                <ModalInput
+                  placeholder="Node Label"
+                  type="text"
+                  onChange={(e) => {
+                    setChangeNodeLabel(e.target.value);
+                  }}
+                  placeholder={currentNodeLabel}
+                ></ModalInput>
+              </ModalBody>
+              <ModalFooter>
+                <ModalButton onClick={changeLabel}>OK</ModalButton>
               </ModalFooter>
             </ModalContent>
           )}

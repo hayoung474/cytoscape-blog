@@ -22,6 +22,7 @@ function Graph({ graph,setGraph }) {
   const [modalType,setModalType] = useState("")
   const [deleteNodeList,setDeleteNodeList] = useState([])
   const [connectedNodes,setConnectedNodes] = useState([])
+  const [currentNodeLabel,setCurrentNodeLabel]=useState("")
 
   var options = {
     // Customize event to bring up the context menu
@@ -33,13 +34,15 @@ function Graph({ graph,setGraph }) {
 
       {
         id: "modify-node",
-        content: "노드 수정",
-        tooltipText: "현재 노드 이름 수정",
+        content: "이름 변경",
+        tooltipText: "현재 노드 이름 변경",
         image: { src: "add.svg", width: 12, height: 12, x: 6, y: 4 },
         selector: "node",
         coreAsWell: true,
-        onClickFunction: function () {
-          setModalType("노드수정")
+        onClickFunction: function (e) {
+          setModalType("이름변경")
+          setCurrentNodeLabel(e.target.data().label)
+          setIsOpen(true);
         },
       },
       {
@@ -51,7 +54,6 @@ function Graph({ graph,setGraph }) {
         coreAsWell: true,
         onClickFunction: function (e) {
           setModalType("엣지추가");
-          console.log()
         },
         hasTrailingDivider: true,
       },
@@ -78,9 +80,9 @@ function Graph({ graph,setGraph }) {
         coreAsWell: true,
         onClickFunction: function (e) {
           let newList=[];
-          console.log(e.target.connectedNodes().each((e)=>{
+          e.target.connectedNodes().each((e)=>{
             newList.push(e.id());
-          }))
+          })
           setConnectedNodes(newList); // 엣지와 연결된 노드들의 id가 들어있는 배열 
           setModalType("간선노드추가");
           setIsOpen(true);
@@ -374,7 +376,7 @@ function Graph({ graph,setGraph }) {
         });
       }}
     />
-    <Modal graph={graph} connectedNodes={connectedNodes} setGraph={setGraph} isOpen={isOpen} setIsOpen={setIsOpen} selectNodeId={selectNodeId} modalType={modalType} deleteNodeList={deleteNodeList}/>
+    <Modal graph={graph} currentNodeLabel={currentNodeLabel} connectedNodes={connectedNodes} setGraph={setGraph} isOpen={isOpen} setIsOpen={setIsOpen} selectNodeId={selectNodeId} modalType={modalType} deleteNodeList={deleteNodeList}/>
     </>
     
   );

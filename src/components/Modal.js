@@ -70,7 +70,15 @@ const ModalSelect = styled.select`
   width: 100%;
 `;
 
-function Modal({ graph,setGraph,isOpen,setIsOpen,selectNodeId ,modalType}) {
+function Modal({
+  graph,
+  setGraph,
+  isOpen,
+  setIsOpen,
+  selectNodeId,
+  modalType,
+  deleteNodeList,
+}) {
   //const [isOpen, setIsOpen] = useState(false);
 
   const openModal = () => {
@@ -93,14 +101,17 @@ function Modal({ graph,setGraph,isOpen,setIsOpen,selectNodeId ,modalType}) {
     };
   }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     setTargetNodeId(selectNodeId);
-  },[selectNodeId])
+  }, [selectNodeId]);
 
-  useEffect(()=>{
-    console.log(modalType)
-  },[modalType])
+  useEffect(() => {
+    console.log(modalType);
+  }, [modalType]);
 
+  useEffect(() => {
+    console.log(deleteNodeList);
+  });
 
   const handleClickOutside = (e) => {
     /* ModalWrapper 에 Ref 를 걸어서, ModalWrapper 영역을 클릭했을 때 Modal이 꺼지도록 함. ModalContent 부분은 클릭해도 꺼지지 않도록 조건을 달았음.*/
@@ -115,42 +126,42 @@ function Modal({ graph,setGraph,isOpen,setIsOpen,selectNodeId ,modalType}) {
     }
   };
   const addNode = () => {
-        const newNodeId = Math.random().toString(36).substr(2, 11); // 대충 어딘가에서 퍼온 랜덤스트링 생성 구문
-        /* 랜덤 키를 생성하기 위하여 push 사용*/
-        /* leaf 노드 추가 가정. 추후 가운데 삽입 같은 것도 생각해야 함. */
-        // firebase
-        //   .database()
-        //   .ref("nodes/")
-        //   .push({
-        //     data: {
-        //       id: newNodeId,
-        //       label: newNodeLabel,
-        //     },
-        //   });
-    
-        // // targetNode 를 통해 egde 연결을 해 주어야 함.
-        // firebase
-        //   .database()
-        //   .ref("edges/")
-        //   .push({
-        //     data: {
-        //       id: newNodeId + "->" + targetNodeId,
-        //       source: newNodeId,
-        //       target: targetNodeId,
-        //     },
-        //   });
-        let newGraph = graph;
-        newGraph['nodes'].push({data:{id:newNodeId,label:newNodeLabel}});
-        newGraph['edges'].push({data:{id: newNodeId + "->" + targetNodeId,source: newNodeId,target: targetNodeId,}})
-        setGraph(newGraph);
+    const newNodeId = Math.random().toString(36).substr(2, 11); // 대충 어딘가에서 퍼온 랜덤스트링 생성 구문
+
+    // setGraph 를 사용하여 graph 자체를 업데이트 해줌.
+    let newGraph = graph;
+    newGraph["nodes"].push({ data: { id: newNodeId, label: newNodeLabel } });
+    newGraph["edges"].push({
+      data: {
+        id: newNodeId + "->" + targetNodeId,
+        source: newNodeId,
+        target: targetNodeId,
+      },
+    });
+    setGraph(newGraph);
 
     closeModal();
-
   };
 
-  const deleteNode = (nodeId)=>{
-      
-  }
+  const deleteNode = () => {
+    console.log(deleteNodeList[1]);
+    let newGraph = graph;
+    deleteNodeList.map((node, index) => {
+      newGraph.nodes.map((item, index) => {
+        if (item.data.id === node) {
+          newGraph.nodes.splice(index, 1);
+        }
+      });
+      newGraph.edges.map((item, index) => {
+        if (item.data.id.includes(node)) {
+          newGraph.edges.splice(index, 1);
+        }
+      });
+    });
+
+    setGraph(graph);
+    console.log(newGraph);
+  };
   return (
     <>
       {isOpen && (
@@ -158,7 +169,7 @@ function Modal({ graph,setGraph,isOpen,setIsOpen,selectNodeId ,modalType}) {
           <ModalContent ref={modalEl}>
             <ModalHeader>새 노드 추가</ModalHeader>
             <ModalBody>
-                추가할 노드의 이름을 작성해주세요
+              추가할 노드의 이름을 작성해주세요
               <ModalInput
                 placeholder="Node Label"
                 type="text"
@@ -184,6 +195,7 @@ function Modal({ graph,setGraph,isOpen,setIsOpen,selectNodeId ,modalType}) {
             </ModalBody>
             <ModalFooter>
               <ModalButton onClick={addNode}>Add</ModalButton>
+              <ModalButton onClick={deleteNode}>Delete</ModalButton>
             </ModalFooter>
           </ModalContent>
         </ModalWrapper>

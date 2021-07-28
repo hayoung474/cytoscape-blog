@@ -20,6 +20,7 @@ function Graph({ graph,setGraph }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectNodeId,setSelectNodeId] = useState("")
   const [modalType,setModalType] = useState("")
+  const [deleteNodeList,setDeleteNodeList] = useState([])
 
   var options = {
     // Customize event to bring up the context menu
@@ -82,6 +83,15 @@ function Graph({ graph,setGraph }) {
         selector: "node",
         onClickFunction: function (e) {
           setModalType("노드삭제")
+          
+          let list = []
+          e.target.predecessors().nodes().each(function(e){
+            list.push(e.id())
+          }) // 자식 노드
+          list.push(e.target.id())
+          setDeleteNodeList(list);
+          setIsOpen(true);
+
         },
         disabled: false, //항목을 사용 안 함으로 만들 것인지 여부
         show: true, // 항목 표시 여부
@@ -344,7 +354,7 @@ function Graph({ graph,setGraph }) {
         });
       }}
     />
-    <Modal graph={graph} setGraph={setGraph} isOpen={isOpen} setIsOpen={setIsOpen} selectNodeId={selectNodeId} modalType={modalType}/>
+    <Modal graph={graph} setGraph={setGraph} isOpen={isOpen} setIsOpen={setIsOpen} selectNodeId={selectNodeId} modalType={modalType} deleteNodeList={deleteNodeList}/>
     </>
     
   );

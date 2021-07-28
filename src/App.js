@@ -12,7 +12,7 @@ function App() {
     firebase
       .database()
       .ref()
-      .on("value", (snapshot) => {
+      .on("value", (snapshot) => { // 데이터베이스가 바뀌면 자동 트리거 됨.
         const loadData = snapshot.val();
         const loadEdgeData = loadData["edges"];
         const loadNodeData = loadData["nodes"];
@@ -35,14 +35,13 @@ function App() {
         tempGraph["edges"] = tempEdges;
         setGraph(tempGraph);
 
-        setLoadDone(true);
+        setLoadDone(true); // 초기데이터 로드를 마무리 하였음. loadDone 을 true로 변경해줌.
       });
   }, []);
   useEffect(() => {
-    console.log("그래프변동발생");
     // // targetNode 를 통해 egde 연결을 해 주어야 함.
-    if(loadDone===true){
-      firebase.database().ref().update(graph);
+    if(loadDone===true){ // 초기 데이터 로딩이 완료된 상태라면. null 방지
+      firebase.database().ref().update(graph); // graph 데이터가 바뀔때마다 데이터베이스에 update해줌.
     }
 
   }, [graph]);

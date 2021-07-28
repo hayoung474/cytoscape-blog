@@ -1,93 +1,113 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import Cytoscape from "cytoscape";
-import contextMenus from 'cytoscape-context-menus';
+import contextMenus from "cytoscape-context-menus";
 import CoseBillkent from "cytoscape-cose-bilkent";
 import styled from "styled-components";
 import Modal from './Modal'
-
 Cytoscape.use(CoseBillkent);
 // register extension
 Cytoscape.use(contextMenus);
 
 // import CSS as well
-import 'cytoscape-context-menus/cytoscape-context-menus.css';
-
-var options = {
-  // Customize event to bring up the context menu
-  // Possible options https://js.cytoscape.org/#events/user-input-device-events
-  evtType: 'cxttap', // 우클릭
-  // List of initial menu items
-  // A menu item must have either onClickFunction or submenu or both
-  menuItems: [
-    {
-      id: 'remove-node', // ID of menu item
-      content: '노드 삭제', // Display content of menu item
-      tooltipText: '현재 노드 삭제', // Tooltip text for menu item
-      image: {src : "../assets/image/remove.svg", width : 12, height : 12, x : 6, y : 4}, // menu icon
-      // Filters the elements to have this menu item on cxttap
-      // If the selector is not truthy no elements will have this menu item on cxttap
-      selector: 'node', 
-      onClickFunction: function (e) { // 클릭 시 실행할 함수
-        console.log(e.target);
-      },
-      disabled: false, //항목을 사용 안 함으로 만들 것인지 여부 
-      show: true, // 항목 표시 여부
-      hasTrailingDivider: false, // 항목에 후행 구분선이 있는지 여부
-      coreAsWell: false, // Whether core instance have this item on cxttap
-      submenu: [/* 이 곳에는 객체를 넣어주어야 함.*/] // Shows the listed menuItems as a submenu for this item. An item must have either submenu or onClickFunction or both.
-    },
-    {
-      id: 'modify-node',
-      content: '노드 수정',
-      tooltipText: '현재 노드 이름 수정',
-      image: {src : "add.svg", width : 12, height : 12, x : 6, y : 4},
-      selector: 'node',
-      coreAsWell: true,
-      onClickFunction: function () {
-        console.log('add node');
-      }
-    },
-    {
-      id: 'add-node',
-      content: '노드 추가',
-      tooltipText: '리프 노드 뒤에 노드 추가',
-      image: {src : "add.svg", width : 12, height : 12, x : 6, y : 4},
-      selector: 'node',
-      coreAsWell: true,
-      onClickFunction: function () {
-        console.log('add node');
-      }
-    },
-    {
-      id: 'add-node-between-node-and-node',
-      content: '간선에 노드 추가',
-      tooltipText: '간선에 노드 추가',
-      image: {src : "add.svg", width : 12, height : 12, x : 6, y : 4},
-      selector: 'edge',
-      coreAsWell: true,
-      onClickFunction: function () {
-        console.log('add node');
-      }
-    },
-  ],
-  // css classes that menu items will have
-  menuItemClasses: [
-    // add class names to this list
-  ],
-  // css classes that context menu will have
-  contextMenuClasses: [
-    // add class names to this list
-  ],
-  // Indicates that the menu item has a submenu. If not provided default one will be used
-  submenuIndicator: { src: 'assets/submenu-indicator-default.svg', width: 12, height: 12 }
-};
+import "cytoscape-context-menus/cytoscape-context-menus.css";
 
 const CustomCytoscapeComponent = styled(CytoscapeComponent)`
   margin: 0 auto;
 `;
 
-function Graph({ graph}) {
+function Graph({ graph }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectNodeId,setSelectNodeId] = useState("")
+  const [modalType,setModalType] = useState("")
+
+  var options = {
+    // Customize event to bring up the context menu
+    // Possible options https://js.cytoscape.org/#events/user-input-device-events
+    evtType: "cxttap", // 우클릭
+    // List of initial menu items
+    // A menu item must have either onClickFunction or submenu or both
+    menuItems: [
+
+      {
+        id: "modify-node",
+        content: "노드 수정",
+        tooltipText: "현재 노드 이름 수정",
+        image: { src: "add.svg", width: 12, height: 12, x: 6, y: 4 },
+        selector: "node",
+        coreAsWell: true,
+        onClickFunction: function () {
+          setModalType("노드수정")
+        },
+        hasTrailingDivider: true,
+      },
+      {
+        id: "add-node",
+        content: "노드 추가",
+        tooltipText: "리프 노드 뒤에 노드 추가",
+        image: { src: "add.svg", width: 12, height: 12, x: 6, y: 4 },
+        selector: "node",
+        coreAsWell: true,
+        onClickFunction: function (e) {
+          setModalType("리프노드추가")
+          setIsOpen(true);
+          setSelectNodeId(e.target.id());
+
+        },
+      },
+      {
+        id: "add-node-between-node-and-node",
+        content: "간선에 노드 추가",
+        tooltipText: "간선에 노드 추가",
+        image: { src: "add.svg", width: 12, height: 12, x: 6, y: 4 },
+        selector: "edge",
+        coreAsWell: true,
+        onClickFunction: function () {
+          setModalType("간선노드추가");
+        },
+      },
+      {
+        id: "remove-node", // ID of menu item
+        content: "노드 삭제", // Display content of menu item
+        tooltipText: "현재 노드 삭제", // Tooltip text for menu item
+        image: {
+          src: "../assets/image/remove.svg",
+          width: 12,
+          height: 12,
+          x: 6,
+          y: 4,
+        }, // menu icon
+        // Filters the elements to have this menu item on cxttap
+        // If the selector is not truthy no elements will have this menu item on cxttap
+        selector: "node",
+        onClickFunction: function (e) {
+          setModalType("노드삭제")
+        },
+        disabled: false, //항목을 사용 안 함으로 만들 것인지 여부
+        show: true, // 항목 표시 여부
+        hasTrailingDivider: false, // 항목에 후행 구분선이 있는지 여부
+        coreAsWell: false, // Whether core instance have this item on cxttap
+        submenu: [
+          /* 이 곳에는 객체를 넣어주어야 함.*/
+        ], // Shows the listed menuItems as a submenu for this item. An item must have either submenu or onClickFunction or both.
+      },
+    ],
+    // css classes that menu items will have
+    menuItemClasses: [
+      // add class names to this list
+    ],
+    // css classes that context menu will have
+    contextMenuClasses: [
+      // add class names to this list
+    ],
+    // Indicates that the menu item has a submenu. If not provided default one will be used
+    submenuIndicator: {
+      src: "assets/submenu-indicator-default.svg",
+      width: 12,
+      height: 12,
+    },
+  };
+
   const layout = {
     name: "cose",
     ready: function () {},
@@ -233,6 +253,7 @@ function Graph({ graph}) {
   }
 
   return (
+    <>
     <CustomCytoscapeComponent
       elements={CytoscapeComponent.normalizeElements(graph)}
       stylesheet={[
@@ -275,16 +296,15 @@ function Graph({ graph}) {
         //   // }
         // });
         cy.contextMenus(options); // menu 등록
-        
-      
-        cy.on("add","node",(e)=>{ // 노드가 추가될 때 마다 새로운 값이 세팅될 수 있도록 이전 graph값을 제거해주는 초기화 작업이 필요함.
-          graph={} // 노드 추가 마다 초기화
-        })
-        cy.on("tapstart mouseover", "node", (e) => {
 
+        cy.on("add", "node", (e) => {
+          // 노드가 추가될 때 마다 새로운 값이 세팅될 수 있도록 이전 graph값을 제거해주는 초기화 작업이 필요함.
+          graph = {}; // 노드 추가 마다 초기화
+        });
+        cy.on("tapstart mouseover", "node", (e) => {
           // 얘는 멀쩡한데 tapend 랑 mouseout은 왜 그런지 ,,
           // 이 이벤트 함수도 똑같이 2번 발동됨.
-          
+
           document.querySelector("body").style.cursor = "pointer";
           document.querySelector("html").style.cursor = "pointer";
 
@@ -308,7 +328,8 @@ function Graph({ graph}) {
           // 또한 2번 실행되는 동안 graph 데이터가 초기값으로 돌아가는 경우 발생
           document.querySelector("body").style.cursor = "default";
           document.querySelector("html").style.cursor = "default";
-          if(Object.keys(graph).length !== 0){ // 빈 객체는 아직 그래프 출력 준비가 덜 된 것으로 간주하고 함수를 실행시키지않음. 반면 빈 객체가 아니라면 출력 준비가 다 된 것으로 간주하고 함수를 실행시킴
+          if (Object.keys(graph).length !== 0) {
+            // 빈 객체는 아직 그래프 출력 준비가 덜 된 것으로 간주하고 함수를 실행시키지않음. 반면 빈 객체가 아니라면 출력 준비가 다 된 것으로 간주하고 함수를 실행시킴
             setResetFocus(e.cy);
           }
         });
@@ -323,6 +344,9 @@ function Graph({ graph}) {
         });
       }}
     />
+    <Modal graph={graph} isOpen={isOpen} setIsOpen={setIsOpen} selectNodeId={selectNodeId} modalType={modalType}/>
+    </>
+    
   );
 }
 

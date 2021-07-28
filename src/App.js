@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import GraphContainer from "./container/GraphContainer";
-import Modal from "./components/AddNodeModal";
+import Modal from "./components/Modal";
 import data from "./data/data.json";
 import firebase from "firebase";
 
 function App() {
   const [graph, setGraph] = useState({ nodes: [], edges: [] });
-
   useEffect(() => {
     firebase
       .database()
@@ -38,7 +37,7 @@ function App() {
 
   return (
     <>
-      <Modal graph={graph} />
+      
       <GraphContainer graph={graph} />
     </>
   );

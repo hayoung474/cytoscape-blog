@@ -16,7 +16,7 @@ const CustomCytoscapeComponent = styled(CytoscapeComponent)`
   margin: 0 auto;
 `;
 
-function Graph({ graph }) {
+function Graph({ graph,setGraph }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectNodeId,setSelectNodeId] = useState("")
   const [modalType,setModalType] = useState("")
@@ -344,7 +344,7 @@ function Graph({ graph }) {
         });
       }}
     />
-    <Modal graph={graph} isOpen={isOpen} setIsOpen={setIsOpen} selectNodeId={selectNodeId} modalType={modalType}/>
+    <Modal graph={graph} setGraph={setGraph} isOpen={isOpen} setIsOpen={setIsOpen} selectNodeId={selectNodeId} modalType={modalType}/>
     </>
     
   );

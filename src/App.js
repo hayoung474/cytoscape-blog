@@ -3,9 +3,11 @@ import GraphContainer from "./container/GraphContainer";
 import Modal from "./components/Modal";
 import data from "./data/data.json";
 import firebase from "firebase";
+import Graph from "./components/Graph";
 
 function App() {
   const [graph, setGraph] = useState({ nodes: [], edges: [] });
+  const [loadDone,setLoadDone] = useState(false)
   useEffect(() => {
     firebase
       .database()
@@ -32,13 +34,22 @@ function App() {
         tempGraph["nodes"] = tempNodes;
         tempGraph["edges"] = tempEdges;
         setGraph(tempGraph);
+
+        setLoadDone(true);
       });
   }, []);
+  useEffect(() => {
+    console.log("그래프변동발생");
+    // // targetNode 를 통해 egde 연결을 해 주어야 함.
+    if(loadDone===true){
+      firebase.database().ref().update(graph);
+    }
+
+  }, [graph]);
 
   return (
     <>
-      
-      <GraphContainer graph={graph} />
+      <Graph graph={graph} setGraph={setGraph} />
     </>
   );
 }

@@ -70,7 +70,7 @@ const ModalSelect = styled.select`
   width: 100%;
 `;
 
-function Modal({ graph,isOpen,setIsOpen,selectNodeId ,modalType}) {
+function Modal({ graph,setGraph,isOpen,setIsOpen,selectNodeId ,modalType}) {
   //const [isOpen, setIsOpen] = useState(false);
 
   const openModal = () => {
@@ -115,33 +115,42 @@ function Modal({ graph,isOpen,setIsOpen,selectNodeId ,modalType}) {
     }
   };
   const addNode = () => {
-    const newNodeId = Math.random().toString(36).substr(2, 11); // 대충 어딘가에서 퍼온 랜덤스트링 생성 구문
-    /* 랜덤 키를 생성하기 위하여 push 사용*/
-    /* leaf 노드 추가 가정. 추후 가운데 삽입 같은 것도 생각해야 함. */
-    firebase
-      .database()
-      .ref("nodes/")
-      .push({
-        data: {
-          id: newNodeId,
-          label: newNodeLabel,
-        },
-      });
+        const newNodeId = Math.random().toString(36).substr(2, 11); // 대충 어딘가에서 퍼온 랜덤스트링 생성 구문
+        /* 랜덤 키를 생성하기 위하여 push 사용*/
+        /* leaf 노드 추가 가정. 추후 가운데 삽입 같은 것도 생각해야 함. */
+        // firebase
+        //   .database()
+        //   .ref("nodes/")
+        //   .push({
+        //     data: {
+        //       id: newNodeId,
+        //       label: newNodeLabel,
+        //     },
+        //   });
+    
+        // // targetNode 를 통해 egde 연결을 해 주어야 함.
+        // firebase
+        //   .database()
+        //   .ref("edges/")
+        //   .push({
+        //     data: {
+        //       id: newNodeId + "->" + targetNodeId,
+        //       source: newNodeId,
+        //       target: targetNodeId,
+        //     },
+        //   });
+        let newGraph = graph;
+        newGraph['nodes'].push({data:{id:newNodeId,label:newNodeLabel}});
+        newGraph['edges'].push({data:{id: newNodeId + "->" + targetNodeId,source: newNodeId,target: targetNodeId,}})
+        setGraph(newGraph);
 
-    // targetNode 를 통해 egde 연결을 해 주어야 함.
-    firebase
-      .database()
-      .ref("edges/")
-      .push({
-        data: {
-          id: newNodeId + "->" + targetNodeId,
-          source: newNodeId,
-          target: targetNodeId,
-        },
-      });
-      closeModal();
+    closeModal();
 
   };
+
+  const deleteNode = (nodeId)=>{
+      
+  }
   return (
     <>
       {isOpen && (

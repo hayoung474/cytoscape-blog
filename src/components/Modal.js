@@ -105,14 +105,6 @@ function Modal({
     setTargetNodeId(selectNodeId);
   }, [selectNodeId]);
 
-  useEffect(() => {
-    console.log(modalType);
-  }, [modalType]);
-
-  useEffect(() => {
-    console.log(deleteNodeList);
-  });
-
   const handleClickOutside = (e) => {
     /* ModalWrapper 에 Ref 를 걸어서, ModalWrapper 영역을 클릭했을 때 Modal이 꺼지도록 함. ModalContent 부분은 클릭해도 꺼지지 않도록 조건을 달았음.*/
     if (!modalEl.current || !wrapperEl.current) {
@@ -144,7 +136,7 @@ function Modal({
   };
 
   const deleteNode = () => {
-    console.log(deleteNodeList[1]);
+      // nodeList의 id를 포함하는 모든 객체를 제거하도록 함.
     let newGraph = graph;
     deleteNodeList.map((node, index) => {
       newGraph.nodes.map((item, index) => {
@@ -159,14 +151,14 @@ function Modal({
       });
     });
 
-    setGraph(graph);
-    console.log(newGraph);
+    setGraph(newGraph); // 덮어씌우기
+    closeModal();
   };
   return (
     <>
       {isOpen && (
         <ModalWrapper ref={wrapperEl}>
-          <ModalContent ref={modalEl}>
+          {modalType==="리프노드추가" && <ModalContent ref={modalEl}>
             <ModalHeader>새 노드 추가</ModalHeader>
             <ModalBody>
               추가할 노드의 이름을 작성해주세요
@@ -177,27 +169,20 @@ function Modal({
                   setNewNodeLabel(e.target.value);
                 }}
               ></ModalInput>
-              {/* <ModalSelect
-                onChange={(e) => {
-                  setTargetNodeId(
-                    e.target.options[e.target.selectedIndex].value
-                  );
-                }}
-              >
-                {graph.nodes.map((item, index) => {
-                  return (
-                    <option value={item.data.id} key={index}>
-                      {item.data.label}
-                    </option>
-                  );
-                })}
-              </ModalSelect> */}
             </ModalBody>
             <ModalFooter>
               <ModalButton onClick={addNode}>Add</ModalButton>
-              <ModalButton onClick={deleteNode}>Delete</ModalButton>
             </ModalFooter>
-          </ModalContent>
+          </ModalContent>}
+          {modalType==="노드삭제" && <ModalContent ref={modalEl}>
+            <ModalHeader>노드 및 엣지 삭제</ModalHeader>
+            <ModalBody>
+              해당 노드를 포함한 하위 노드 및 연결된 엣지가 모두 삭제됩니다. 삭제하시겠습니까?
+            </ModalBody>
+            <ModalFooter>
+              <ModalButton onClick={deleteNode}>OK</ModalButton>
+            </ModalFooter>
+          </ModalContent>}
         </ModalWrapper>
       )}
     </>

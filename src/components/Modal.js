@@ -78,6 +78,7 @@ function Modal({
   selectNodeId,
   modalType,
   deleteNodeList,
+  connectedNodes,
 }) {
   //const [isOpen, setIsOpen] = useState(false);
 
@@ -116,6 +117,43 @@ function Modal({
     ) {
       closeModal();
     }
+  };
+
+  const addToEdgeNode = () => {
+    console.log(connectedNodes);
+    const newNodeId = Math.random().toString(36).substr(2, 11); // 대충 어딘가에서 퍼온 랜덤스트링 생성 구문
+
+    // setGraph 를 사용하여 graph 자체를 업데이트 해줌.
+    let newGraph = { ...graph }; // spread 안쓰면 useEffect가 발동 안되네? 참고참고 !!!
+
+    // 두 노드가 연결된 엣지 제거
+    newGraph.edges.map((item, index) => {
+        console.log(connectedNodes[1] + "->" + connectedNodes[0])
+      if (item.data.id === (connectedNodes[1] + "->" + connectedNodes[0])) {
+        newGraph.edges.splice(index, 1);
+      }
+    });
+    // 새 노드 추가
+    newGraph["nodes"].push({ data: { id: newNodeId, label: newNodeLabel } });
+
+    // 새 노드와 기존 노드들 연결 , 총 엣지 2개 필요
+    newGraph["edges"].push({
+      data: {
+        id: newNodeId + "->" + connectedNodes[1],
+        source: newNodeId,
+        target: connectedNodes[1],
+      },
+    });
+    newGraph["edges"].push({
+      data: {
+        id: connectedNodes[0] + "->" + newNodeId,
+        source: connectedNodes[0],
+        target: newNodeId,
+      },
+    });
+    setGraph(newGraph);
+
+    closeModal();
   };
   const addNode = () => {
     const newNodeId = Math.random().toString(36).substr(2, 11); // 대충 어딘가에서 퍼온 랜덤스트링 생성 구문
@@ -185,6 +223,24 @@ function Modal({
               </ModalBody>
               <ModalFooter>
                 <ModalButton onClick={deleteNode}>OK</ModalButton>
+              </ModalFooter>
+            </ModalContent>
+          )}
+          {modalType === "간선노드추가" && (
+            <ModalContent ref={modalEl}>
+              <ModalHeader>엣지에 노드 추가</ModalHeader>
+              <ModalBody>
+                추가할 노드의 이름을 작성해주세요
+                <ModalInput
+                  placeholder="Node Label"
+                  type="text"
+                  onChange={(e) => {
+                    setNewNodeLabel(e.target.value);
+                  }}
+                ></ModalInput>
+              </ModalBody>
+              <ModalFooter>
+                <ModalButton onClick={addToEdgeNode}>OK</ModalButton>
               </ModalFooter>
             </ModalContent>
           )}

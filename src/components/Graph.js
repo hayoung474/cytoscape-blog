@@ -21,6 +21,7 @@ function Graph({ graph,setGraph }) {
   const [selectNodeId,setSelectNodeId] = useState("")
   const [modalType,setModalType] = useState("")
   const [deleteNodeList,setDeleteNodeList] = useState([])
+  const [connectedNodes,setConnectedNodes] = useState([])
 
   var options = {
     // Customize event to bring up the context menu
@@ -39,6 +40,18 @@ function Graph({ graph,setGraph }) {
         coreAsWell: true,
         onClickFunction: function () {
           setModalType("노드수정")
+        },
+      },
+      {
+        id: "connect-between-node-and-node",
+        content: "엣지 추가",
+        tooltipText: "기존 노드와 연결",
+        image: { src: "add.svg", width: 12, height: 12, x: 6, y: 4 },
+        selector: "node",
+        coreAsWell: true,
+        onClickFunction: function (e) {
+          setModalType("엣지추가");
+          console.log()
         },
         hasTrailingDivider: true,
       },
@@ -63,10 +76,17 @@ function Graph({ graph,setGraph }) {
         image: { src: "add.svg", width: 12, height: 12, x: 6, y: 4 },
         selector: "edge",
         coreAsWell: true,
-        onClickFunction: function () {
+        onClickFunction: function (e) {
+          let newList=[];
+          console.log(e.target.connectedNodes().each((e)=>{
+            newList.push(e.id());
+          }))
+          setConnectedNodes(newList); // 엣지와 연결된 노드들의 id가 들어있는 배열 
           setModalType("간선노드추가");
+          setIsOpen(true);
         },
       },
+
       {
         id: "remove-node", // ID of menu item
         content: "노드 삭제", // Display content of menu item
@@ -354,7 +374,7 @@ function Graph({ graph,setGraph }) {
         });
       }}
     />
-    <Modal graph={graph} setGraph={setGraph} isOpen={isOpen} setIsOpen={setIsOpen} selectNodeId={selectNodeId} modalType={modalType} deleteNodeList={deleteNodeList}/>
+    <Modal graph={graph} connectedNodes={connectedNodes} setGraph={setGraph} isOpen={isOpen} setIsOpen={setIsOpen} selectNodeId={selectNodeId} modalType={modalType} deleteNodeList={deleteNodeList}/>
     </>
     
   );

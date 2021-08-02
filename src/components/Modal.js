@@ -255,9 +255,9 @@ function Modal({
       deleteNodeCurrentObj.childNodes.map((childNode, index) => {
         newGraph["edges"].push({
           data: {
-            id: parentNode + "->" + childNode,
-            source: parentNode,
-            target: childNode,
+            id: childNode + "->" + parentNode,
+            source: childNode,
+            target: parentNode,
           },
         });
 

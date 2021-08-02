@@ -54,6 +54,9 @@ function Graph({ graph,setGraph }) {
         coreAsWell: true,
         onClickFunction: function (e) {
           setModalType("엣지추가");
+          setIsOpen(true);
+          setSelectNodeId(e.target.id());
+
         },
         hasTrailingDivider: true,
       },
@@ -81,7 +84,6 @@ function Graph({ graph,setGraph }) {
         onClickFunction: function (e) {
           let newList=[]; //[0],[1] 은 연결된 노드들의 id , [2] 는 삭제할 edge의 id
           e.target.connectedNodes().each((e)=>{
-            console.log(e.id());
             newList.push(e.id());
           })
           newList.push(e.target.edges().id())
@@ -144,8 +146,8 @@ function Graph({ graph,setGraph }) {
 
   const layout = {
     name: "cose",
-    ready: function () {},
-    stop: function () {},
+    ready: function () {console.log("ready")},
+    stop: function () {console.log("stop")},
     animate: true,
     animationEasing: undefined,
     animationDuration: 1000,

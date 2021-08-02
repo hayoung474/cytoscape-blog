@@ -95,7 +95,7 @@ function Modal({
 
   const [newNodeLabel, setNewNodeLabel] = useState("");
   const [changeNodeLabel, setChangeNodeLabel] = useState("");
-  const [targetNodeId, setTargetNodeId] = useState("");
+  const [targetNodeId, setTargetNodeId] = useState(""); // 노드 추가 및 간선 추가 용
 
   useEffect(() => {
     window.addEventListener("click", handleClickOutside);
@@ -130,6 +130,18 @@ function Modal({
     });
 
     setGraph(newGraph); // 덮어씌우기
+  };
+  const addEdge = ()=>{ // 기존 노드와의 연결을 위한 간선 추가 함수
+    let newGraph = { ...graph };
+    newGraph["edges"].push({
+      data: {
+        id: selectNodeId + "->" + targetNodeId,
+        source: selectNodeId,
+        target: targetNodeId,
+      },
+    });
+    setGraph(newGraph);
+    closeModal();
   };
   const addToEdgeNode = () => {
     const newNodeId = Math.random().toString(36).substr(2, 11); // 대충 어딘가에서 퍼온 랜덤스트링 생성 구문
@@ -179,7 +191,6 @@ function Modal({
       },
     });
     setGraph(newGraph);
-
     closeModal();
   };
 
@@ -270,6 +281,32 @@ function Modal({
               </ModalBody>
               <ModalFooter>
                 <ModalButton onClick={changeLabel}>OK</ModalButton>
+              </ModalFooter>
+            </ModalContent>
+          )}
+          {modalType === "엣지추가" && (
+            <ModalContent ref={modalEl}>
+              <ModalHeader>엣지 추가</ModalHeader>
+              <ModalBody>
+                해당 노드와 연결할 노드를 선택하세요
+                <ModalSelect
+                  onChange={(e) => {
+                    setTargetNodeId(
+                      e.target.options[e.target.selectedIndex].value
+                    );
+                  }}
+                >
+                  {graph.nodes.map((item, index) => {
+                    return (
+                      <option value={item.data.id} key={index}>
+                        {item.data.label}
+                      </option>
+                    );
+                  })}
+                </ModalSelect>
+              </ModalBody>
+              <ModalFooter>
+                <ModalButton onClick={addEdge}>OK</ModalButton>
               </ModalFooter>
             </ModalContent>
           )}

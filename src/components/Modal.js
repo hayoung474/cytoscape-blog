@@ -98,8 +98,16 @@ function Modal({
   const [targetNodeId, setTargetNodeId] = useState(""); // 노드 추가 및 간선 추가 용
 
   useEffect(() => {
-    window.addEventListener("click", handleClickOutside);
+    const close = (e) => {
+      if (e.keyCode === 27) {
+        closeModal();
+      }
+    };
+    window.addEventListener("keydown", close); // esc 를 눌러서 모달 닫기
+    window.addEventListener("click", handleClickOutside); // 모달 바깥을 클릭하여 모달 닫기
+
     return () => {
+      window.removeEventListener("keydown", close);
       window.removeEventListener("click", handleClickOutside);
     };
   }, []);
@@ -131,7 +139,8 @@ function Modal({
 
     setGraph(newGraph); // 덮어씌우기
   };
-  const addEdge = ()=>{ // 기존 노드와의 연결을 위한 간선 추가 함수
+  const addEdge = () => {
+    // 기존 노드와의 연결을 위한 간선 추가 함수
     let newGraph = { ...graph };
     newGraph["edges"].push({
       data: {
@@ -194,7 +203,26 @@ function Modal({
     closeModal();
   };
 
-  const deleteNode = () => {
+  const deleteNodeAll = () => {
+    // nodeList의 id를 포함하는 모든 객체를 제거하도록 함.
+    let newGraph = { ...graph };
+    deleteNodeList.map((node, index) => {
+      newGraph.nodes.map((item, index) => {
+        if (item.data.id === node) {
+          newGraph.nodes.splice(index, 1);
+        }
+      });
+      newGraph.edges.map((item, index) => {
+        if (item.data.id.includes(node)) {
+          newGraph.edges.splice(index, 1);
+        }
+      });
+    });
+
+    setGraph(newGraph); // 덮어씌우기
+    closeModal();
+  };
+  const deleteNodeCurrent = () => {
     // nodeList의 id를 포함하는 모든 객체를 제거하도록 함.
     let newGraph = { ...graph };
     deleteNodeList.map((node, index) => {
@@ -235,15 +263,30 @@ function Modal({
               </ModalFooter>
             </ModalContent>
           )}
-          {modalType === "노드삭제" && (
+          {modalType === "하위노드모두삭제" && (
             <ModalContent ref={modalEl}>
               <ModalHeader>노드 및 엣지 삭제</ModalHeader>
               <ModalBody>
+                <h4>전체삭제</h4>
                 해당 노드를 포함한 하위 노드 및 연결된 엣지가 모두 삭제됩니다.
-                삭제하시겠습니까?
+                <h4>삭제하시겠습니까?</h4>
               </ModalBody>
               <ModalFooter>
-                <ModalButton onClick={deleteNode}>OK</ModalButton>
+                <ModalButton onClick={deleteNodeAll}>OK</ModalButton>
+              </ModalFooter>
+            </ModalContent>
+          )}
+          {modalType === "현재노드만삭제" && (
+            <ModalContent ref={modalEl}>
+              <ModalHeader>노드 및 엣지 삭제</ModalHeader>
+              <ModalBody>
+                <h4>현재노드 삭제</h4>
+                해당 노드 및 연결된 엣지가 모두 삭제 되고 하위 노드는 상위
+                노드에 포함됩니다.
+                <h4>삭제하시겠습니까?</h4>
+              </ModalBody>
+              <ModalFooter>
+                <ModalButton onClick={deleteNodeCurrent}>OK</ModalButton>
               </ModalFooter>
             </ModalContent>
           )}

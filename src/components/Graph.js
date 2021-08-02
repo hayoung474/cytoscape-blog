@@ -4,7 +4,7 @@ import Cytoscape from "cytoscape";
 import contextMenus from "cytoscape-context-menus";
 import CoseBillkent from "cytoscape-cose-bilkent";
 import styled from "styled-components";
-import Modal from './Modal'
+import Modal from "./Modal";
 Cytoscape.use(CoseBillkent);
 // register extension
 Cytoscape.use(contextMenus);
@@ -16,13 +16,14 @@ const CustomCytoscapeComponent = styled(CytoscapeComponent)`
   margin: 0 auto;
 `;
 
-function Graph({ graph,setGraph }) {
+function Graph({ graph, setGraph }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectNodeId,setSelectNodeId] = useState("")
-  const [modalType,setModalType] = useState("")
-  const [deleteNodeList,setDeleteNodeList] = useState([])
-  const [connectedNodes,setConnectedNodes] = useState([])
-  const [currentNodeLabel,setCurrentNodeLabel]=useState("")
+  const [selectNodeId, setSelectNodeId] = useState("");
+  const [modalType, setModalType] = useState("");
+  const [deleteNodeList, setDeleteNodeList] = useState([]);
+  const [connectedNodes, setConnectedNodes] = useState([]);
+  const [currentNodeLabel, setCurrentNodeLabel] = useState("");
+  const [childNodeList, setChildNodeList] = useState([]);
 
   var options = {
     // Customize event to bring up the context menu
@@ -31,7 +32,6 @@ function Graph({ graph,setGraph }) {
     // List of initial menu items
     // A menu item must have either onClickFunction or submenu or both
     menuItems: [
-
       {
         id: "modify-node",
         content: "이름 변경",
@@ -40,8 +40,8 @@ function Graph({ graph,setGraph }) {
         selector: "node",
         coreAsWell: true,
         onClickFunction: function (e) {
-          setModalType("이름변경")
-          setCurrentNodeLabel(e.target.data().label)
+          setCurrentNodeLabel(e.target.data().label);
+          setModalType("이름변경");
           setIsOpen(true);
         },
       },
@@ -53,10 +53,9 @@ function Graph({ graph,setGraph }) {
         selector: "node",
         coreAsWell: true,
         onClickFunction: function (e) {
+          setSelectNodeId(e.target.id());
           setModalType("엣지추가");
           setIsOpen(true);
-          setSelectNodeId(e.target.id());
-
         },
         hasTrailingDivider: true,
       },
@@ -68,10 +67,9 @@ function Graph({ graph,setGraph }) {
         selector: "node",
         coreAsWell: true,
         onClickFunction: function (e) {
-          setModalType("리프노드추가")
-          setIsOpen(true);
           setSelectNodeId(e.target.id());
-
+          setModalType("리프노드추가");
+          setIsOpen(true);
         },
       },
       {
@@ -82,12 +80,12 @@ function Graph({ graph,setGraph }) {
         selector: "edge",
         coreAsWell: true,
         onClickFunction: function (e) {
-          let newList=[]; //[0],[1] 은 연결된 노드들의 id , [2] 는 삭제할 edge의 id
-          e.target.connectedNodes().each((e)=>{
+          let newList = []; //[0],[1] 은 연결된 노드들의 id , [2] 는 삭제할 edge의 id
+          e.target.connectedNodes().each((e) => {
             newList.push(e.id());
-          })
-          newList.push(e.target.edges().id())
-          setConnectedNodes(newList); // 엣지와 연결된 노드들의 id가 들어있는 배열 
+          });
+          newList.push(e.target.edges().id());
+          setConnectedNodes(newList); // 엣지와 연결된 노드들의 id가 들어있는 배열
           setModalType("간선노드추가");
           setIsOpen(true);
         },
@@ -96,36 +94,69 @@ function Graph({ graph,setGraph }) {
       {
         id: "remove-node", // ID of menu item
         content: "노드 삭제", // Display content of menu item
-        tooltipText: "현재 노드 삭제", // Tooltip text for menu item
-        image: {
-          src: "../assets/image/remove.svg",
-          width: 12,
-          height: 12,
-          x: 6,
-          y: 4,
-        }, // menu icon
-        // Filters the elements to have this menu item on cxttap
-        // If the selector is not truthy no elements will have this menu item on cxttap
+        tooltipText: "노드 삭제", // Tooltip text for menu item
         selector: "node",
-        onClickFunction: function (e) {
-          setModalType("노드삭제")
-          
-          let list = []
-          e.target.predecessors().nodes().each(function(e){
-            list.push(e.id())
-          }) // 자식 노드
-          list.push(e.target.id())
-          setDeleteNodeList(list);
-          setIsOpen(true);
-
-        },
+        onClickFunction: function (e) {},
         disabled: false, //항목을 사용 안 함으로 만들 것인지 여부
         show: true, // 항목 표시 여부
         hasTrailingDivider: false, // 항목에 후행 구분선이 있는지 여부
         coreAsWell: false, // Whether core instance have this item on cxttap
         submenu: [
-          /* 이 곳에는 객체를 넣어주어야 함.*/
-        ], // Shows the listed menuItems as a submenu for this item. An item must have either submenu or onClickFunction or both.
+          {
+            id: "remove-node-all", // ID of menu item
+            content: "하위노드 모두 삭제", // Display content of menu item
+            tooltipText: "하위노드 모두 삭제", // Tooltip text for menu item
+            selector: "node",
+            onClickFunction: function (e) {
+              // 하위 노드 모두 삭제 용
+              let list = [];
+              list.push(e.target.id()); // [0]은 current Node
+              e.target
+                .predecessors()
+                .nodes()
+                .each(function (e) {
+                  list.push(e.id());
+                }); // 자식 노드
+              setDeleteNodeList(list);
+              setModalType("하위노드모두삭제");
+              setIsOpen(true);
+            },
+            disabled: false, //항목을 사용 안 함으로 만들 것인지 여부
+            show: true, // 항목 표시 여부
+            hasTrailingDivider: false, // 항목에 후행 구분선이 있는지 여부
+            coreAsWell: false, // Whether core instance have this item on cxttap
+          },
+          {
+            id: "remove-node-all", // ID of menu item
+            content: "현재 노드만 삭제", // Display content of menu item
+            tooltipText: "현재 노드만 삭제", // Tooltip text for menu item
+            selector: "node",
+            onClickFunction: function (e) {
+              setSelectNodeId(e.target.id());
+              //setChildNodeList
+
+              // child 구하는 방법을 잘 모르겠어서 야매 로직 작성
+              // 바로 한단계 아래의 자식 노드 id 구하기
+              let neighborhoodList = [];
+              let predecessorsList = [];
+              e.target.neighborhood().nodes().each(function(e){
+                neighborhoodList.push(e.id())
+              })
+              e.target.predecessors().nodes().each(function(e){
+                predecessorsList.push(e.id())
+              })
+              let resultList=predecessorsList.filter(x => neighborhoodList.includes(x));
+              console.log(resultList)
+
+              setModalType("현재노드만삭제");
+              setIsOpen(true);
+            },
+            disabled: false, //항목을 사용 안 함으로 만들 것인지 여부
+            show: true, // 항목 표시 여부
+            hasTrailingDivider: false, // 항목에 후행 구분선이 있는지 여부
+            coreAsWell: false, // Whether core instance have this item on cxttap
+          },
+        ],
       },
     ],
     // css classes that menu items will have
@@ -146,8 +177,12 @@ function Graph({ graph,setGraph }) {
 
   const layout = {
     name: "cose",
-    ready: function () {console.log("ready")},
-    stop: function () {console.log("stop")},
+    ready: function () {
+      console.log("ready");
+    },
+    stop: function () {
+      console.log("stop");
+    },
     animate: true,
     animationEasing: undefined,
     animationDuration: 1000,
@@ -290,99 +325,108 @@ function Graph({ graph,setGraph }) {
 
   return (
     <>
-    <CustomCytoscapeComponent
-      elements={CytoscapeComponent.normalizeElements(graph)}
-      stylesheet={[
-        {
-          selector: "node",
-          style: {
-            // 노드색
-            backgroundColor: nodeColor,
-            label: "data(label)",
-            width: (el) => {
-              return nodeMaxSize * pageRank.rank("#" + el.id()) + nodeMinSize;
+      <CustomCytoscapeComponent
+        elements={CytoscapeComponent.normalizeElements(graph)}
+        stylesheet={[
+          {
+            selector: "node",
+            style: {
+              // 노드색
+              backgroundColor: nodeColor,
+              label: "data(label)",
+              width: (el) => {
+                return nodeMaxSize * pageRank.rank("#" + el.id()) + nodeMinSize;
+              },
+              height: (el) => {
+                return nodeMaxSize * pageRank.rank("#" + el.id()) + nodeMinSize;
+              },
+              fontSize: (el) => {
+                return fontMaxSize * pageRank.rank("#" + el.id()) + fontMinSize;
+              },
+              // 글자색
+              color: nodeColor,
             },
-            height: (el) => {
-              return nodeMaxSize * pageRank.rank("#" + el.id()) + nodeMinSize;
-            },
-            fontSize: (el) => {
-              return fontMaxSize * pageRank.rank("#" + el.id()) + fontMinSize;
-            },
-            // 글자색
-            color: nodeColor,
           },
-        },
-        {
-          selector: "edge",
-          style: {
-            width: edgeWidth,
-            lineColor: edgeColor,
-            sourceArrowColor: edgeColor,
+          {
+            selector: "edge",
+            style: {
+              width: edgeWidth,
+              lineColor: edgeColor,
+              sourceArrowColor: edgeColor,
+            },
           },
-        },
-      ]}
-      style={{ width: "100vh", height: "100vh" }}
-      layout={layout}
-      cy={(cy) => {
-        // cy.on("tap", (e) => {
-        //   console.log(graph)
-        //   // const url = e.target.data("url");
-        //   // if (url && url !== "") {
-        //   //   window.open(url);
-        //   // }
-        // });
-        cy.contextMenus(options); // menu 등록
+        ]}
+        style={{ width: "100vh", height: "100vh" }}
+        layout={layout}
+        cy={(cy) => {
+          // cy.on("tap", (e) => {
+          //   console.log(graph)
+          //   // const url = e.target.data("url");
+          //   // if (url && url !== "") {
+          //   //   window.open(url);
+          //   // }
+          // });
+          cy.contextMenus(options); // menu 등록
 
-        cy.on("add", "node", (e) => {
-          // 노드가 추가될 때 마다 새로운 값이 세팅될 수 있도록 이전 graph값을 제거해주는 초기화 작업이 필요함.
-          graph = {}; // 노드 추가 마다 초기화
-        });
-        cy.on("tapstart mouseover", "node", (e) => {
-          // 얘는 멀쩡한데 tapend 랑 mouseout은 왜 그런지 ,,
-          // 이 이벤트 함수도 똑같이 2번 발동됨.
-
-          document.querySelector("body").style.cursor = "pointer";
-          document.querySelector("html").style.cursor = "pointer";
-
-          setDimStyle(cy, {
-            backgroundColor: dimColor,
-            lineColor: dimColor,
-            sourceArrowColor: dimColor,
-            color: dimColor,
+          cy.on("add", "node", (e) => {
+            // 노드가 추가될 때 마다 새로운 값이 세팅될 수 있도록 이전 graph값을 제거해주는 초기화 작업이 필요함.
+            graph = {}; // 노드 추가 마다 초기화
           });
-          setFocus(
-            e.target,
-            successorColor,
-            predecessorsColor,
-            edgeActiveWidth
-          );
-        });
+          cy.on("tapstart mouseover", "node", (e) => {
+            // 얘는 멀쩡한데 tapend 랑 mouseout은 왜 그런지 ,,
+            // 이 이벤트 함수도 똑같이 2번 발동됨.
 
-        cy.on("tapend mouseout", "node", (e) => {
-          e.preventDefault();
-          // 이벤트 함수가 2번 발동되는 이유를 모르겠음.
-          // 또한 2번 실행되는 동안 graph 데이터가 초기값으로 돌아가는 경우 발생
-          document.querySelector("body").style.cursor = "default";
-          document.querySelector("html").style.cursor = "default";
-          if (Object.keys(graph).length !== 0) {
-            // 빈 객체는 아직 그래프 출력 준비가 덜 된 것으로 간주하고 함수를 실행시키지않음. 반면 빈 객체가 아니라면 출력 준비가 다 된 것으로 간주하고 함수를 실행시킴
-            setResetFocus(e.cy);
-          }
-        });
+            document.querySelector("body").style.cursor = "pointer";
+            document.querySelector("html").style.cursor = "pointer";
 
-        let resizeTimer;
+            setDimStyle(cy, {
+              backgroundColor: dimColor,
+              lineColor: dimColor,
+              sourceArrowColor: dimColor,
+              color: dimColor,
+            });
+            setFocus(
+              e.target,
+              successorColor,
+              predecessorsColor,
+              edgeActiveWidth
+            );
+          });
 
-        window.addEventListener("resize", function () {
-          this.clearTimeout(resizeTimer);
-          resizeTimer = this.setTimeout(function () {
-            cy.fit();
-          }, 200);
-        });
-      }}
-    />
-    <Modal graph={graph} currentNodeLabel={currentNodeLabel} connectedNodes={connectedNodes} setGraph={setGraph} isOpen={isOpen} setIsOpen={setIsOpen} selectNodeId={selectNodeId} modalType={modalType} deleteNodeList={deleteNodeList}/>
+          cy.on("tapend mouseout", "node", (e) => {
+            e.preventDefault();
+            // 이벤트 함수가 2번 발동되는 이유를 모르겠음.
+            // 또한 2번 실행되는 동안 graph 데이터가 초기값으로 돌아가는 경우 발생
+            document.querySelector("body").style.cursor = "default";
+            document.querySelector("html").style.cursor = "default";
+            if (Object.keys(graph).length !== 0) {
+              // 빈 객체는 아직 그래프 출력 준비가 덜 된 것으로 간주하고 함수를 실행시키지않음. 반면 빈 객체가 아니라면 출력 준비가 다 된 것으로 간주하고 함수를 실행시킴
+              setResetFocus(e.cy);
+            }
+          });
+
+          let resizeTimer;
+
+          window.addEventListener("resize", function () {
+            this.clearTimeout(resizeTimer);
+            resizeTimer = this.setTimeout(function () {
+              cy.fit();
+            }, 200);
+          });
+        }}
+      />
+      <Modal
+        graph={graph}
+        currentNodeLabel={currentNodeLabel}
+        connectedNodes={connectedNodes}
+        setGraph={setGraph}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        selectNodeId={selectNodeId}
+        modalType={modalType}
+        deleteNodeList={deleteNodeList}
+      />
     </>
-    
   );
 }
 

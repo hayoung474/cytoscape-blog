@@ -139,7 +139,7 @@ function Modal({
 
     // 두 노드가 연결된 엣지 제거
     newGraph.edges.map((item, index) => {
-      if (item.data.id === connectedNodes[1] + "->" + connectedNodes[0]) {
+      if (item.data.id === connectedNodes[2]) {
         newGraph.edges.splice(index, 1);
       }
     });
@@ -278,5 +278,4 @@ function Modal({
     </>
   );
 }
-
 export default Modal;

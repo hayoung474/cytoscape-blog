@@ -79,10 +79,12 @@ function Graph({ graph,setGraph }) {
         selector: "edge",
         coreAsWell: true,
         onClickFunction: function (e) {
-          let newList=[];
+          let newList=[]; //[0],[1] 은 연결된 노드들의 id , [2] 는 삭제할 edge의 id
           e.target.connectedNodes().each((e)=>{
+            console.log(e.id());
             newList.push(e.id());
           })
+          newList.push(e.target.edges().id())
           setConnectedNodes(newList); // 엣지와 연결된 노드들의 id가 들어있는 배열 
           setModalType("간선노드추가");
           setIsOpen(true);

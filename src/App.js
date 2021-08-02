@@ -40,11 +40,9 @@ function App() {
   }, []);
   useEffect(() => {
     // // targetNode 를 통해 egde 연결을 해 주어야 함.
-    console.log("바뀌어야지 .. ?")
     if(loadDone===true){ // 초기 데이터 로딩이 완료된 상태라면. null 방지
       firebase.database().ref().update(graph); // graph 데이터가 바뀔때마다 데이터베이스에 update해줌.
     }
-    console.log(graph)
 
   }, [graph]);
 

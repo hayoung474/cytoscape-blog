@@ -80,7 +80,7 @@ function Modal({
   deleteNodeList,
   connectedNodes,
   currentNodeLabel,
-  deleteNodeCurrentObj
+  deleteNodeCurrentObj,
 }) {
 
   const openModal = () => {

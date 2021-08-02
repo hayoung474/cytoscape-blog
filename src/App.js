@@ -4,8 +4,18 @@ import Modal from "./components/Modal";
 import data from "./data/data.json";
 import firebase from "firebase";
 import Graph from "./components/Graph";
+import styled from "styled-components";
 
+const AdminSetButton = styled.button`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 30px;
+  height: 30px;
+  opacity:0;
+`;
 function App() {
+  const [isAdmin, setIsAdmin] = useState(false);
   const [graph, setGraph] = useState({ nodes: [], edges: [] });
   const [loadDone, setLoadDone] = useState(false);
   useEffect(() => {
@@ -48,9 +58,18 @@ function App() {
     }
   }, [graph]);
 
+  const adminLogin = ()=>{
+    console.log("test")
+    let password = prompt("password"+"");
+    if(password === "1234"){
+      setIsAdmin(true);
+    }
+  }
+
   return (
     <>
-      <Graph graph={graph} setGraph={setGraph} />
+      <AdminSetButton onClick={adminLogin}></AdminSetButton>
+      <Graph graph={graph} setGraph={setGraph} isAdmin={isAdmin} />
     </>
   );
 }

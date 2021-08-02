@@ -16,7 +16,7 @@ const CustomCytoscapeComponent = styled(CytoscapeComponent)`
   margin: 0 auto;
 `;
 
-function Graph({ graph, setGraph }) {
+function Graph({ graph, setGraph,isAdmin}) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectNodeId, setSelectNodeId] = useState("");
   const [modalType, setModalType] = useState("");
@@ -39,6 +39,7 @@ function Graph({ graph, setGraph }) {
         image: { src: "add.svg", width: 12, height: 12, x: 6, y: 4 },
         selector: "node",
         coreAsWell: true,
+        show: isAdmin, // 항목 표시 여부
         onClickFunction: function (e) {
           setCurrentNodeLabel(e.target.data().label);
           setModalType("이름변경");
@@ -52,6 +53,7 @@ function Graph({ graph, setGraph }) {
         image: { src: "add.svg", width: 12, height: 12, x: 6, y: 4 },
         selector: "node",
         coreAsWell: true,
+        show: isAdmin, // 항목 표시 여부
         onClickFunction: function (e) {
           setSelectNodeId(e.target.id());
           setModalType("엣지추가");
@@ -66,6 +68,7 @@ function Graph({ graph, setGraph }) {
         image: { src: "add.svg", width: 12, height: 12, x: 6, y: 4 },
         selector: "node",
         coreAsWell: true,
+        show: isAdmin, // 항목 표시 여부
         onClickFunction: function (e) {
           setSelectNodeId(e.target.id());
           setModalType("리프노드추가");
@@ -79,6 +82,7 @@ function Graph({ graph, setGraph }) {
         image: { src: "add.svg", width: 12, height: 12, x: 6, y: 4 },
         selector: "edge",
         coreAsWell: true,
+        show: isAdmin, // 항목 표시 여부
         onClickFunction: function (e) {
           let newList = []; //[0],[1] 은 연결된 노드들의 id , [2] 는 삭제할 edge의 id
           e.target.connectedNodes().each((e) => {
@@ -98,9 +102,10 @@ function Graph({ graph, setGraph }) {
         selector: "node",
         onClickFunction: function (e) {},
         disabled: false, //항목을 사용 안 함으로 만들 것인지 여부
-        show: true, // 항목 표시 여부
+        show: isAdmin, // 항목 표시 여부
         hasTrailingDivider: false, // 항목에 후행 구분선이 있는지 여부
         coreAsWell: false, // Whether core instance have this item on cxttap
+        show: isAdmin, // 항목 표시 여부
         submenu: [
           {
             id: "remove-node-all", // ID of menu item
@@ -122,7 +127,7 @@ function Graph({ graph, setGraph }) {
               setIsOpen(true);
             },
             disabled: false, //항목을 사용 안 함으로 만들 것인지 여부
-            show: true, // 항목 표시 여부
+            show: isAdmin, // 항목 표시 여부
             hasTrailingDivider: false, // 항목에 후행 구분선이 있는지 여부
             coreAsWell: false, // Whether core instance have this item on cxttap
           },
@@ -175,6 +180,7 @@ function Graph({ graph, setGraph }) {
             },
             disabled: false, //항목을 사용 안 함으로 만들 것인지 여부
             show: true, // 항목 표시 여부
+            show: isAdmin, // 항목 표시 여부
             hasTrailingDivider: false, // 항목에 후행 구분선이 있는지 여부
             coreAsWell: false, // Whether core instance have this item on cxttap
           },

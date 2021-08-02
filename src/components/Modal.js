@@ -80,8 +80,8 @@ function Modal({
   deleteNodeList,
   connectedNodes,
   currentNodeLabel,
+  deleteNodeCurrentObj
 }) {
-  //const [isOpen, setIsOpen] = useState(false);
 
   const openModal = () => {
     setIsOpen(true);
@@ -224,20 +224,45 @@ function Modal({
   };
   const deleteNodeCurrent = () => {
     // nodeList의 id를 포함하는 모든 객체를 제거하도록 함.
+    console.log(deleteNodeCurrentObj)
     let newGraph = { ...graph };
-    deleteNodeList.map((node, index) => {
-      newGraph.nodes.map((item, index) => {
-        if (item.data.id === node) {
-          newGraph.nodes.splice(index, 1);
+    // 부모 edge와 자식 edge를 우선 삭제 함
+    deleteNodeCurrentObj.parentEdges.map((parentEdge, index) => {
+      newGraph.edges.map((item, index) => {
+        if (item.data.id === parentEdge) {
+          newGraph.edges.splice(index, 1);
         }
       });
+    });
+    deleteNodeCurrentObj.childEdges.map((childEdge, index) => {
       newGraph.edges.map((item, index) => {
-        if (item.data.id.includes(node)) {
+        if (item.data.id === childEdge) {
           newGraph.edges.splice(index, 1);
         }
       });
     });
 
+    // currentNode를 삭제
+    newGraph.nodes.map((item, index) => {
+      if (item.data.id === deleteNodeCurrentObj.currentNodeId) {
+        newGraph.nodes.splice(index, 1);
+      }
+    });
+
+    // parent 노드와 child 노드를 연결함.
+
+    deleteNodeCurrentObj.parentNodes.map((parentNode, index) => {
+      deleteNodeCurrentObj.childNodes.map((childNode, index) => {
+        newGraph["edges"].push({
+          data: {
+            id: parentNode + "->" + childNode,
+            source: parentNode,
+            target: childNode,
+          },
+        });
+
+      });
+    });
     setGraph(newGraph); // 덮어씌우기
     closeModal();
   };

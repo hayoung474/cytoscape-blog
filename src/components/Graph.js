@@ -23,7 +23,7 @@ function Graph({ graph, setGraph }) {
   const [deleteNodeList, setDeleteNodeList] = useState([]);
   const [connectedNodes, setConnectedNodes] = useState([]);
   const [currentNodeLabel, setCurrentNodeLabel] = useState("");
-  const [childNodeList, setChildNodeList] = useState([]);
+  const [deleteNodeCurrentObj, setDeleteNodeCurrentObj] = useState({}); // deleteNodeCurrnet 함수를 위한 객체
 
   var options = {
     // Customize event to bring up the context menu
@@ -132,22 +132,44 @@ function Graph({ graph, setGraph }) {
             tooltipText: "현재 노드만 삭제", // Tooltip text for menu item
             selector: "node",
             onClickFunction: function (e) {
-              setSelectNodeId(e.target.id());
-              //setChildNodeList
-
               // child 구하는 방법을 잘 모르겠어서 야매 로직 작성
               // 바로 한단계 아래의 자식 노드 id 구하기
-              let neighborhoodList = [];
-              let predecessorsList = [];
+              let tempObj={} // 임시 객체
+              let neighborhoodNodeList = []; // 바로 이웃한 노드 목록
+              let neighborhoodEdgeList = []; // 바로 이웃한 엣지 목록
+              let predecessorsNodeList = []; // 모든 자식 노드 목록
+              let predecessorsEdgeList = []; // 모든 자식 엣지 목록
+              let successorNodeList=[]; // 모든 부모 노드 목록
+              let successorEdgeList=[]; // 모든 부모 엣지 목록
               e.target.neighborhood().nodes().each(function(e){
-                neighborhoodList.push(e.id())
+                neighborhoodNodeList.push(e.id())
               })
               e.target.predecessors().nodes().each(function(e){
-                predecessorsList.push(e.id())
+                predecessorsNodeList.push(e.id())
               })
-              let resultList=predecessorsList.filter(x => neighborhoodList.includes(x));
-              console.log(resultList)
+              e.target.neighborhood().edges().each(function(e){
+                neighborhoodEdgeList.push(e.id())
+              })
+              e.target.predecessors().edges().each(function(e){
+                predecessorsEdgeList.push(e.id())
+              })
+              e.target.successors().nodes().each(function(e){
+                successorNodeList.push(e.id())
+              })
+              e.target.successors().edges().each(function(e){
+                successorEdgeList.push(e.id())
+              })
+              let childNodes=predecessorsNodeList.filter(x => neighborhoodNodeList.includes(x)); // 바로 이웃한 자식 노드
+              let childEdges=predecessorsEdgeList.filter(x => neighborhoodEdgeList.includes(x)); // 바로 이웃한 자식 엣지
+              let parentEdges = successorEdgeList.filter(x => neighborhoodEdgeList.includes(x)); // 바로 이웃한 부모 엣지
+              let parentNodes=successorNodeList.filter(x => neighborhoodNodeList.includes(x)); // 바로 이웃한 부모 노드
 
+              tempObj['childNodes']=childNodes;
+              tempObj['childEdges']=childEdges;
+              tempObj['parentEdges']=parentEdges;
+              tempObj['parentNodes']=parentNodes;
+              tempObj['currentNodeId']=e.target.id();
+              setDeleteNodeCurrentObj(tempObj);
               setModalType("현재노드만삭제");
               setIsOpen(true);
             },
@@ -178,10 +200,8 @@ function Graph({ graph, setGraph }) {
   const layout = {
     name: "cose",
     ready: function () {
-      console.log("ready");
     },
     stop: function () {
-      console.log("stop");
     },
     animate: true,
     animationEasing: undefined,
@@ -425,6 +445,7 @@ function Graph({ graph, setGraph }) {
         selectNodeId={selectNodeId}
         modalType={modalType}
         deleteNodeList={deleteNodeList}
+        deleteNodeCurrentObj={deleteNodeCurrentObj}
       />
     </>
   );

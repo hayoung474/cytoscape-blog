@@ -1,7 +1,4 @@
 import React, { useState, useEffect } from "react";
-import GraphContainer from "./container/GraphContainer";
-import Modal from "./components/Modal";
-import data from "./data/data.json";
 import firebase from "firebase";
 import Graph from "./components/Graph";
 import styled from "styled-components";
@@ -12,7 +9,7 @@ const AdminSetButton = styled.button`
   left: 0;
   width: 30px;
   height: 30px;
-  opacity:0;
+  opacity: 0;
 `;
 function App() {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -56,15 +53,15 @@ function App() {
       // 초기 데이터 로딩이 완료된 상태라면. null 방지
       firebase.database().ref().update(graph); // graph 데이터가 바뀔때마다 데이터베이스에 update해줌.
     }
-  }, [graph]);
+  }, [graph, loadDone]);
 
-  const adminLogin = ()=>{
-    console.log("test")
-    let password = prompt("password"+"");
-    if(password === "1234"){
+  const adminLogin = () => {
+    console.log("test");
+    let password = prompt("password" + "");
+    if (password === "1234") {
       setIsAdmin(true);
     }
-  }
+  };
 
   return (
     <>

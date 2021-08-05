@@ -357,7 +357,6 @@ function Modal({
               <ModalBody>
                 변경할 노드의 이름을 작성해주세요
                 <ModalInput
-                  placeholder="Node Label"
                   type="text"
                   onChange={(e) => {
                     setChangeNodeLabel(e.target.value);

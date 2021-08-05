@@ -1,22 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import Cytoscape from "cytoscape";
 import contextMenus from "cytoscape-context-menus";
 import CoseBillkent from "cytoscape-cose-bilkent";
 import styled from "styled-components";
 import Modal from "./Modal";
+import "cytoscape-context-menus/cytoscape-context-menus.css";
+
 Cytoscape.use(CoseBillkent);
 // register extension
 Cytoscape.use(contextMenus);
 
 // import CSS as well
-import "cytoscape-context-menus/cytoscape-context-menus.css";
 
 const CustomCytoscapeComponent = styled(CytoscapeComponent)`
-  margin: 0 auto;
+  width: 100vw;
+  height: 100vh;
 `;
 
-function Graph({ graph, setGraph,isAdmin}) {
+function Graph({ graph, setGraph, isAdmin }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectNodeId, setSelectNodeId] = useState("");
   const [modalType, setModalType] = useState("");
@@ -24,7 +26,7 @@ function Graph({ graph, setGraph,isAdmin}) {
   const [connectedNodes, setConnectedNodes] = useState([]);
   const [currentNodeLabel, setCurrentNodeLabel] = useState("");
   const [deleteNodeCurrentObj, setDeleteNodeCurrentObj] = useState({}); // deleteNodeCurrnet 함수를 위한 객체
-  const [selectEdgeId,setSelectEdgeId] = useState("");
+  const [selectEdgeId, setSelectEdgeId] = useState("");
   var options = {
     // Customize event to bring up the context menu
     // Possible options https://js.cytoscape.org/#events/user-input-device-events
@@ -102,7 +104,7 @@ function Graph({ graph, setGraph,isAdmin}) {
         coreAsWell: true,
         show: isAdmin, // 항목 표시 여부
         onClickFunction: function (e) {
-          setSelectEdgeId(e.target.edges().id())
+          setSelectEdgeId(e.target.edges().id());
           setModalType("간선삭제");
           setIsOpen(true);
         },
@@ -118,7 +120,6 @@ function Graph({ graph, setGraph,isAdmin}) {
         show: isAdmin, // 항목 표시 여부
         hasTrailingDivider: false, // 항목에 후행 구분선이 있는지 여부
         coreAsWell: false, // Whether core instance have this item on cxttap
-        show: isAdmin, // 항목 표시 여부
         submenu: [
           {
             id: "remove-node-all", // ID of menu item
@@ -152,48 +153,73 @@ function Graph({ graph, setGraph,isAdmin}) {
             onClickFunction: function (e) {
               // child 구하는 방법을 잘 모르겠어서 야매 로직 작성
               // 바로 한단계 아래의 자식 노드 id 구하기
-              let tempObj={} // 임시 객체
+              let tempObj = {}; // 임시 객체
               let neighborhoodNodeList = []; // 바로 이웃한 노드 목록
               let neighborhoodEdgeList = []; // 바로 이웃한 엣지 목록
               let predecessorsNodeList = []; // 모든 자식 노드 목록
               let predecessorsEdgeList = []; // 모든 자식 엣지 목록
-              let successorNodeList=[]; // 모든 부모 노드 목록
-              let successorEdgeList=[]; // 모든 부모 엣지 목록
-              e.target.neighborhood().nodes().each(function(e){
-                neighborhoodNodeList.push(e.id())
-              })
-              e.target.predecessors().nodes().each(function(e){
-                predecessorsNodeList.push(e.id())
-              })
-              e.target.neighborhood().edges().each(function(e){
-                neighborhoodEdgeList.push(e.id())
-              })
-              e.target.predecessors().edges().each(function(e){
-                predecessorsEdgeList.push(e.id())
-              })
-              e.target.successors().nodes().each(function(e){
-                successorNodeList.push(e.id())
-              })
-              e.target.successors().edges().each(function(e){
-                successorEdgeList.push(e.id())
-              })
-              let childNodes=predecessorsNodeList.filter(x => neighborhoodNodeList.includes(x)); // 바로 이웃한 자식 노드
-              let childEdges=predecessorsEdgeList.filter(x => neighborhoodEdgeList.includes(x)); // 바로 이웃한 자식 엣지
-              let parentEdges = successorEdgeList.filter(x => neighborhoodEdgeList.includes(x)); // 바로 이웃한 부모 엣지
-              let parentNodes=successorNodeList.filter(x => neighborhoodNodeList.includes(x)); // 바로 이웃한 부모 노드
+              let successorNodeList = []; // 모든 부모 노드 목록
+              let successorEdgeList = []; // 모든 부모 엣지 목록
+              e.target
+                .neighborhood()
+                .nodes()
+                .each(function (e) {
+                  neighborhoodNodeList.push(e.id());
+                });
+              e.target
+                .predecessors()
+                .nodes()
+                .each(function (e) {
+                  predecessorsNodeList.push(e.id());
+                });
+              e.target
+                .neighborhood()
+                .edges()
+                .each(function (e) {
+                  neighborhoodEdgeList.push(e.id());
+                });
+              e.target
+                .predecessors()
+                .edges()
+                .each(function (e) {
+                  predecessorsEdgeList.push(e.id());
+                });
+              e.target
+                .successors()
+                .nodes()
+                .each(function (e) {
+                  successorNodeList.push(e.id());
+                });
+              e.target
+                .successors()
+                .edges()
+                .each(function (e) {
+                  successorEdgeList.push(e.id());
+                });
+              let childNodes = predecessorsNodeList.filter((x) =>
+                neighborhoodNodeList.includes(x)
+              ); // 바로 이웃한 자식 노드
+              let childEdges = predecessorsEdgeList.filter((x) =>
+                neighborhoodEdgeList.includes(x)
+              ); // 바로 이웃한 자식 엣지
+              let parentEdges = successorEdgeList.filter((x) =>
+                neighborhoodEdgeList.includes(x)
+              ); // 바로 이웃한 부모 엣지
+              let parentNodes = successorNodeList.filter((x) =>
+                neighborhoodNodeList.includes(x)
+              ); // 바로 이웃한 부모 노드
 
-              tempObj['childNodes']=childNodes;
-              tempObj['childEdges']=childEdges;
-              tempObj['parentEdges']=parentEdges;
-              tempObj['parentNodes']=parentNodes;
-              tempObj['currentNodeId']=e.target.id();
+              tempObj["childNodes"] = childNodes;
+              tempObj["childEdges"] = childEdges;
+              tempObj["parentEdges"] = parentEdges;
+              tempObj["parentNodes"] = parentNodes;
+              tempObj["currentNodeId"] = e.target.id();
               setDeleteNodeCurrentObj(tempObj);
               setModalType("현재노드만삭제");
               setIsOpen(true);
             },
             disabled: false, //항목을 사용 안 함으로 만들 것인지 여부
             show: true, // 항목 표시 여부
-            show: isAdmin, // 항목 표시 여부
             hasTrailingDivider: false, // 항목에 후행 구분선이 있는지 여부
             coreAsWell: false, // Whether core instance have this item on cxttap
           },
@@ -218,10 +244,8 @@ function Graph({ graph, setGraph,isAdmin}) {
 
   const layout = {
     name: "cose",
-    ready: function () {
-    },
-    stop: function () {
-    },
+    ready: function () {},
+    stop: function () {},
     animate: true,
     animationEasing: undefined,
     animationDuration: 1000,
@@ -395,7 +419,7 @@ function Graph({ graph, setGraph,isAdmin}) {
             },
           },
         ]}
-        style={{ width: "100vh", height: "100vh" }}
+        // style={{ width: "100vh", height: "100vh" }}
         layout={layout}
         cy={(cy) => {
           // cy.on("tap", (e) => {

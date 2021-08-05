@@ -24,7 +24,7 @@ function Graph({ graph, setGraph,isAdmin}) {
   const [connectedNodes, setConnectedNodes] = useState([]);
   const [currentNodeLabel, setCurrentNodeLabel] = useState("");
   const [deleteNodeCurrentObj, setDeleteNodeCurrentObj] = useState({}); // deleteNodeCurrnet 함수를 위한 객체
-
+  const [selectEdgeId,setSelectEdgeId] = useState("");
   var options = {
     // Customize event to bring up the context menu
     // Possible options https://js.cytoscape.org/#events/user-input-device-events
@@ -91,6 +91,19 @@ function Graph({ graph, setGraph,isAdmin}) {
           newList.push(e.target.edges().id());
           setConnectedNodes(newList); // 엣지와 연결된 노드들의 id가 들어있는 배열
           setModalType("간선노드추가");
+          setIsOpen(true);
+        },
+      },
+      {
+        id: "delete-edge",
+        content: "간선 삭제",
+        tooltipText: "해당 간선을 삭제",
+        selector: "edge",
+        coreAsWell: true,
+        show: isAdmin, // 항목 표시 여부
+        onClickFunction: function (e) {
+          setSelectEdgeId(e.target.edges().id())
+          setModalType("간선삭제");
           setIsOpen(true);
         },
       },
@@ -452,6 +465,7 @@ function Graph({ graph, setGraph,isAdmin}) {
         modalType={modalType}
         deleteNodeList={deleteNodeList}
         deleteNodeCurrentObj={deleteNodeCurrentObj}
+        selectEdgeId={selectEdgeId}
       />
     </>
   );

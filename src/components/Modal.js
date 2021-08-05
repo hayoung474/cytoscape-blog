@@ -81,8 +81,8 @@ function Modal({
   connectedNodes,
   currentNodeLabel,
   deleteNodeCurrentObj,
+  selectEdgeId,
 }) {
-
   const openModal = () => {
     setIsOpen(true);
   };
@@ -224,7 +224,7 @@ function Modal({
   };
   const deleteNodeCurrent = () => {
     // nodeList의 id를 포함하는 모든 객체를 제거하도록 함.
-    console.log(deleteNodeCurrentObj)
+    console.log(deleteNodeCurrentObj);
     let newGraph = { ...graph };
     // 부모 edge와 자식 edge를 우선 삭제 함
     deleteNodeCurrentObj.parentEdges.map((parentEdge, index) => {
@@ -260,8 +260,17 @@ function Modal({
             target: parentNode,
           },
         });
-
       });
+    });
+    setGraph(newGraph); // 덮어씌우기
+    closeModal();
+  };
+  const deleteEdge = () => {
+    let newGraph = { ...graph };
+    newGraph.edges.map((item, index) => {
+      if (item.data.id === selectEdgeId) {
+        newGraph.edges.splice(index, 1);
+      }
     });
     setGraph(newGraph); // 덮어씌우기
     closeModal();
@@ -312,6 +321,15 @@ function Modal({
               </ModalBody>
               <ModalFooter>
                 <ModalButton onClick={deleteNodeCurrent}>OK</ModalButton>
+              </ModalFooter>
+            </ModalContent>
+          )}
+          {modalType === "간선삭제" && (
+            <ModalContent ref={modalEl}>
+              <ModalHeader>간선 삭제</ModalHeader>
+              <ModalBody>해당 간선을 삭제하시겠습니까?</ModalBody>
+              <ModalFooter>
+                <ModalButton onClick={deleteEdge}>OK</ModalButton>
               </ModalFooter>
             </ModalContent>
           )}

@@ -10,6 +10,7 @@ const AdminSetButton = styled.button`
   width: 30px;
   height: 30px;
   opacity: 0;
+  z-index: 10;
 `;
 function App() {
   const [isAdmin, setIsAdmin] = useState(false);

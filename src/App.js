@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import firebase from "firebase";
 import Graph from "./components/Graph";
 import styled from "styled-components";
+import Menus from './components/Menus'
 
 const AdminSetButton = styled.button`
   position: absolute;
@@ -67,6 +68,7 @@ function App() {
   return (
     <>
       <AdminSetButton onClick={adminLogin}></AdminSetButton>
+      <Menus/>
       <Graph graph={graph} setGraph={setGraph} isAdmin={isAdmin} />
     </>
   );

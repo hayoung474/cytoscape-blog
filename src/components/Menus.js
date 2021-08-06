@@ -14,17 +14,18 @@ const FloatingActionButton = styled.div`
     padding-left: 0px;
     flex-direction: column-reverse;
     place-items: flex-end;
-    display: none;
+    display:none;
   }
 
   &:hover .mainMenu {
     display: flex;
+    
   }
 
   .subMenu {
-    display: none;
     flex-direction: row-reverse;
     padding-left: 0px;
+    display: none;
   }
 
   .subButton:hover .subMenu {
@@ -38,51 +39,61 @@ const FloatingActionButton = styled.div`
   li {
     list-style: none;
   }
-  button {
-    display: inline-block;
-    position: relative;
-    outline: none;
-    user-select: none;
-    width: 60px;
-    height: 60px;
-    text-align: center;
-    background: #eee;
-    color: #336699;
-    border-radius: 50%;
-    border: 0;
-    overflow: hidden;
-    cursor: pointer;
-    margin-top: 10px;
-    margin-left: 10px;
+`;
+const CustomButton = styled.button`
+  background: ${(props) => props.color || "#eee"};
+  &.hover {
+    background: lighten(${(props) => props.color || "#eee"}, 10%);
   }
+  &.active {
+    background: darken(${(props) => props.color || "#eee"}, 10%);
+  }
+
+  display: inline-block;
+  position: relative;
+  outline: none;
+  user-select: none;
+  width: 60px;
+  height: 60px;
+  text-align: center;
+  //background: #eee;
+  color: white;
+  border-radius: 50%;
+  border: 0;
+  overflow: hidden;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-left: 10px;
 `;
 function Menus() {
   return (
     <FloatingActionButton>
-      <button className="mainButton">+</button>
+      <CustomButton color="#19464D" className="mainButton">
+        +
+      </CustomButton>
       <ul className="mainMenu">
         <li>
-          <button>소개</button>
+          <CustomButton color="#2D7A86">소개</CustomButton>
         </li>
         <li className="subButton">
-          <button>코스</button>
+          <CustomButton color="#40AFBF">코스</CustomButton>
           <ul className="subMenu">
             <li>
-              <button>코스1</button>
+              <CustomButton>코스1</CustomButton>
             </li>
             <li>
-              <button>코스2</button>
+              <CustomButton>코스2</CustomButton>
             </li>
             <li>
-              <button>코스3</button>
+              <CustomButton>코스3</CustomButton>
             </li>
           </ul>
         </li>
         <li>
-          <button>432</button>
+          <CustomButton color="#79C7D2">메뉴1</CustomButton>
         </li>
         <li>
-          <button>123</button>
+          <CustomButton color="#B3DFE5">메뉴2</CustomButton>
         </li>
       </ul>
     </FloatingActionButton>

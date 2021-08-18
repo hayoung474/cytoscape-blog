@@ -8,10 +8,7 @@ import Modal from "./Modal";
 import "cytoscape-context-menus/cytoscape-context-menus.css";
 
 Cytoscape.use(CoseBillkent);
-// register extension
 Cytoscape.use(contextMenus);
-
-// import CSS as well
 
 const CustomCytoscapeComponent = styled(CytoscapeComponent)`
   width: 100vw;
@@ -27,12 +24,10 @@ function Graph({ graph, setGraph, isAdmin }) {
   const [currentNodeLabel, setCurrentNodeLabel] = useState("");
   const [deleteNodeCurrentObj, setDeleteNodeCurrentObj] = useState({}); // deleteNodeCurrnet 함수를 위한 객체
   const [selectEdgeId, setSelectEdgeId] = useState("");
-  var options = {
-    // Customize event to bring up the context menu
+
+  let options = {
     // Possible options https://js.cytoscape.org/#events/user-input-device-events
     evtType: "cxttap", // 우클릭
-    // List of initial menu items
-    // A menu item must have either onClickFunction or submenu or both
     menuItems: [
       {
         id: "modify-node",
@@ -365,11 +360,8 @@ function Graph({ graph, setGraph, isAdmin }) {
 
   function setResetFocus(target_cy) {
     target_cy.nodes().forEach(function (target) {
+      let rank = pageRank.rank("#" + target.id());
       target.style("background-color", nodeColor);
-      //let rank =pageRank.rank(target.id());
-      //var rank = pageRank.rank(target); // index 오류의 원인
-      //console.log(rank);
-      var rank = pageRank.rank("#" + target.id());
       target.style("width", nodeMaxSize * rank + nodeMinSize);
       target.style("height", nodeMaxSize * rank + nodeMinSize);
       target.style("font-size", fontMaxSize * rank + fontMinSize);

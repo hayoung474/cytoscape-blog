@@ -68,32 +68,32 @@ const CustomButton = styled.button`
 function Menus() {
   return (
     <FloatingActionButton>
-      <CustomButton color="#19464D" className="mainButton">
+      <CustomButton color="#000" className="mainButton">
         +
       </CustomButton>
       <ul className="mainMenu">
         <li>
-          <CustomButton color="#2D7A86">소개</CustomButton>
+          <CustomButton color="#000">소개</CustomButton>
         </li>
         <li className="subButton">
-          <CustomButton color="#40AFBF">코스</CustomButton>
+          <CustomButton color="#000">코스</CustomButton>
           <ul className="subMenu">
             <li>
-              <CustomButton>코스1</CustomButton>
+              <CustomButton color="#000">코스1</CustomButton>
             </li>
             <li>
-              <CustomButton>코스2</CustomButton>
+              <CustomButton color="#000">코스2</CustomButton>
             </li>
             <li>
-              <CustomButton>코스3</CustomButton>
+              <CustomButton color="#000">코스3</CustomButton>
             </li>
           </ul>
         </li>
         <li>
-          <CustomButton color="#79C7D2">메뉴1</CustomButton>
+          <CustomButton color="#000">메뉴1</CustomButton>
         </li>
         <li>
-          <CustomButton color="#B3DFE5">메뉴2</CustomButton>
+          <CustomButton color="#000">메뉴2</CustomButton>
         </li>
       </ul>
     </FloatingActionButton>
@@ -101,3 +101,4 @@ function Menus() {
 }
 
 export default Menus;
+

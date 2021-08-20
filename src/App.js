@@ -14,7 +14,7 @@ const AdminSetButton = styled.button`
   opacity: 0;
   z-index: 10;
 `;
-function App() {
+function App() { // 1. firebase 로 부터 데이터를 받아와 정제하여 graph에 세팅함.
   const [isAdmin, setIsAdmin] = useState(false); // 관리자 모드를 관리하기위한 변수
   const [graph, setGraph] = useState({ nodes: [], edges: [] }); // graph 데이터
   const [loadDone, setLoadDone] = useState(false); // 초기에 데이터를 불러왔는지 확인하기 위한 변수

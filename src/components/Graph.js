@@ -14,8 +14,9 @@ const CustomCytoscapeComponent = styled(CytoscapeComponent)`
   width: 100vw;
   height: 100vh;
 `;
-
-function Graph({ graph, setGraph, isAdmin }) {
+// 2. App.js 로 부터 넘어온 graph 데이터를 출력한다.
+// 3. 우클릭 메뉴로 Modal.js 를 제어한다. 
+function Graph({ graph, setGraph, isAdmin }) { // App.js 로 부터 넘어온 props 
   /* 아래의 모든 useState 변수는 Modal에 props로 전달해 주기 위해 사용함. */
   const [isOpen, setIsOpen] = useState(false);
   /* 

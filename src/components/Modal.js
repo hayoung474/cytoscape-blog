@@ -68,7 +68,8 @@ const ModalSelect = styled.select`
   width: 100%;
 `;
 
-function Modal({
+// 4. Graph.js 가 부모 컴포넌트이며, Graph.js 의 값에 따라 Modal의 표시값이 달라진다. 
+function Modal({ // Graph.js 로 부터 넘어온 props 
   graph, // Graph.js 에서 받아오는 graph 변수
   setGraph, // graph의 값을 변경하기 위한 setter 함수
   isOpen, // modal이 열려있는지 여부를 확인하기 위한 변수

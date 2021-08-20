@@ -4,7 +4,7 @@ import Graph from "./components/Graph";
 import styled from "styled-components";
 import Menus from "./components/Menus";
 
-/* 왼쪽 상단에 투명버튼으로 되어있는 관리자 로그인 버튼*/
+/* 왼쪽 상단에 투명버튼으로 되어있는 관리자 로그인 버튼 */
 const AdminSetButton = styled.button`
   position: absolute;
   top: 0;
@@ -16,7 +16,7 @@ const AdminSetButton = styled.button`
 `;
 function App() {
   const [isAdmin, setIsAdmin] = useState(false); // 관리자 모드를 관리하기위한 변수
-  const [graph, setGraph] = useState({ nodes: [], edges: [] }); // graph 데이터 
+  const [graph, setGraph] = useState({ nodes: [], edges: [] }); // graph 데이터
   const [loadDone, setLoadDone] = useState(false); // 초기에 데이터를 불러왔는지 확인하기 위한 변수
   useEffect(() => {
     firebase // firebase 에 접근하여 데이터를 받아오는 구문
@@ -24,9 +24,13 @@ function App() {
       .ref()
       .on("value", (snapshot) => {
         // 데이터베이스가 바뀌면 자동 트리거 됨.
-        if (snapshot.val()) { // 불러올 데이터가 존재한다면 
+        if (snapshot.val()) {
+          // 불러올 데이터가 존재한다면
 
-          // 데이터를 정제하여 setGraph를 사용하여 graph 값을 변경해줌
+          /* 
+            graph의 데이터 규격에 맞게 데이터를 정제한 후 
+            setGraph를 사용하여 graph 값을 변경해줌 
+           */
           const loadData = snapshot.val();
           const loadEdgeData = loadData["edges"];
           const loadNodeData = loadData["nodes"];
@@ -47,8 +51,8 @@ function App() {
 
           tempGraph["nodes"] = tempNodes;
           tempGraph["edges"] = tempEdges;
-          setGraph(tempGraph);
 
+          setGraph(tempGraph);
           setLoadDone(true); // 초기데이터 로드를 마무리 하였음. loadDone 을 true로 변경해줌.
         }
       });
@@ -69,7 +73,7 @@ function App() {
   /* 관리자 로그인 함수 */
   const adminLogin = () => {
     let password = prompt("password" + "");
-    if (password === "1234")  setIsAdmin(true);
+    if (password === "1234") setIsAdmin(true); // 임시비밀번호 1234.
   };
 
   return (

@@ -16,59 +16,74 @@ const CustomCytoscapeComponent = styled(CytoscapeComponent)`
 `;
 
 function Graph({ graph, setGraph, isAdmin }) {
+  /* 아래의 모든 useState 변수는 Modal에 props로 전달해 주기 위해 사용함. */
   const [isOpen, setIsOpen] = useState(false);
-  const [selectNodeId, setSelectNodeId] = useState("");
-  const [modalType, setModalType] = useState("");
-  const [deleteNodeList, setDeleteNodeList] = useState([]);
-  const [connectedNodes, setConnectedNodes] = useState([]);
-  const [currentNodeLabel, setCurrentNodeLabel] = useState("");
-  const [deleteNodeCurrentObj, setDeleteNodeCurrentObj] = useState({}); // deleteNodeCurrnet 함수를 위한 객체
-  const [selectEdgeId, setSelectEdgeId] = useState("");
+  /* 
+    isOpen 변수는 modal 창이 열려있는지 확인하기 위한 변수임. 
+    우클릭 메뉴에서 특정 기능을 클릭하면 그 기능을 수행하는 모달창이 뜸. 
+    이 창을 띄우기 위해서는 modal isOpen 변수를 Modal 컴포넌트에 props로 전달해주어야 함.
+    modal 은 isOpen 상태를 보고 모달 렌더 여부를 결정함.
+  */
 
+  const [selectNodeId, setSelectNodeId] = useState(""); // 현재 선택한 노드의 id값을 저장하기 위한 변수
+  const [modalType, setModalType] = useState("");
+  /* 
+    모달타입에 따라 다른 모달 내용을 띄우기 위해 사용하는 변수.
+    우클릭 메뉴에 따라 다양한 모달 타입이 존재함. 
+    eg. "리프노드추가" , "엣지추가" etc...
+   */
+
+  const [deleteNodeList, setDeleteNodeList] = useState([]); // "하위노드모두삭제" 기능을 수행하기 위한 데이터를 담는 리스트
+  const [connectedNodes, setConnectedNodes] = useState([]); // "간선에노드추가" 기능을 수행하기 위한 데이터를 담는 리스트. 선택한 간선에 연결된 양 끝 노드의 id를 담음.
+  const [currentNodeLabel, setCurrentNodeLabel] = useState(""); // "이름변경" 기능을 수행하기 위한 데이터를 담는 변수. 변경전 노드의 Label 을 저장함.
+  const [deleteNodeCurrentObj, setDeleteNodeCurrentObj] = useState({}); // deleteNodeCurrnet 함수를 위한 객체
+  const [selectEdgeId, setSelectEdgeId] = useState(""); // 현재 선택한 간선의 id값을 저장하기 위한 변수
+
+  // 우클릭 메뉴를 구성하는 객체
   let options = {
-    // Possible options https://js.cytoscape.org/#events/user-input-device-events
-    evtType: "cxttap", // 우클릭
+    // 사용가능한 옵션: https://js.cytoscape.org/#events/user-input-device-events
+    evtType: "cxttap", // 노드 또는 간선에 우클릭을 하였을 경우 메뉴가 활성화 됨.
     menuItems: [
       {
-        id: "modify-node",
-        content: "이름 변경",
-        tooltipText: "현재 노드 이름 변경",
-        image: { src: "add.svg", width: 12, height: 12, x: 6, y: 4 },
-        selector: "node",
+        id: "modify-node", // 메뉴 구분을 위한 id
+        content: "이름 변경", // 메뉴 이름
+        tooltipText: "현재 노드 이름 변경", // 메뉴에 마우스 hover 했을 때 띄울 tooltip
+        selector: "node", // 노드에 우클릭을 하였을 경우 활성화 됨.
         coreAsWell: true,
-        show: isAdmin, // 항목 표시 여부
+        show: isAdmin, // 항목 표시 여부. 관리자의 경우만 해당 메뉴를 활성화 하도록 함.
         onClickFunction: function (e) {
-          setCurrentNodeLabel(e.target.data().label);
-          setModalType("이름변경");
-          setIsOpen(true);
+          // 해당 메뉴를 클릭했을 때 수행할 기능
+          // 선택한 노드의 라벨(이름) 을 변경함.
+          setCurrentNodeLabel(e.target.data().label); // 현재 클릭한 노드의 label값을 currentNodeLabel에 저장함.
+          setModalType("이름변경"); // 모달타입을 "이름변경"으로 세팅함.
+          setIsOpen(true); // 모달을 open 한다.
         },
       },
       {
         id: "connect-between-node-and-node",
-        content: "엣지 추가",
-        tooltipText: "기존 노드와 연결",
-        image: { src: "add.svg", width: 12, height: 12, x: 6, y: 4 },
+        content: "간선 추가",
+        tooltipText: "간선 추가",
         selector: "node",
         coreAsWell: true,
-        show: isAdmin, // 항목 표시 여부
+        show: isAdmin,
         onClickFunction: function (e) {
-          setSelectNodeId(e.target.id());
-          setModalType("엣지추가");
+          // 선택한 노드와 모달에서 선택한 타겟 노드를 연결하는 간선을 추가함
+          setSelectNodeId(e.target.id()); // 현재 클릭한 노드의 id값을 selectNodeId에 저장함.
+          setModalType("간선추가"); // 모달타입을 "간선추가"로 세팅함.
           setIsOpen(true);
         },
-        hasTrailingDivider: true,
       },
       {
         id: "add-node",
         content: "노드 추가",
         tooltipText: "리프 노드 뒤에 노드 추가",
-        image: { src: "add.svg", width: 12, height: 12, x: 6, y: 4 },
         selector: "node",
         coreAsWell: true,
-        show: isAdmin, // 항목 표시 여부
+        show: isAdmin,
         onClickFunction: function (e) {
-          setSelectNodeId(e.target.id());
-          setModalType("리프노드추가");
+          // 선택한 노드 뒤에 리프 노드를 추가함.
+          setSelectNodeId(e.target.id()); // 현재 클릭한 노드의 id값을 selectNodeId에 저장함.
+          setModalType("리프노드추가"); // 모달타입을 "리프노드추가"로 세팅함.
           setIsOpen(true);
         },
       },
@@ -76,18 +91,22 @@ function Graph({ graph, setGraph, isAdmin }) {
         id: "add-node-between-node-and-node",
         content: "간선에 노드 추가",
         tooltipText: "간선에 노드 추가",
-        image: { src: "add.svg", width: 12, height: 12, x: 6, y: 4 },
-        selector: "edge",
+        selector: "edge", // 간선에 우클릭 하였을 경우 활성화 됨.
         coreAsWell: true,
-        show: isAdmin, // 항목 표시 여부
+        show: isAdmin,
         onClickFunction: function (e) {
-          let newList = []; //[0],[1] 은 연결된 노드들의 id , [2] 는 삭제할 edge의 id
+          // 간선에 노드를 추가함.
+          /* 
+            connectedNodes[0],[1]은 연결된 노드들의 id값이며,
+            connectedNodes[2]는 삭제할 간선의 id값 임.
+          */
+          let newList = [];
           e.target.connectedNodes().each((e) => {
             newList.push(e.id());
           });
           newList.push(e.target.edges().id());
-          setConnectedNodes(newList); // 엣지와 연결된 노드들의 id가 들어있는 배열
-          setModalType("간선노드추가");
+          setConnectedNodes(newList); // 간선과 연결된 양 끝 노드들의 id가 들어있는 배열
+          setModalType("간선노드추가"); // 모달타입을 "간선노드추가"로 세팅함.
           setIsOpen(true);
         },
       },
@@ -97,31 +116,38 @@ function Graph({ graph, setGraph, isAdmin }) {
         tooltipText: "해당 간선을 삭제",
         selector: "edge",
         coreAsWell: true,
-        show: isAdmin, // 항목 표시 여부
+        show: isAdmin,
         onClickFunction: function (e) {
-          setSelectEdgeId(e.target.edges().id());
-          setModalType("간선삭제");
+          // 선택한 간선을 삭제함.
+          setSelectEdgeId(e.target.edges().id()); // 현재 클릭한 간선의 id값을 selectEdgeId 에 저장함.
+          setModalType("간선삭제"); // 모달타입을 "간선삭제"로 세팅함.
           setIsOpen(true);
         },
       },
 
       {
-        id: "remove-node", // ID of menu item
-        content: "노드 삭제", // Display content of menu item
-        tooltipText: "노드 삭제", // Tooltip text for menu item
+        id: "remove-node",
+        content: "노드 삭제",
+        tooltipText: "노드 삭제",
         selector: "node",
         onClickFunction: function (e) {},
         disabled: false, //항목을 사용 안 함으로 만들 것인지 여부
         show: isAdmin, // 항목 표시 여부
         hasTrailingDivider: false, // 항목에 후행 구분선이 있는지 여부
-        coreAsWell: false, // Whether core instance have this item on cxttap
+        coreAsWell: false,
         submenu: [
+          // 하위메뉴
           {
-            id: "remove-node-all", // ID of menu item
-            content: "하위노드 모두 삭제", // Display content of menu item
-            tooltipText: "하위노드 모두 삭제", // Tooltip text for menu item
+            id: "remove-node-all",
+            content: "하위노드 모두 삭제",
+            tooltipText: "하위노드 모두 삭제",
             selector: "node",
             onClickFunction: function (e) {
+              /*     
+                deleteNodeList[0] 은 현재 클릭한 노드의 Id 가 담겨있음.
+                그 뒤의 값은 삭제대상인 자식 노드 Id 들이 담겨있음.
+                이를 이용 하여 자식노드 및 연관 엣지를 삭제할 때 사용한다.
+              */
               // 하위 노드 모두 삭제 용
               let list = [];
               list.push(e.target.id()); // [0]은 current Node
@@ -141,9 +167,9 @@ function Graph({ graph, setGraph, isAdmin }) {
             coreAsWell: false, // Whether core instance have this item on cxttap
           },
           {
-            id: "remove-node-all", // ID of menu item
-            content: "현재 노드만 삭제", // Display content of menu item
-            tooltipText: "현재 노드만 삭제", // Tooltip text for menu item
+            id: "remove-node-all",
+            content: "현재 노드만 삭제",
+            tooltipText: "현재 노드만 삭제",
             selector: "node",
             onClickFunction: function (e) {
               // child 구하는 방법을 잘 모르겠어서 야매 로직 작성
@@ -213,10 +239,10 @@ function Graph({ graph, setGraph, isAdmin }) {
               setModalType("현재노드만삭제");
               setIsOpen(true);
             },
-            disabled: false, //항목을 사용 안 함으로 만들 것인지 여부
-            show: true, // 항목 표시 여부
-            hasTrailingDivider: false, // 항목에 후행 구분선이 있는지 여부
-            coreAsWell: false, // Whether core instance have this item on cxttap
+            disabled: false,
+            show: true,
+            hasTrailingDivider: false,
+            coreAsWell: false,
           },
         ],
       },
@@ -229,14 +255,9 @@ function Graph({ graph, setGraph, isAdmin }) {
     contextMenuClasses: [
       // add class names to this list
     ],
-    // Indicates that the menu item has a submenu. If not provided default one will be used
-    submenuIndicator: {
-      src: "assets/submenu-indicator-default.svg",
-      width: 12,
-      height: 12,
-    },
   };
 
+  // graph의 layout 설정
   const layout = {
     name: "cose",
     ready: function () {},
@@ -283,19 +304,14 @@ function Graph({ graph, setGraph, isAdmin }) {
   const fontMaxSize = 8;
   const fontMinSize = 5;
   const fontActiveSize = 7;
-
   const edgeWidth = "2px";
-  let edgeActiveWidth = "4px";
-
+  const edgeActiveWidth = "4px";
   const dimColor = "#dfe4ea";
   const edgeColor = "#ced6e0";
   const nodeColor = "#57606f";
   const nodeActiveColor = "#ffa502";
-
-  const successorColor = "#ff6348";
-  // 상위 node & edge color
-  const predecessorsColor = "#1e90ff";
-  // 하위 node & edge color
+  const successorColor = "#ff6348"; // 상위 node & edge color
+  const predecessorsColor = "#1e90ff"; // 하위 node & edge color
 
   function setDimStyle(target_cy, style) {
     target_cy.nodes().forEach(function (target) {

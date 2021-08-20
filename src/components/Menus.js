@@ -19,9 +19,7 @@ const FloatingActionButton = styled.div`
 
   &:hover .mainMenu {
     display: flex;
-    
   }
-
   .subMenu {
     flex-direction: row-reverse;
     padding-left: 0px;
@@ -42,10 +40,10 @@ const FloatingActionButton = styled.div`
 `;
 const CustomButton = styled.button`
   background: ${(props) => props.color || "#eee"};
-  &.hover {
+  &:hover {
     background: lighten(${(props) => props.color || "#eee"}, 10%);
   }
-  &.active {
+  &:active {
     background: darken(${(props) => props.color || "#eee"}, 10%);
   }
 

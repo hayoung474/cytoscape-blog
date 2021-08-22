@@ -4,17 +4,6 @@ import Graph from "./components/Graph";
 import styled from "styled-components";
 import Menus from "./components/Menus";
 
-/* 왼쪽 상단에 투명버튼으로 되어있는 관리자 로그인 버튼 */
-const AdminSetButton = styled.button`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 30px;
-  height: 30px;
-  opacity: 0;
-  z-index: 10;
-`;
-
 function App () { // 1. firebase 로 부터 데이터를 받아와 정제하여 graph에 세팅함.
   const [isAdmin, setIsAdmin] = useState(false); // 관리자 모드를 관리하기위한 변수
   const [graph, setGraph] = useState({ nodes: [], edges: [] }); // graph 데이터
@@ -96,3 +85,14 @@ loadDone 조건 없이 graph값이 변경될 때 마다 graph 값을 update 하�
 }
 
 export default App;
+
+/* 왼쪽 상단에 투명버튼으로 되어있는 관리자 로그인 버튼 */
+const AdminSetButton = styled.button`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 30px;
+  height: 30px;
+  opacity: 0;
+  z-index: 10;
+`;

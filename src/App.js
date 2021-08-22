@@ -18,7 +18,7 @@ const AdminSetButton = styled.button`
 function App () { // 1. firebase 로 부터 데이터를 받아와 정제하여 graph에 세팅함.
   const [isAdmin, setIsAdmin] = useState(false); // 관리자 모드를 관리하기위한 변수
   const [graph, setGraph] = useState({ nodes: [], edges: [] }); // graph 데이터
-  const [loadDone, setLoadDone] = useState(false); // 초기에 데이터를 불러왔는지 확인하기 위한 변수
+  const [isInit, setIsInit] = useState(false); // 초기에 데이터를 불러왔는지 확인하기 위한 변수
 
   useEffect(() => {
     firebase // firebase 에 접근하여 데이터를 받아오는 구문
@@ -60,7 +60,7 @@ function App () { // 1. firebase 로 부터 데이터를 받아와 정제하여 
           tempGraph["edges"] = tempEdges;
 
           setGraph(tempGraph); // 그래프 세팅
-          setLoadDone(true); // 초기데이터 로드를 마무리 하였음. loadDone 을 true로 변경해줌.
+          setIsInit(true); // 초기데이터 로드를 마무리 하였음. loadDone 을 true로 변경해줌.
         }
       });
   }, []);
@@ -73,9 +73,9 @@ loadDone 조건 없이 graph값이 변경될 때 마다 graph 값을 update 하�
 */
   useEffect(() => {
     // 초기 데이터 로딩이 완료된 상태라면. null 방지
-    if (loadDone)
+    if (isInit)
       firebase.database().ref().update(graph); // graph 데이터가 바뀔때마다 데이터베이스에 update해줌.
-  }, [graph, loadDone]);
+  }, [graph, isInit]);
 
   /* 관리자 로그인 함수 */
   const adminLogin = () => {

@@ -10,56 +10,57 @@ import "cytoscape-context-menus/cytoscape-context-menus.css";
 Cytoscape.use(CoseBillkent);
 Cytoscape.use(contextMenus);
 
-const CustomCytoscapeComponent = styled(CytoscapeComponent)`
-  width: 100vw;
-  height: 100vh;
-`;
 // 2. App.js 로 부터 넘어온 graph 데이터를 출력한다.
 // 3. 우클릭 메뉴로 Modal.js 를 제어한다. 
-function Graph({ graph, setGraph, isAdmin }) { // App.js 로 부터 넘어온 props 
+function Graph ({ graph, setGraph, isAdmin }) { // App.js 로 부터 넘어온 props 
   /* 아래의 모든 useState 변수는 Modal에 props로 전달해 주기 위해 사용함. */
-  const [isOpen, setIsOpen] = useState(false);
+
   /* 
-    isOpen 변수는 modal 창이 열려있는지 확인하기 위한 변수임. 
-    우클릭 메뉴에서 특정 기능을 클릭하면 그 기능을 수행하는 모달창이 뜸. 
-    이 창을 띄우기 위해서는 modal isOpen 변수를 Modal 컴포넌트에 props로 전달해주어야 함.
-    modal 은 isOpen 상태를 보고 모달 렌더 여부를 결정함.
-  */
+  isOpen 변수는 modal 창이 열려있는지 확인하기 위한 변수임. 
+  우클릭 메뉴에서 특정 기능을 클릭하면 그 기능을 수행하는 모달창이 뜸. 
+  이 창을 띄우기 위해서는 modal isOpen 변수를 Modal 컴포넌트에 props로 전달해주어야 함.
+  modal 은 isOpen 상태를 보고 모달 렌더 여부를 결정함.
+*/
+  const [isOpen, setIsOpen] = useState(false);
 
   const [selectNodeId, setSelectNodeId] = useState(""); // 현재 선택한 노드의 id값을 저장하기 위한 변수
-  const [modalType, setModalType] = useState("");
+
   /* 
-    모달타입에 따라 다른 모달 내용을 띄우기 위해 사용하는 변수.
-    우클릭 메뉴에 따라 다양한 모달 타입이 존재함. 
-    eg. "리프노드추가" , "엣지추가" etc...
-   */
+  모달타입에 따라 다른 모달 내용을 띄우기 위해 사용하는 변수.
+  우클릭 메뉴에 따라 다양한 모달 타입이 존재함. 
+  eg. "리프노드추가" , "엣지추가" etc...
+ */
+  const [modalType, setModalType] = useState("");
 
   const [deleteNodeList, setDeleteNodeList] = useState([]); // "하위노드모두삭제" 기능을 수행하기 위한 데이터를 담는 리스트
   const [connectedNodes, setConnectedNodes] = useState([]); // "간선에노드추가" 기능을 수행하기 위한 데이터를 담는 리스트. 선택한 간선에 연결된 양 끝 노드의 id를 담음.
   const [currentNodeLabel, setCurrentNodeLabel] = useState(""); // "이름변경" 기능을 수행하기 위한 데이터를 담는 변수. 변경전 노드의 Label 을 저장함.
-  const [deleteNodeCurrentObj, setDeleteNodeCurrentObj] = useState({}); // deleteNodeCurrnet 함수를 위한 객체
+  const [deleteNodeCurrentObj, setDeleteNodeCurrentObj] = useState({}); // Modal 컴포넌트에 있는 deleteNodeCurrnet 함수를 위한 객체
   const [selectEdgeId, setSelectEdgeId] = useState(""); // 현재 선택한 간선의 id값을 저장하기 위한 변수
 
   // 우클릭 메뉴를 구성하는 객체
   let options = {
     // 사용가능한 옵션: https://js.cytoscape.org/#events/user-input-device-events
     evtType: "cxttap", // 노드 또는 간선에 우클릭을 하였을 경우 메뉴가 활성화 됨.
+
+    // 우클릭 시 나오는 메뉴 리스트
     menuItems: [
       {
-        id: "modify-node", // 메뉴 구분을 위한 id
-        content: "이름 변경", // 메뉴 이름
-        tooltipText: "현재 노드 이름 변경", // 메뉴에 마우스 hover 했을 때 띄울 tooltip
-        selector: "node", // 노드에 우클릭을 하였을 경우 활성화 됨.
+        id: "modify-node", // 메뉴들의 구분을 위한 고유한 id (메뉴 id)
+        content: "이름 변경", // 사용자에게 보여지는 메뉴 이름
+        tooltipText: "현재 노드 이름 변경", // 메뉴에 마우스 hover 했을 때 띄울 tooltip (hidden)
+        selector: "node", // 무엇을 우클릭 하면 활성화 되는지 => 노드에 우클릭을 하였을 경우 활성화 됨.
         coreAsWell: true,
         show: isAdmin, // 항목 표시 여부. 관리자의 경우만 해당 메뉴를 활성화 하도록 함.
+        // 해당 메뉴를 클릭했을 때 수행할 기능
+        // 선택한 노드의 라벨(이름) 을 변경함.
         onClickFunction: function (e) {
-          // 해당 메뉴를 클릭했을 때 수행할 기능
-          // 선택한 노드의 라벨(이름) 을 변경함.
           setCurrentNodeLabel(e.target.data().label); // 현재 클릭한 노드의 label값을 currentNodeLabel에 저장함.
           setModalType("이름변경"); // 모달타입을 "이름변경"으로 세팅함.
           setIsOpen(true); // 모달을 open 한다.
         },
       },
+
       {
         id: "connect-between-node-and-node",
         content: "간선 추가",
@@ -67,13 +68,14 @@ function Graph({ graph, setGraph, isAdmin }) { // App.js 로 부터 넘어온 pr
         selector: "node",
         coreAsWell: true,
         show: isAdmin,
+        // 선택한 노드와 모달에서 선택한 타겟 노드를 연결하는 간선을 추가함
         onClickFunction: function (e) {
-          // 선택한 노드와 모달에서 선택한 타겟 노드를 연결하는 간선을 추가함
           setSelectNodeId(e.target.id()); // 현재 클릭한 노드의 id값을 selectNodeId에 저장함.
           setModalType("간선추가"); // 모달타입을 "간선추가"로 세팅함.
           setIsOpen(true);
         },
       },
+
       {
         id: "add-node",
         content: "노드 추가",
@@ -81,13 +83,14 @@ function Graph({ graph, setGraph, isAdmin }) { // App.js 로 부터 넘어온 pr
         selector: "node",
         coreAsWell: true,
         show: isAdmin,
+        // 선택한 노드 뒤에 리프 노드를 추가함.
         onClickFunction: function (e) {
-          // 선택한 노드 뒤에 리프 노드를 추가함.
           setSelectNodeId(e.target.id()); // 현재 클릭한 노드의 id값을 selectNodeId에 저장함.
           setModalType("리프노드추가"); // 모달타입을 "리프노드추가"로 세팅함.
           setIsOpen(true);
         },
       },
+
       {
         id: "add-node-between-node-and-node",
         content: "간선에 노드 추가",
@@ -95,8 +98,8 @@ function Graph({ graph, setGraph, isAdmin }) { // App.js 로 부터 넘어온 pr
         selector: "edge", // 간선에 우클릭 하였을 경우 활성화 됨.
         coreAsWell: true,
         show: isAdmin,
+        // 간선에 노드를 추가함.
         onClickFunction: function (e) {
-          // 간선에 노드를 추가함.
           /* 
             connectedNodes[0],[1]은 연결된 노드들의 id값이며,
             connectedNodes[2]는 삭제할 간선의 id값 임.
@@ -111,6 +114,7 @@ function Graph({ graph, setGraph, isAdmin }) { // App.js 로 부터 넘어온 pr
           setIsOpen(true);
         },
       },
+
       {
         id: "delete-edge",
         content: "간선 삭제",
@@ -131,7 +135,7 @@ function Graph({ graph, setGraph, isAdmin }) { // App.js 로 부터 넘어온 pr
         content: "노드 삭제",
         tooltipText: "노드 삭제",
         selector: "node",
-        onClickFunction: function (e) {},
+        onClickFunction: function (e) { },
         disabled: false, //항목을 사용 안 함으로 만들 것인지 여부
         show: isAdmin, // 항목 표시 여부
         hasTrailingDivider: false, // 항목에 후행 구분선이 있는지 여부
@@ -261,8 +265,8 @@ function Graph({ graph, setGraph, isAdmin }) { // App.js 로 부터 넘어온 pr
   // graph의 layout 설정
   const layout = {
     name: "cose",
-    ready: function () {},
-    stop: function () {},
+    ready: function () { },
+    stop: function () { },
     animate: true,
     animationEasing: undefined,
     animationDuration: 1000,
@@ -314,7 +318,7 @@ function Graph({ graph, setGraph, isAdmin }) { // App.js 로 부터 넘어온 pr
   const successorColor = "#ff6348"; // 상위 node & edge color
   const predecessorsColor = "#1e90ff"; // 하위 node & edge color
 
-  function setDimStyle(target_cy, style) {
+  function setDimStyle (target_cy, style) {
     target_cy.nodes().forEach(function (target) {
       target.style(style);
     });
@@ -323,7 +327,7 @@ function Graph({ graph, setGraph, isAdmin }) { // App.js 로 부터 넘어온 pr
     });
   }
 
-  function setFocus(
+  function setFocus (
     target_element,
     successorColor,
     predecessorsColor,
@@ -371,11 +375,11 @@ function Graph({ graph, setGraph, isAdmin }) { // App.js 로 부터 넘어온 pr
     );
   }
 
-  function setOpacityElement(target_element, degree) {
+  function setOpacityElement (target_element, degree) {
     target_element.style("opacity", degree);
   }
 
-  function setResetFocus(target_cy) {
+  function setResetFocus (target_cy) {
     target_cy.nodes().forEach(function (target) {
       let rank = pageRank.rank("#" + target.id());
       target.style("background-color", nodeColor);
@@ -505,3 +509,8 @@ function Graph({ graph, setGraph, isAdmin }) { // App.js 로 부터 넘어온 pr
 }
 
 export default Graph;
+
+const CustomCytoscapeComponent = styled(CytoscapeComponent)`
+  width: 100vw;
+  height: 100vh;
+`;

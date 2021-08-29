@@ -1,73 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 
-const ModalButton = styled.button`
-  background-color: grey;
-  text-decoration: none;
-  border: none;
-  padding: 15px;
-  color: white;
-  border-radius: 30px;
-  cursor: pointer;
-`;
-
-const ModalWrapper = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 9;
-`;
-const ModalContent = styled.div`
-  margin: 200px auto;
-  background-color: white;
-  padding: 20px;
-  border-radius: 10px;
-  width: 200px;
-  height: 300px;
-`;
-
-const ModalHeader = styled.div`
-  font-weight: bold;
-  font-size: 20px;
-  display: block;
-  margin-bottom: 10px;
-`;
-
-const ModalBody = styled.div`
-  font-size: 15px;
-  display: block;
-  margin-bottom: 10px;
-`;
-
-const ModalFooter = styled.div`
-  display: block;
-  float: right;
-`;
-
-const ModalInput = styled.input`
-  font-size: 15px;
-  display: block;
-  height: 35px;
-  border: solid 2px rgba(0, 0, 0, 0.2);
-  border-radius: 5px;
-  padding-left: 5px;
-  margin-bottom: 5px;
-`;
-
-const ModalSelect = styled.select`
-  font-size: 15px;
-  display: block;
-  height: 35px;
-  border: solid 2px rgba(0, 0, 0, 0.2);
-  border-radius: 5px;
-  padding-left: 5px;
-  margin-bottom: 5px;
-  width: 100%;
-`;
-
 // 4. Graph.js 가 부모 컴포넌트이며, Graph.js 의 값에 따라 Modal의 표시값이 달라진다. 
 function Modal ({ // Graph.js 로 부터 넘어온 props 
   graph, // Graph.js 에서 받아오는 graph 변수
@@ -415,4 +348,72 @@ function Modal ({ // Graph.js 로 부터 넘어온 props
     </>
   );
 }
+
+const ModalButton = styled.button`
+  background-color: grey;
+  text-decoration: none;
+  border: none;
+  padding: 15px;
+  color: white;
+  border-radius: 30px;
+  cursor: pointer;
+`;
+
+const ModalWrapper = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9;
+`;
+const ModalContent = styled.div`
+  margin: 200px auto;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 200px;
+  height: 300px;
+`;
+
+const ModalHeader = styled.div`
+  font-weight: bold;
+  font-size: 20px;
+  display: block;
+  margin-bottom: 10px;
+`;
+
+const ModalBody = styled.div`
+  font-size: 15px;
+  display: block;
+  margin-bottom: 10px;
+`;
+
+const ModalFooter = styled.div`
+  display: block;
+  float: right;
+`;
+
+const ModalInput = styled.input`
+  font-size: 15px;
+  display: block;
+  height: 35px;
+  border: solid 2px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  padding-left: 5px;
+  margin-bottom: 5px;
+`;
+
+const ModalSelect = styled.select`
+  font-size: 15px;
+  display: block;
+  height: 35px;
+  border: solid 2px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  padding-left: 5px;
+  margin-bottom: 5px;
+  width: 100%;
+`;
+
 export default Modal;

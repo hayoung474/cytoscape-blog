@@ -1,12 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import Cytoscape from "cytoscape";
 import contextMenus from "cytoscape-context-menus";
 import CoseBillkent from "cytoscape-cose-bilkent";
 import styled from "styled-components";
-import Modal from "./Modal";
-
-import { useSelector } from "react-redux"
 import "cytoscape-context-menus/cytoscape-context-menus.css";
 
 Cytoscape.use(CoseBillkent);
@@ -14,259 +11,7 @@ Cytoscape.use(contextMenus);
 
 // 2. App.js 로 부터 넘어온 graph 데이터를 출력한다.
 // 3. 우클릭 메뉴로 Modal.js 를 제어한다. 
-function Graph ({ graph, setGraph }) {
-  const { isAdmin } = useSelector(state => ({ isAdmin: state.isAdmin }));
-
-  // App.js 로 부터 넘어온 props 
-  /* 아래의 모든 useState 변수는 Modal에 props로 전달해 주기 위해 사용함. */
-
-  /* 
-  isOpen 변수는 modal 창이 열려있는지 확인하기 위한 변수임. 
-  우클릭 메뉴에서 특정 기능을 클릭하면 그 기능을 수행하는 모달창이 뜸. 
-  이 창을 띄우기 위해서는 modal isOpen 변수를 Modal 컴포넌트에 props로 전달해주어야 함.
-  modal 은 isOpen 상태를 보고 모달 렌더 여부를 결정함.
-*/
-  const [isOpen, setIsOpen] = useState(false);
-
-  const [selectNodeId, setSelectNodeId] = useState(""); // 현재 선택한 노드의 id값을 저장하기 위한 변수
-
-  /* 
-  모달타입에 따라 다른 모달 내용을 띄우기 위해 사용하는 변수.
-  우클릭 메뉴에 따라 다양한 모달 타입이 존재함. 
-  eg. "리프노드추가" , "엣지추가" etc...
- */
-  const [modalType, setModalType] = useState("");
-
-  const [deleteNodeList, setDeleteNodeList] = useState([]); // "하위노드모두삭제" 기능을 수행하기 위한 데이터를 담는 리스트
-  const [connectedNodes, setConnectedNodes] = useState([]); // "간선에노드추가" 기능을 수행하기 위한 데이터를 담는 리스트. 선택한 간선에 연결된 양 끝 노드의 id를 담음.
-  const [currentNodeLabel, setCurrentNodeLabel] = useState(""); // "이름변경" 기능을 수행하기 위한 데이터를 담는 변수. 변경전 노드의 Label 을 저장함.
-  const [deleteNodeCurrentObj, setDeleteNodeCurrentObj] = useState({}); // Modal 컴포넌트에 있는 deleteNodeCurrnet 함수를 위한 객체
-  const [selectEdgeId, setSelectEdgeId] = useState(""); // 현재 선택한 간선의 id값을 저장하기 위한 변수
-
-  // 우클릭 메뉴를 구성하는 객체
-  let options = {
-    // 사용가능한 옵션: https://js.cytoscape.org/#events/user-input-device-events
-    evtType: "cxttap", // 노드 또는 간선에 우클릭을 하였을 경우 메뉴가 활성화 됨.
-
-    // 우클릭 시 나오는 메뉴 리스트
-    menuItems: [
-      {
-        id: "modify-node", // 메뉴들의 구분을 위한 고유한 id (메뉴 id)
-        content: "이름 변경", // 사용자에게 보여지는 메뉴 이름
-        tooltipText: "현재 노드 이름 변경", // 메뉴에 마우스 hover 했을 때 띄울 tooltip (hidden)
-        selector: "node", // 무엇을 우클릭 하면 활성화 되는지 => 노드에 우클릭을 하였을 경우 활성화 됨.
-        coreAsWell: true,
-        show: isAdmin, // 항목 표시 여부. 관리자의 경우만 해당 메뉴를 활성화 하도록 함.
-        // 해당 메뉴를 클릭했을 때 수행할 기능
-        // 선택한 노드의 라벨(이름) 을 변경함.
-        onClickFunction: function (e) {
-          setCurrentNodeLabel(e.target.data().label); // 현재 클릭한 노드의 label값을 currentNodeLabel에 저장함.
-          setModalType("이름변경"); // 모달타입을 "이름변경"으로 세팅함.
-          setIsOpen(true); // 모달을 open 한다.
-        },
-      },
-
-      {
-        id: "connect-between-node-and-node",
-        content: "간선 추가",
-        tooltipText: "간선 추가",
-        selector: "node",
-        coreAsWell: true,
-        show: isAdmin,
-        // 선택한 노드와 모달에서 선택한 타겟 노드를 연결하는 간선을 추가함
-        onClickFunction: function (e) {
-          setSelectNodeId(e.target.id()); // 현재 클릭한 노드의 id값을 selectNodeId에 저장함.
-          setModalType("간선추가"); // 모달타입을 "간선추가"로 세팅함.
-          setIsOpen(true);
-        },
-      },
-
-      {
-        id: "add-node",
-        content: "노드 추가",
-        tooltipText: "리프 노드 뒤에 노드 추가",
-        selector: "node",
-        coreAsWell: true,
-        show: isAdmin,
-        // 선택한 노드 뒤에 리프 노드를 추가함.
-        onClickFunction: function (e) {
-          setSelectNodeId(e.target.id()); // 현재 클릭한 노드의 id값을 selectNodeId에 저장함.
-          setModalType("리프노드추가"); // 모달타입을 "리프노드추가"로 세팅함.
-          setIsOpen(true);
-        },
-      },
-
-      {
-        id: "add-node-between-node-and-node",
-        content: "간선에 노드 추가",
-        tooltipText: "간선에 노드 추가",
-        selector: "edge", // 간선에 우클릭 하였을 경우 활성화 됨.
-        coreAsWell: true,
-        show: isAdmin,
-        // 간선에 노드를 추가함.
-        onClickFunction: function (e) {
-          /* 
-            connectedNodes[0],[1]은 연결된 노드들의 id값이며,
-            connectedNodes[2]는 삭제할 간선의 id값 임.
-          */
-          let newList = [];
-          e.target.connectedNodes().each((e) => {
-            newList.push(e.id());
-          });
-          newList.push(e.target.edges().id());
-          setConnectedNodes(newList); // 간선과 연결된 양 끝 노드들의 id가 들어있는 배열
-          setModalType("간선노드추가"); // 모달타입을 "간선노드추가"로 세팅함.
-          setIsOpen(true);
-        },
-      },
-
-      {
-        id: "delete-edge",
-        content: "간선 삭제",
-        tooltipText: "해당 간선을 삭제",
-        selector: "edge",
-        coreAsWell: true,
-        show: isAdmin,
-        onClickFunction: function (e) {
-          // 선택한 간선을 삭제함.
-          setSelectEdgeId(e.target.edges().id()); // 현재 클릭한 간선의 id값을 selectEdgeId 에 저장함.
-          setModalType("간선삭제"); // 모달타입을 "간선삭제"로 세팅함.
-          setIsOpen(true);
-        },
-      },
-
-      {
-        id: "remove-node",
-        content: "노드 삭제",
-        tooltipText: "노드 삭제",
-        selector: "node",
-        onClickFunction: function (e) { },
-        disabled: false, //항목을 사용 안 함으로 만들 것인지 여부
-        show: isAdmin, // 항목 표시 여부
-        hasTrailingDivider: false, // 항목에 후행 구분선이 있는지 여부
-        coreAsWell: false,
-        submenu: [
-          // 하위메뉴
-          {
-            id: "remove-node-all",
-            content: "하위노드 모두 삭제",
-            tooltipText: "하위노드 모두 삭제",
-            selector: "node",
-            onClickFunction: function (e) {
-              /*     
-                deleteNodeList[0] 은 현재 클릭한 노드의 Id 가 담겨있음.
-                그 뒤의 값은 삭제대상인 자식 노드 Id 들이 담겨있음.
-                이를 이용 하여 자식노드 및 연관 엣지를 삭제할 때 사용한다.
-              */
-              // 하위 노드 모두 삭제 용
-              let list = [];
-              list.push(e.target.id()); // [0]은 current Node
-              e.target
-                .predecessors()
-                .nodes()
-                .each(function (e) {
-                  list.push(e.id());
-                }); // 자식 노드
-              setDeleteNodeList(list);
-              setModalType("하위노드모두삭제");
-              setIsOpen(true);
-            },
-            disabled: false, //항목을 사용 안 함으로 만들 것인지 여부
-            show: isAdmin, // 항목 표시 여부
-            hasTrailingDivider: false, // 항목에 후행 구분선이 있는지 여부
-            coreAsWell: false, // Whether core instance have this item on cxttap
-          },
-          {
-            id: "remove-node-all",
-            content: "현재 노드만 삭제",
-            tooltipText: "현재 노드만 삭제",
-            selector: "node",
-            onClickFunction: function (e) {
-              // child 구하는 방법을 잘 모르겠어서 야매 로직 작성
-              // 바로 한단계 아래의 자식 노드 id 구하기
-              let tempObj = {}; // 임시 객체
-              let neighborhoodNodeList = []; // 바로 이웃한 노드 목록
-              let neighborhoodEdgeList = []; // 바로 이웃한 엣지 목록
-              let predecessorsNodeList = []; // 모든 자식 노드 목록
-              let predecessorsEdgeList = []; // 모든 자식 엣지 목록
-              let successorNodeList = []; // 모든 부모 노드 목록
-              let successorEdgeList = []; // 모든 부모 엣지 목록
-              e.target
-                .neighborhood()
-                .nodes()
-                .each(function (e) {
-                  neighborhoodNodeList.push(e.id());
-                });
-              e.target
-                .predecessors()
-                .nodes()
-                .each(function (e) {
-                  predecessorsNodeList.push(e.id());
-                });
-              e.target
-                .neighborhood()
-                .edges()
-                .each(function (e) {
-                  neighborhoodEdgeList.push(e.id());
-                });
-              e.target
-                .predecessors()
-                .edges()
-                .each(function (e) {
-                  predecessorsEdgeList.push(e.id());
-                });
-              e.target
-                .successors()
-                .nodes()
-                .each(function (e) {
-                  successorNodeList.push(e.id());
-                });
-              e.target
-                .successors()
-                .edges()
-                .each(function (e) {
-                  successorEdgeList.push(e.id());
-                });
-              let childNodes = predecessorsNodeList.filter((x) =>
-                neighborhoodNodeList.includes(x)
-              ); // 바로 이웃한 자식 노드
-              let childEdges = predecessorsEdgeList.filter((x) =>
-                neighborhoodEdgeList.includes(x)
-              ); // 바로 이웃한 자식 엣지
-              let parentEdges = successorEdgeList.filter((x) =>
-                neighborhoodEdgeList.includes(x)
-              ); // 바로 이웃한 부모 엣지
-              let parentNodes = successorNodeList.filter((x) =>
-                neighborhoodNodeList.includes(x)
-              ); // 바로 이웃한 부모 노드
-
-              tempObj["childNodes"] = childNodes;
-              tempObj["childEdges"] = childEdges;
-              tempObj["parentEdges"] = parentEdges;
-              tempObj["parentNodes"] = parentNodes;
-              tempObj["currentNodeId"] = e.target.id();
-              setDeleteNodeCurrentObj(tempObj);
-              setModalType("현재노드만삭제");
-              setIsOpen(true);
-            },
-            disabled: false,
-            show: true,
-            hasTrailingDivider: false,
-            coreAsWell: false,
-          },
-        ],
-      },
-    ],
-    // css classes that menu items will have
-    menuItemClasses: [
-      // add class names to this list
-    ],
-    // css classes that context menu will have
-    contextMenuClasses: [
-      // add class names to this list
-    ],
-  };
-
+function Graph ({ graph, setGraph, options }) {
   // graph의 layout 설정
   const layout = {
     name: "cose",
@@ -306,7 +51,6 @@ function Graph ({ graph, setGraph }) {
   const cyForRank = Cytoscape({
     elements: CytoscapeComponent.normalizeElements(graph),
   });
-
   const pageRank = cyForRank.elements().pageRank();
 
   const nodeMaxSize = 50;
@@ -324,6 +68,7 @@ function Graph ({ graph, setGraph }) {
   const successorColor = "#ff6348"; // 상위 node & edge color
   const predecessorsColor = "#1e90ff"; // 하위 node & edge color
 
+  // 배경 흐리게
   function setDimStyle (target_cy, style) {
     target_cy.nodes().forEach(function (target) {
       target.style(style);
@@ -333,6 +78,7 @@ function Graph ({ graph, setGraph }) {
     });
   }
 
+  // hover
   function setFocus (
     target_element,
     successorColor,
@@ -381,10 +127,12 @@ function Graph ({ graph, setGraph }) {
     );
   }
 
+  // 노드 갈수록 흐리게
   function setOpacityElement (target_element, degree) {
     target_element.style("opacity", degree);
   }
 
+  // 마우스 뗐을때
   function setResetFocus (target_cy) {
     target_cy.nodes().forEach(function (target) {
       let rank = pageRank.rank("#" + target.id());
@@ -406,119 +154,100 @@ function Graph ({ graph, setGraph }) {
   }
 
   return (
-    <>
-      <CustomCytoscapeComponent
-        elements={CytoscapeComponent.normalizeElements(graph)}
-        stylesheet={[
-          {
-            selector: "node",
-            style: {
-              // 노드색
-              backgroundColor: nodeColor,
-              label: "data(label)",
-              width: (el) => {
-                return nodeMaxSize * pageRank.rank("#" + el.id()) + nodeMinSize;
-              },
-              height: (el) => {
-                return nodeMaxSize * pageRank.rank("#" + el.id()) + nodeMinSize;
-              },
-              fontSize: (el) => {
-                return fontMaxSize * pageRank.rank("#" + el.id()) + fontMinSize;
-              },
-              // 글자색
-              color: nodeColor,
+
+    <CustomCytoscapeComponent
+      elements={CytoscapeComponent.normalizeElements(graph)}
+      // 그래프 스타일링
+      stylesheet={[
+        {
+          selector: "node",
+          style: {
+            // 노드색
+            backgroundColor: nodeColor,
+            label: "data(label)",
+            width: (el) => {
+              return nodeMaxSize * pageRank.rank("#" + el.id()) + nodeMinSize;
             },
-          },
-          {
-            selector: "edge",
-            style: {
-              width: edgeWidth,
-              lineColor: edgeColor,
-              sourceArrowColor: edgeColor,
+            height: (el) => {
+              return nodeMaxSize * pageRank.rank("#" + el.id()) + nodeMinSize;
             },
+            fontSize: (el) => {
+              return fontMaxSize * pageRank.rank("#" + el.id()) + fontMinSize;
+            },
+            // 글자색
+            color: nodeColor,
           },
-        ]}
-        // style={{ width: "100vh", height: "100vh" }}
-        layout={layout}
-        cy={(cy) => {
-          // 링크 추가
-          // cy.on("tap", (e) => {
-          //   console.log(graph)
-          //   // const url = e.target.data("url");
-          //   // if (url && url !== "") {
-          //   //   window.open(url);
-          //   // }
-          // });
+        },
+        {
+          selector: "edge",
+          style: {
+            width: edgeWidth,
+            lineColor: edgeColor,
+            sourceArrowColor: edgeColor,
+          },
+        },
+      ]}
 
-          // 우클릭 메뉴 등록
-          cy.contextMenus(options);
+      // 레이아웃
+      layout={layout}
 
-          // 노드가 추가될 때 마다 호출되는 트리거
-          cy.on("add", "node", (e) => {
-            // 그래프에 새로운 값이 세팅될 수 있도록 이전 graph값을 제거해주는 초기화 작업이 필요함.
-            graph = {};
+      // 이벤트 바인딩
+      cy={(cy) => {
+        // 우클릭 메뉴 등록
+        cy.contextMenus(options);
+
+        // 노드가 추가될 때 마다 호출되는 트리거
+        cy.on("add", "node", (e) => {
+          // 그래프에 새로운 값이 세팅될 수 있도록 이전 graph값을 제거해주는 초기화 작업이 필요함.
+          graph = {};
+        });
+
+        // 노드에 마우스 hover시 호출
+        cy.on("tapstart mouseover", "node", (e) => {
+          // 얘는 멀쩡한데 tapend 랑 mouseout은 왜 그런지 ,,
+          // 이 이벤트 함수도 똑같이 2번 발동됨.
+
+          document.querySelector("body").style.cursor = "pointer";
+          document.querySelector("html").style.cursor = "pointer";
+
+          // 색처리
+          setDimStyle(cy, {
+            backgroundColor: dimColor,
+            lineColor: dimColor,
+            sourceArrowColor: dimColor,
+            color: dimColor,
           });
+          setFocus(
+            e.target,
+            successorColor,
+            predecessorsColor,
+            edgeActiveWidth
+          );
+        });
 
-          // 노드에 마우스 hover시 호출
-          cy.on("tapstart mouseover", "node", (e) => {
-            // 얘는 멀쩡한데 tapend 랑 mouseout은 왜 그런지 ,,
-            // 이 이벤트 함수도 똑같이 2번 발동됨.
+        // 노드에 마우스 out시
+        cy.on("tapend mouseout", "node", (e) => {
+          e.preventDefault();
+          // 이벤트 함수가 2번 발동되는 이유를 모르겠음.
+          // 또한 2번 실행되는 동안 graph 데이터가 초기값으로 돌아가는 경우 발생
+          document.querySelector("body").style.cursor = "default";
+          document.querySelector("html").style.cursor = "default";
+          if (Object.keys(graph).length !== 0) {
+            // 빈 객체는 아직 그래프 출력 준비가 덜 된 것으로 간주하고 함수를 실행시키지않음. 반면 빈 객체가 아니라면 출력 준비가 다 된 것으로 간주하고 함수를 실행시킴
+            setResetFocus(e.cy);
+          }
+        });
 
-            document.querySelector("body").style.cursor = "pointer";
-            document.querySelector("html").style.cursor = "pointer";
-
-            // 색처리
-            setDimStyle(cy, {
-              backgroundColor: dimColor,
-              lineColor: dimColor,
-              sourceArrowColor: dimColor,
-              color: dimColor,
-            });
-            setFocus(
-              e.target,
-              successorColor,
-              predecessorsColor,
-              edgeActiveWidth
-            );
-          });
-
-          // 노드에 마우스 out시
-          cy.on("tapend mouseout", "node", (e) => {
-            e.preventDefault();
-            // 이벤트 함수가 2번 발동되는 이유를 모르겠음.
-            // 또한 2번 실행되는 동안 graph 데이터가 초기값으로 돌아가는 경우 발생
-            document.querySelector("body").style.cursor = "default";
-            document.querySelector("html").style.cursor = "default";
-            if (Object.keys(graph).length !== 0) {
-              // 빈 객체는 아직 그래프 출력 준비가 덜 된 것으로 간주하고 함수를 실행시키지않음. 반면 빈 객체가 아니라면 출력 준비가 다 된 것으로 간주하고 함수를 실행시킴
-              setResetFocus(e.cy);
-            }
-          });
-
-          // 윈도우 리사이즈 시 반응형 이벤트 추가
-          let resizeTimer;
-          window.addEventListener("resize", function () {
-            this.clearTimeout(resizeTimer);
-            resizeTimer = this.setTimeout(function () {
-              cy.fit();
-            }, 200);
-          });
-        }}
-      />
-      <Modal
-        graph={graph}
-        currentNodeLabel={currentNodeLabel}
-        connectedNodes={connectedNodes}
-        setGraph={setGraph}
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        selectNodeId={selectNodeId}
-        modalType={modalType}
-        deleteNodeList={deleteNodeList}
-        deleteNodeCurrentObj={deleteNodeCurrentObj}
-        selectEdgeId={selectEdgeId}
-      />
-    </>
+        // 윈도우 리사이즈 시 반응형 이벤트 추가
+        let resizeTimer;
+        window.addEventListener("resize", function () {
+          this.clearTimeout(resizeTimer);
+          resizeTimer = this.setTimeout(function () {
+            cy.fit();
+          }, 200);
+        });
+      }}
+    />
   );
 }
 

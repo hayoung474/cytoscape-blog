@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { useSelector, useDispatch } from "react-redux"
+import { setModal } from "../modules/modal";
 
 // 4. Graph.js 가 부모 컴포넌트이며, Graph.js 의 값에 따라 Modal의 표시값이 달라진다. 
 function Modal ({ // Graph.js 로 부터 넘어온 props 
   graph, // Graph.js 에서 받아오는 graph 변수
   setGraph, // graph의 값을 변경하기 위한 setter 함수
-  isOpen, // modal이 열려있는지 여부를 확인하기 위한 변수
-  setIsOpen, // isOpen의 값을 변경하기 위한 setter 함수
   selectNodeId, // Graph 에서 선택한 Node의 Id를 받아오기 위한 변수
   modalType, // Modal의 종류를 정하는 변수. 이 값에 따라 모달에 출력할 내용이 달라짐
   deleteNodeList, // Node 삭제를 할 때 연관된 노드 및 엣지를 함께 삭제하기 위한 정보가 담긴 변수
@@ -15,56 +15,18 @@ function Modal ({ // Graph.js 로 부터 넘어온 props
   deleteNodeCurrentObj, // 삭제할 노드와 관련된 데이터를 담은 객체 변수
   selectEdgeId, // 현재 선택한 Edge의 Id 를 담은 변수
 }) {
+  const dispatch = useDispatch();
+  const { modal } = useSelector(state => ({ modal: state.modal.modal }));
+
   const [newNodeLabel, setNewNodeLabel] = useState(""); // 새로운 노드를 추가할 때 label 값을 입력받기 위한 변수.
   const [changeNodeLabel, setChangeNodeLabel] = useState(""); // 노드의 label을 변경할 때 사용하기 위한 변수
   const [targetNodeId, setTargetNodeId] = useState(""); // 노드 추가 및 간선 추가 용
-
-  const modalEl = useRef(); // modal 박스 자체 DOM 객체를 선택하기 위한 ref 변수
-  const wrapperEl = useRef(); // modal 바깥의 어두운 배경 DOM 객체를 선택하기 위한 ref 변수
-
-  useEffect(() => {
-    const escKeyDownClose = (e) => {
-      // esc 버튼을 클릭하였을 경우
-      if (e.keyCode === 27) {
-        closeModal(); // 모달 창을 닫도록 함.
-      }
-    };
-    const handleClickOutside = (e) => {
-      /* ModalWrapper 에 Ref 를 걸어서, ModalWrapper 영역을 클릭했을 때 Modal이 꺼지도록 함. ModalContent 부분은 클릭해도 꺼지지 않도록 조건을 달았음.*/
-      if (!modalEl.current || !wrapperEl.current) {
-        //modalEl과 wrapperEl를 제외한 것을 클릭하였을 경우
-        return; // 아무런 이벤트를 수행하지 않고 함수를 종료하도록 함
-      }
-      if (
-        !modalEl.current.contains(e.target) &&
-        wrapperEl.current.contains(e.target)
-      ) {
-        // 만약에 클릭한 것이 modalEl은 아님과 동시에 wrapperEl이 맞다면
-        closeModal(); // 모달 창을 닫도록 함
-      }
-    };
-    // 이벤트 리스너에 등록함.
-    window.addEventListener("keydown", escKeyDownClose); // esc 를 눌러서 모달 닫기
-    window.addEventListener("click", handleClickOutside); // 모달 바깥을 클릭하여 모달 닫기
-
-    // 언마운트
-    return () => {
-      // 이벤트 리스너 등록 한 것을 제거함.
-      window.removeEventListener("keydown", escKeyDownClose);
-      window.removeEventListener("click", handleClickOutside);
-    };
-  });
 
   useEffect(() => {
     // 간선을 추가할 때 사용되는 구문(?)
     // selectNodeId 가 변경된다면
     setTargetNodeId(selectNodeId); // 타겟노드의 id를 변경하도록 함.
   }, [selectNodeId]);
-
-  /* 모달 창을 닫도록 하는 함수 */
-  const closeModal = () => {
-    setIsOpen(false);
-  };
 
   /* "이름변경" 기능을 위한 함수 */
   const changeLabel = () => {
@@ -78,7 +40,7 @@ function Modal ({ // Graph.js 로 부터 넘어온 props
     });
 
     setGraph(newGraph); // graph 자체를 덮어씌움
-    closeModal(); // 모달 창 닫기
+    dispatch(setModal(false))
   };
 
   /* "간선추가" 기능을 위한 함수 */
@@ -93,7 +55,7 @@ function Modal ({ // Graph.js 로 부터 넘어온 props
       },
     });
     setGraph(newGraph);
-    closeModal();
+    dispatch(setModal(false))
   };
 
   /* "간선에 노드 추가" 기능을 위한 함수 */
@@ -127,7 +89,7 @@ function Modal ({ // Graph.js 로 부터 넘어온 props
       },
     });
     setGraph(newGraph);
-    closeModal();
+    dispatch(setModal(false))
   };
   /* "노드추가" 기능을 위한 함수 */
   const addNode = () => {
@@ -142,7 +104,7 @@ function Modal ({ // Graph.js 로 부터 넘어온 props
       },
     });
     setGraph(newGraph);
-    closeModal();
+    dispatch(setModal(false))
   };
 
   /* "노드삭제 > 하위노드 모두 삭제" 기능을 위한 함수 */
@@ -164,7 +126,7 @@ function Modal ({ // Graph.js 로 부터 넘어온 props
       });
     });
     setGraph(newGraph);
-    closeModal();
+    dispatch(setModal(false))
   };
 
   /* "노드삭제 > 현재 노드만 삭제" 기능을 위한 함수 */
@@ -208,7 +170,7 @@ function Modal ({ // Graph.js 로 부터 넘어온 props
       });
     });
     setGraph(newGraph);
-    closeModal();
+    dispatch(setModal(false))
   };
 
   /* "간선 삭제" 기능을 위한 함수 */
@@ -220,15 +182,16 @@ function Modal ({ // Graph.js 로 부터 넘어온 props
       }
     });
     setGraph(newGraph);
-    closeModal();
+    dispatch(setModal(false))
   };
 
   return (
     <>
-      {isOpen && (
-        <ModalWrapper ref={wrapperEl}>
+      <DarkBackground modal={modal} onClick={() => dispatch(setModal(false))} />
+      {modal && (
+        <>
           {modalType === "리프노드추가" && (
-            <ModalContent ref={modalEl}>
+            <ModalContent>
               <ModalHeader>새 노드 추가</ModalHeader>
               <ModalBody>
                 추가할 노드의 이름을 작성해주세요
@@ -246,7 +209,7 @@ function Modal ({ // Graph.js 로 부터 넘어온 props
             </ModalContent>
           )}
           {modalType === "하위노드모두삭제" && (
-            <ModalContent ref={modalEl}>
+            <ModalContent >
               <ModalHeader>노드 및 엣지 삭제</ModalHeader>
               <ModalBody>
                 <h4>전체삭제</h4>
@@ -259,7 +222,7 @@ function Modal ({ // Graph.js 로 부터 넘어온 props
             </ModalContent>
           )}
           {modalType === "현재노드만삭제" && (
-            <ModalContent ref={modalEl}>
+            <ModalContent >
               <ModalHeader>노드 및 엣지 삭제</ModalHeader>
               <ModalBody>
                 <h4>현재노드 삭제</h4>
@@ -273,7 +236,7 @@ function Modal ({ // Graph.js 로 부터 넘어온 props
             </ModalContent>
           )}
           {modalType === "간선삭제" && (
-            <ModalContent ref={modalEl}>
+            <ModalContent >
               <ModalHeader>간선 삭제</ModalHeader>
               <ModalBody>해당 간선을 삭제하시겠습니까?</ModalBody>
               <ModalFooter>
@@ -282,7 +245,7 @@ function Modal ({ // Graph.js 로 부터 넘어온 props
             </ModalContent>
           )}
           {modalType === "간선노드추가" && (
-            <ModalContent ref={modalEl}>
+            <ModalContent >
               <ModalHeader>엣지에 노드 추가</ModalHeader>
               <ModalBody>
                 추가할 노드의 이름을 작성해주세요
@@ -300,7 +263,7 @@ function Modal ({ // Graph.js 로 부터 넘어온 props
             </ModalContent>
           )}
           {modalType === "이름변경" && (
-            <ModalContent ref={modalEl}>
+            <ModalContent >
               <ModalHeader>노드 이름 변경</ModalHeader>
               <ModalBody>
                 변경할 노드의 이름을 작성해주세요
@@ -318,7 +281,7 @@ function Modal ({ // Graph.js 로 부터 넘어온 props
             </ModalContent>
           )}
           {modalType === "간선추가" && (
-            <ModalContent ref={modalEl}>
+            <ModalContent >
               <ModalHeader>간선 추가</ModalHeader>
               <ModalBody>
                 해당 노드와 연결할 노드를 선택하세요
@@ -343,7 +306,7 @@ function Modal ({ // Graph.js 로 부터 넘어온 props
               </ModalFooter>
             </ModalContent>
           )}
-        </ModalWrapper>
+        </>
       )}
     </>
   );
@@ -359,22 +322,14 @@ const ModalButton = styled.button`
   cursor: pointer;
 `;
 
-const ModalWrapper = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 9;
-`;
 const ModalContent = styled.div`
-  margin: 200px auto;
+  position: fixed;
+  top: 50%;
+  left: 50%;
   background-color: white;
   padding: 20px;
+  transform:translate(-50%, -50%);
   border-radius: 10px;
-  width: 200px;
-  height: 300px;
 `;
 
 const ModalHeader = styled.div`
@@ -415,5 +370,16 @@ const ModalSelect = styled.select`
   margin-bottom: 5px;
   width: 100%;
 `;
+
+const DarkBackground = styled.div`
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+
+  display: ${(props) => props.modal ? "block" : "none"}
+`
 
 export default Modal;

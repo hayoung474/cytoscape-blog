@@ -26,7 +26,6 @@ firebase.initializeApp(firebaseConfig);
 
 // 리덕스 설정
 const store = createStore(rootReducer)
-console.log(store.getState())
 
 ReactDOM.render(
   <React.StrictMode>

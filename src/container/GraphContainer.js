@@ -3,15 +3,17 @@ import firebase from "firebase";
 import Graph from "../components/Graph";
 import Modal from "../components/Modal";
 
-import { useSelector } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
+import { setModal } from "../modules/modal";
 
 function GraphContainer () {
-  const { isAdmin } = useSelector(state => ({ isAdmin: state.isAdmin }));
+  const dispatch = useDispatch();
+
+  const { isAdmin } = useSelector(state => ({ isAdmin: state.admin.isAdmin }));
 
   const [graph, setGraph] = useState({ nodes: [], edges: [] }); // graph 데이터
   const [isInit, setIsInit] = useState(false); // 초기에 데이터를 불러왔는지 확인하기 위한 변수
 
-  const [isOpen, setIsOpen] = useState(false);
   const [selectNodeId, setSelectNodeId] = useState("");
   const [modalType, setModalType] = useState("");
   const [deleteNodeList, setDeleteNodeList] = useState([]);
@@ -94,7 +96,7 @@ loadDone 조건 없이 graph값이 변경될 때 마다 graph 값을 update 하�
         onClickFunction: function (e) {
           setCurrentNodeLabel(e.target.data().label); // 현재 클릭한 노드의 label값을 currentNodeLabel에 저장함.
           setModalType("이름변경"); // 모달타입을 "이름변경"으로 세팅함.
-          setIsOpen(true); // 모달을 open 한다.
+          dispatch(setModal(true)) // 모달을 open 한다.
         },
       },
 
@@ -109,7 +111,7 @@ loadDone 조건 없이 graph값이 변경될 때 마다 graph 값을 update 하�
         onClickFunction: function (e) {
           setSelectNodeId(e.target.id()); // 현재 클릭한 노드의 id값을 selectNodeId에 저장함.
           setModalType("간선추가"); // 모달타입을 "간선추가"로 세팅함.
-          setIsOpen(true);
+          dispatch(setModal(true))
         },
       },
 
@@ -124,7 +126,7 @@ loadDone 조건 없이 graph값이 변경될 때 마다 graph 값을 update 하�
         onClickFunction: function (e) {
           setSelectNodeId(e.target.id()); // 현재 클릭한 노드의 id값을 selectNodeId에 저장함.
           setModalType("리프노드추가"); // 모달타입을 "리프노드추가"로 세팅함.
-          setIsOpen(true);
+          dispatch(setModal(true))
         },
       },
 
@@ -148,7 +150,7 @@ loadDone 조건 없이 graph값이 변경될 때 마다 graph 값을 update 하�
           newList.push(e.target.edges().id());
           setConnectedNodes(newList); // 간선과 연결된 양 끝 노드들의 id가 들어있는 배열
           setModalType("간선노드추가"); // 모달타입을 "간선노드추가"로 세팅함.
-          setIsOpen(true);
+          dispatch(setModal(true))
         },
       },
 
@@ -163,7 +165,7 @@ loadDone 조건 없이 graph값이 변경될 때 마다 graph 값을 update 하�
           // 선택한 간선을 삭제함.
           setSelectEdgeId(e.target.edges().id()); // 현재 클릭한 간선의 id값을 selectEdgeId 에 저장함.
           setModalType("간선삭제"); // 모달타입을 "간선삭제"로 세팅함.
-          setIsOpen(true);
+          dispatch(setModal(true))
         },
       },
 
@@ -201,7 +203,7 @@ loadDone 조건 없이 graph값이 변경될 때 마다 graph 값을 update 하�
                 }); // 자식 노드
               setDeleteNodeList(list);
               setModalType("하위노드모두삭제");
-              setIsOpen(true);
+              dispatch(setModal(true))
             },
             disabled: false, //항목을 사용 안 함으로 만들 것인지 여부
             show: isAdmin, // 항목 표시 여부
@@ -279,7 +281,7 @@ loadDone 조건 없이 graph값이 변경될 때 마다 graph 값을 update 하�
               tempObj["currentNodeId"] = e.target.id();
               setDeleteNodeCurrentObj(tempObj);
               setModalType("현재노드만삭제");
-              setIsOpen(true);
+              dispatch(setModal(true))
             },
             disabled: false,
             show: true,
@@ -298,8 +300,6 @@ loadDone 조건 없이 graph값이 변경될 때 마다 graph 값을 update 하�
         currentNodeLabel={currentNodeLabel}
         connectedNodes={connectedNodes}
         setGraph={setGraph}
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
         selectNodeId={selectNodeId}
         modalType={modalType}
         deleteNodeList={deleteNodeList}

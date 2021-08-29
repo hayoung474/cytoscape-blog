@@ -5,6 +5,8 @@ import contextMenus from "cytoscape-context-menus";
 import CoseBillkent from "cytoscape-cose-bilkent";
 import styled from "styled-components";
 import Modal from "./Modal";
+
+import { useSelector } from "react-redux"
 import "cytoscape-context-menus/cytoscape-context-menus.css";
 
 Cytoscape.use(CoseBillkent);
@@ -12,7 +14,10 @@ Cytoscape.use(contextMenus);
 
 // 2. App.js 로 부터 넘어온 graph 데이터를 출력한다.
 // 3. 우클릭 메뉴로 Modal.js 를 제어한다. 
-function Graph ({ graph, setGraph, isAdmin }) { // App.js 로 부터 넘어온 props 
+function Graph ({ graph, setGraph }) {
+  const { isAdmin } = useSelector(state => ({ isAdmin: state.isAdmin }));
+
+  // App.js 로 부터 넘어온 props 
   /* 아래의 모든 useState 변수는 Modal에 props로 전달해 주기 위해 사용함. */
 
   /* 
@@ -297,6 +302,7 @@ function Graph ({ graph, setGraph, isAdmin }) { // App.js 로 부터 넘어온 p
     minTemp: 1.0,
   };
 
+  // 그래프의 깊이를 기반으로 탐색하기 위한 그래프 자체 객체
   const cyForRank = Cytoscape({
     elements: CytoscapeComponent.normalizeElements(graph),
   });
@@ -435,6 +441,7 @@ function Graph ({ graph, setGraph, isAdmin }) { // App.js 로 부터 넘어온 p
         // style={{ width: "100vh", height: "100vh" }}
         layout={layout}
         cy={(cy) => {
+          // 링크 추가
           // cy.on("tap", (e) => {
           //   console.log(graph)
           //   // const url = e.target.data("url");
@@ -442,12 +449,17 @@ function Graph ({ graph, setGraph, isAdmin }) { // App.js 로 부터 넘어온 p
           //   //   window.open(url);
           //   // }
           // });
-          cy.contextMenus(options); // menu 등록
 
+          // 우클릭 메뉴 등록
+          cy.contextMenus(options);
+
+          // 노드가 추가될 때 마다 호출되는 트리거
           cy.on("add", "node", (e) => {
-            // 노드가 추가될 때 마다 새로운 값이 세팅될 수 있도록 이전 graph값을 제거해주는 초기화 작업이 필요함.
-            graph = {}; // 노드 추가 마다 초기화
+            // 그래프에 새로운 값이 세팅될 수 있도록 이전 graph값을 제거해주는 초기화 작업이 필요함.
+            graph = {};
           });
+
+          // 노드에 마우스 hover시 호출
           cy.on("tapstart mouseover", "node", (e) => {
             // 얘는 멀쩡한데 tapend 랑 mouseout은 왜 그런지 ,,
             // 이 이벤트 함수도 똑같이 2번 발동됨.
@@ -455,6 +467,7 @@ function Graph ({ graph, setGraph, isAdmin }) { // App.js 로 부터 넘어온 p
             document.querySelector("body").style.cursor = "pointer";
             document.querySelector("html").style.cursor = "pointer";
 
+            // 색처리
             setDimStyle(cy, {
               backgroundColor: dimColor,
               lineColor: dimColor,
@@ -469,6 +482,7 @@ function Graph ({ graph, setGraph, isAdmin }) { // App.js 로 부터 넘어온 p
             );
           });
 
+          // 노드에 마우스 out시
           cy.on("tapend mouseout", "node", (e) => {
             e.preventDefault();
             // 이벤트 함수가 2번 발동되는 이유를 모르겠음.
@@ -481,8 +495,8 @@ function Graph ({ graph, setGraph, isAdmin }) { // App.js 로 부터 넘어온 p
             }
           });
 
+          // 윈도우 리사이즈 시 반응형 이벤트 추가
           let resizeTimer;
-
           window.addEventListener("resize", function () {
             this.clearTimeout(resizeTimer);
             resizeTimer = this.setTimeout(function () {

@@ -3,8 +3,16 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+
+// 파이어베이스
 import firebase from 'firebase'
 
+// 리덕스
+import { Provider } from "react-redux";
+import { createStore } from "redux";
+import rootReducer from "./modules";
+
+// 파이어베이스 설정
 var firebaseConfig = {
   apiKey: "AIzaSyAyc5AhneRxo27wpeLp01uUu-6kArT4NCI",
   authDomain: "cytoscape-devblog.firebaseapp.com",
@@ -16,9 +24,14 @@ var firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
+// 리덕스 설정
+const store = createStore(rootReducer)
+
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );

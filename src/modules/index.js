@@ -1,7 +1,7 @@
-// 관리할 상태가 많아질 시
-// import { combineReducers } from 'redux'
+import { combineReducers } from 'redux'
 import admin from "./admin"
+import modal from "./modal"
 
-const rootReducer = admin;
+const rootReducer = combineReducers({ admin, modal });
 
 export default rootReducer;

@@ -11,9 +11,7 @@ Cytoscape.use(contextMenus);
 
 // 2. App.js 로 부터 넘어온 graph 데이터를 출력한다.
 // 3. 우클릭 메뉴로 Modal.js 를 제어한다. 
-function Graph ({ graph }) {
-
-
+function Graph ({ graph ,options}) {
   // graph의 layout 설정
   const layout = {
     name: "cose",
@@ -196,7 +194,7 @@ function Graph ({ graph }) {
       // 이벤트 바인딩
       cy={(cy) => {
         // 우클릭 메뉴 등록
-        // cy.contextMenus(options);
+        cy.contextMenus(options);
 
         // 노드가 추가될 때 마다 호출되는 트리거
         cy.on("add", "node", (e) => {

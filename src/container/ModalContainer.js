@@ -2,8 +2,8 @@ import React from "react";
 import Modal from "../components/Modal";
 import { setModal } from "../modules/modal";
 import { setGraph } from "../modules/graph";
-import { useSelector, useDispatch } from "react-redux";
-import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { useState } from "react";
 
 function ModalContainer({ modalPropsObj, graph }) {
   const dispatch = useDispatch();
@@ -31,6 +31,7 @@ function ModalContainer({ modalPropsObj, graph }) {
   const addEdge = () => {
     // 기존 노드와의 연결을 위한 엣지 추가를 위한  함수
     let newGraph = { ...graph };
+    console.log(targetNodeId)
     newGraph["edges"].push({
       data: {
         id: modalPropsObj.data.selectNodeId + "->" + targetNodeId,
@@ -183,7 +184,6 @@ function ModalContainer({ modalPropsObj, graph }) {
     <>
       <Modal
         modalType={modalPropsObj.modalType}
-        header={modalPropsObj.modalType}
         execution_function={
           (modalPropsObj.modalType === "이름변경" && changeLabel) ||
           (modalPropsObj.modalType === "간선에노드추가" && addToEdgeNode) ||

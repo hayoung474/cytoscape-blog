@@ -22,7 +22,7 @@ function Modal({
       <DarkBackground modal={modal} onClick={() => dispatch(setModal(false))} />
       {modal && (
         <ModalContent>
-          <ModalHeader>{header}</ModalHeader>
+          <ModalHeader>{modalType}</ModalHeader>
           <ModalBody>{children}</ModalBody>
           {(modalType === "이름변경" || modalType === "리프노드추가" || modalType==="간선에노드추가") && (
             <ModalInput

@@ -1,6 +1,41 @@
 import React from "react";
 import styled from "styled-components";
 
+function Menus() {
+  return (
+    <FloatingActionButton>
+      <CustomButton color="#000" className="mainButton">
+        +
+      </CustomButton>
+      <ul className="mainMenu">
+        <li>
+          <CustomButton color="#000">소개</CustomButton>
+        </li>
+        <li className="subButton">
+          <CustomButton color="#000">코스</CustomButton>
+          <ul className="subMenu">
+            <li>
+              <CustomButton color="#000">코스1</CustomButton>
+            </li>
+            <li>
+              <CustomButton color="#000">코스2</CustomButton>
+            </li>
+            <li>
+              <CustomButton color="#000">코스3</CustomButton>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <CustomButton color="#000">메뉴1</CustomButton>
+        </li>
+        <li>
+          <CustomButton color="#000">메뉴2</CustomButton>
+        </li>
+      </ul>
+    </FloatingActionButton>
+  );
+}
+
 const FloatingActionButton = styled.div`
   position: fixed;
   bottom: 10px;
@@ -14,7 +49,7 @@ const FloatingActionButton = styled.div`
     padding-left: 0px;
     flex-direction: column-reverse;
     place-items: flex-end;
-    display:none;
+    display: none;
   }
 
   &:hover .mainMenu {
@@ -63,40 +98,5 @@ const CustomButton = styled.button`
   margin-top: 10px;
   margin-left: 10px;
 `;
-function Menus() {
-  return (
-    <FloatingActionButton>
-      <CustomButton color="#000" className="mainButton">
-        +
-      </CustomButton>
-      <ul className="mainMenu">
-        <li>
-          <CustomButton color="#000">소개</CustomButton>
-        </li>
-        <li className="subButton">
-          <CustomButton color="#000">코스</CustomButton>
-          <ul className="subMenu">
-            <li>
-              <CustomButton color="#000">코스1</CustomButton>
-            </li>
-            <li>
-              <CustomButton color="#000">코스2</CustomButton>
-            </li>
-            <li>
-              <CustomButton color="#000">코스3</CustomButton>
-            </li>
-          </ul>
-        </li>
-        <li>
-          <CustomButton color="#000">메뉴1</CustomButton>
-        </li>
-        <li>
-          <CustomButton color="#000">메뉴2</CustomButton>
-        </li>
-      </ul>
-    </FloatingActionButton>
-  );
-}
 
 export default Menus;
-

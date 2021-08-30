@@ -10,13 +10,13 @@ Cytoscape.use(CoseBillkent);
 Cytoscape.use(contextMenus);
 
 // 2. App.js 로 부터 넘어온 graph 데이터를 출력한다.
-// 3. 우클릭 메뉴로 Modal.js 를 제어한다. 
-function Graph ({ graph ,options}) {
+// 3. 우클릭 메뉴로 Modal.js 를 제어한다.
+function Graph({ graph, options }) {
   // graph의 layout 설정
   const layout = {
     name: "cose",
-    ready: function () { },
-    stop: function () { },
+    ready: function () {},
+    stop: function () {},
     animate: true,
     animationEasing: undefined,
     animationDuration: 1000,
@@ -69,7 +69,7 @@ function Graph ({ graph ,options}) {
   const predecessorsColor = "#1e90ff"; // 하위 node & edge color
 
   // 배경 흐리게
-  function setDimStyle (target_cy, style) {
+  function setDimStyle(target_cy, style) {
     target_cy.nodes().forEach(function (target) {
       target.style(style);
     });
@@ -79,7 +79,7 @@ function Graph ({ graph ,options}) {
   }
 
   // hover
-  function setFocus (
+  function setFocus(
     target_element,
     successorColor,
     predecessorsColor,
@@ -128,12 +128,12 @@ function Graph ({ graph ,options}) {
   }
 
   // 노드 갈수록 흐리게
-  function setOpacityElement (target_element, degree) {
+  function setOpacityElement(target_element, degree) {
     target_element.style("opacity", degree);
   }
 
   // 마우스 뗐을때
-  function setResetFocus (target_cy) {
+  function setResetFocus(target_cy) {
     target_cy.nodes().forEach(function (target) {
       let rank = pageRank.rank("#" + target.id());
       target.style("background-color", nodeColor);
@@ -154,7 +154,6 @@ function Graph ({ graph ,options}) {
   }
 
   return (
-
     <CustomCytoscapeComponent
       elements={CytoscapeComponent.normalizeElements(graph)}
       // 그래프 스타일링
@@ -187,10 +186,8 @@ function Graph ({ graph ,options}) {
           },
         },
       ]}
-
       // 레이아웃
       layout={layout}
-
       // 이벤트 바인딩
       cy={(cy) => {
         // 우클릭 메뉴 등록

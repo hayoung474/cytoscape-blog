@@ -1,13 +1,13 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setGraph, setIsInit } from "../modules/graph";
 import { setModal } from "../modules/modal";
 
 import firebase from "firebase";
 import Graph from "../components/Graph";
-import ModalContainer from "./ModalContainer"
+import Modal from "./ModalContainer"
 
-function GraphContainer() {
+function GraphContainer () {
   const [modalPropsObj, setModalPropsObj] = useState({});
 
   const { graph } = useSelector((state) => ({ graph: state.graph.graph })); // redux 의 graph 상태 구독
@@ -115,7 +115,7 @@ function GraphContainer() {
         content: "노드 삭제",
         tooltipText: "노드 삭제",
         selector: "node",
-        onClickFunction: function (e) {},
+        onClickFunction: function (e) { },
         disabled: false, //항목을 사용 안 함으로 만들 것인지 여부
         show: isAdmin, // 항목 표시 여부
         hasTrailingDivider: false, // 항목에 후행 구분선이 있는지 여부
@@ -138,7 +138,7 @@ function GraphContainer() {
                 }); // 자식 노드
               list.push(e.target.id())// 현재 클릭한 노드의 Id 가 담겨있음.
               let dataObj = {
-                deleteNodeList:list, // 삭제대상인 자식 노드 Id 들이 담겨있음. 이를 이용 하여 자식노드 및 연관 엣지를 삭제할 때 사용한다.
+                deleteNodeList: list, // 삭제대상인 자식 노드 Id 들이 담겨있음. 이를 이용 하여 자식노드 및 연관 엣지를 삭제할 때 사용한다.
               };
               setModalPropsObj({ modalType: "하위노드모두삭제", data: dataObj });
               dispatch(setModal(true));
@@ -289,8 +289,8 @@ loadDone 조건 없이 graph값이 변경될 때 마다 graph 값을 update 하�
 
   return (
     <>
-      <Graph graph={graph} options={options}/>
-      <ModalContainer modalPropsObj={modalPropsObj} graph={graph}></ModalContainer>
+      <Graph graph={graph} options={options} />
+      <Modal modalPropsObj={modalPropsObj} graph={graph}></Modal>
     </>
   );
 }

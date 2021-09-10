@@ -124,7 +124,7 @@ function ModalContainer({ modalPropsObj, graph }) {
 
     // currentNode를 삭제
     newGraph.nodes.forEach((item, index) => {
-      if (item.data.id === modalPropsObj.currentNodeId) {
+      if (item.data.id === modalPropsObj.data.currentNodeId) {
         newGraph.nodes.splice(index, 1);
       }
     });
@@ -148,23 +148,23 @@ function ModalContainer({ modalPropsObj, graph }) {
         });
       });
     }
-    if (
-      modalPropsObj.data.parentEdges.length !== 0 &&
-      modalPropsObj.data.childEdges.length !== 0
-    ) {
-      // parent 노드와 child 노드를 연결함.
-      modalPropsObj.data.parentNodes.forEach((parentNode) => {
-        modalPropsObj.childNodes.forEach((childNode) => {
-          newGraph["edges"].push({
-            data: {
-              id: childNode + "->" + parentNode,
-              source: childNode,
-              target: parentNode,
-            },
-          });
-        });
-      });
-    }
+    // if (
+    //   modalPropsObj.data.parentEdges.length !== 0 &&
+    //   modalPropsObj.data.childEdges.length !== 0
+    // ) {
+    //   // parent 노드와 child 노드를 연결함.
+    //   modalPropsObj.data.parentNodes.forEach((parentNode) => {
+    //     modalPropsObj.childNodes.forEach((childNode) => {
+    //       newGraph["edges"].push({
+    //         data: {
+    //           id: childNode + "->" + parentNode,
+    //           source: childNode,
+    //           target: parentNode,
+    //         },
+    //       });
+    //     });
+    //   });
+    // }
     dispatch(setGraph(newGraph));
     dispatch(setModal(false));
   };

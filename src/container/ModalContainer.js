@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Modal from "../components/Modal";
 import { setModal } from "../modules/modal";
 import { setGraph } from "../modules/graph";
@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { useState } from "react";
 
 function ModalContainer({ modalPropsObj, graph }) {
+
   const dispatch = useDispatch();
   const [nodeLabel, setNodeLabel] = useState(""); // 노드의 label 값을 저장하기 위한 변수
   const [targetNodeId, setTargetNodeId] = useState(""); // 노드 추가 및 간선 추가
@@ -14,12 +15,10 @@ function ModalContainer({ modalPropsObj, graph }) {
   const changeLabel = () => {
     let newGraph = { ...graph }; // spread 함수를 사용하여 useEffect가 발동되도록 함 !
     // (spread를 통해 값을 복사하는 것을 습관화 하여야 할 듯 ,,, 안그러면 자꾸 useEffect가 발동이 안되네 ㅠ )
-    console.log(modalPropsObj.currentNodeLabel);
     newGraph.nodes.forEach((item) => {
       if (item.data.label === modalPropsObj.data.currentNodeLabel) {
         // 만약에 현재 선택한 라벨과 동일한 라벨을 가진 노드를 찾았다면
         item.data.label = nodeLabel; // 그 노드의 라벨을 변경하고자 하는 새로운 라벨 이름으로 변경함
-        console.log(nodeLabel);
       }
     });
 
@@ -31,7 +30,6 @@ function ModalContainer({ modalPropsObj, graph }) {
   const addEdge = () => {
     // 기존 노드와의 연결을 위한 엣지 추가를 위한  함수
     let newGraph = { ...graph };
-    console.log(targetNodeId)
     newGraph["edges"].push({
       data: {
         id: modalPropsObj.data.selectNodeId + "->" + targetNodeId,
@@ -118,7 +116,6 @@ function ModalContainer({ modalPropsObj, graph }) {
 
   //   /* "노드삭제 > 현재 노드만 삭제" 기능을 위한 함수 */
   const deleteNodeCurrent = () => {
-    console.log(modalPropsObj.data);
     // nodeList의 id를 포함하는 모든 객체를 제거하도록 함.
     let newGraph = { ...graph };
 

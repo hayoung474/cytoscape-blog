@@ -24,7 +24,9 @@ function Modal({
         <ModalContent>
           <ModalHeader>{modalType}</ModalHeader>
           <ModalBody>{children}</ModalBody>
-          {(modalType === "이름변경" || modalType === "리프노드추가" || modalType==="간선에노드추가") && (
+          {(modalType === "이름변경" ||
+            modalType === "리프노드추가" ||
+            modalType === "간선에노드추가") && (
             <ModalInput
               placeholder="Node Label"
               type="text"

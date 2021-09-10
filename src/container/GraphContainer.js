@@ -5,15 +5,16 @@ import { setModal } from "../modules/modal";
 
 import firebase from "firebase";
 import Graph from "../components/Graph";
-import Modal from "./ModalContainer"
+import Modal from "./ModalContainer";
 
-function GraphContainer () {
+function GraphContainer() {
   const [modalPropsObj, setModalPropsObj] = useState({});
 
   const { graph } = useSelector((state) => ({ graph: state.graph.graph })); // redux 의 graph 상태 구독
   const { isInit } = useSelector((state) => ({ isInit: state.graph.isInit })); // 초기에 데이터를 불러왔는지 확인하기 위한 변수
-  const { isAdmin } = useSelector(state => ({ isAdmin: state.admin.isAdmin }));
-
+  const { isAdmin } = useSelector((state) => ({
+    isAdmin: state.admin.isAdmin,
+  }));
 
   const dispatch = useDispatch();
 
@@ -106,7 +107,6 @@ function GraphContainer () {
           };
           setModalPropsObj({ modalType: "간선삭제", data: dataObj });
           dispatch(setModal(true));
-
         },
       },
 
@@ -115,7 +115,7 @@ function GraphContainer () {
         content: "노드 삭제",
         tooltipText: "노드 삭제",
         selector: "node",
-        onClickFunction: function (e) { },
+        onClickFunction: function (e) {},
         disabled: false, //항목을 사용 안 함으로 만들 것인지 여부
         show: isAdmin, // 항목 표시 여부
         hasTrailingDivider: false, // 항목에 후행 구분선이 있는지 여부
@@ -136,11 +136,14 @@ function GraphContainer () {
                 .each(function (e) {
                   list.push(e.id());
                 }); // 자식 노드
-              list.push(e.target.id())// 현재 클릭한 노드의 Id 가 담겨있음.
+              list.push(e.target.id()); // 현재 클릭한 노드의 Id 가 담겨있음.
               let dataObj = {
                 deleteNodeList: list, // 삭제대상인 자식 노드 Id 들이 담겨있음. 이를 이용 하여 자식노드 및 연관 엣지를 삭제할 때 사용한다.
               };
-              setModalPropsObj({ modalType: "하위노드모두삭제", data: dataObj });
+              setModalPropsObj({
+                modalType: "하위노드모두삭제",
+                data: dataObj,
+              });
               dispatch(setModal(true));
             },
             disabled: false, //항목을 사용 안 함으로 만들 것인지 여부
@@ -285,7 +288,6 @@ loadDone 조건 없이 graph값이 변경될 때 마다 graph 값을 update 하�
     // 초기 데이터 로딩이 완료된 상태라면. null 방지
     if (isInit) firebase.database().ref().update(graph); // graph 데이터가 바뀔때마다 데이터베이스에 update해줌.
   }, [graph, isInit]);
-
 
   return (
     <>

@@ -7,7 +7,7 @@ import firebase from "firebase";
 import Graph from "../components/Graph";
 import Modal from "./ModalContainer";
 
-function GraphContainer() {
+function GraphContainer () {
   const [modalPropsObj, setModalPropsObj] = useState({});
 
   const { graph } = useSelector((state) => ({ graph: state.graph.graph })); // redux 의 graph 상태 구독
@@ -115,7 +115,7 @@ function GraphContainer() {
         content: "노드 삭제",
         tooltipText: "노드 삭제",
         selector: "node",
-        onClickFunction: function (e) {},
+        onClickFunction: function (e) { },
         disabled: false, //항목을 사용 안 함으로 만들 것인지 여부
         show: isAdmin, // 항목 표시 여부
         hasTrailingDivider: false, // 항목에 후행 구분선이 있는지 여부
@@ -276,7 +276,7 @@ function GraphContainer() {
           dispatch(setIsInit(true)); // 초기데이터 로드를 마무리 하였음. loadDone 을 true로 변경해줌.
         }
       });
-  }, []);
+  }, [dispatch]);
 
   /* 
 loadDone 조건 없이 graph값이 변경될 때 마다 graph 값을 update 하라고 하면 
@@ -284,6 +284,7 @@ loadDone 조건 없이 graph값이 변경될 때 마다 graph 값을 update 하�
 이를 방지하기위해 초기에 db에서 데이터를 잘 가져왔는지 여부를 확인하기 위한 loadDone 변수를 추가하였다.
 이렇게 되면 graph값이 바뀌었을 때 update 하여도 데이터가 모두 날아갈 가능성은 없다.
 */
+
   useEffect(() => {
     // 초기 데이터 로딩이 완료된 상태라면. null 방지
     if (isInit) firebase.database().ref().update(graph); // graph 데이터가 바뀔때마다 데이터베이스에 update해줌.

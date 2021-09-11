@@ -14,6 +14,8 @@ function App () { // 1. firebase 로 부터 데이터를 받아와 정제하여 
       <Menus />
       {/* 메인 그래프 */}
       <Graph />
+      {/* 모달 */}
+      {/* <Modal /> */}
     </>
   );
 }

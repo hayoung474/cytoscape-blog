@@ -1,21 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { setModalPropsObj } from "../modules/modal";
 import { setGraph, setIsInit } from "../modules/graph";
 import { setModal } from "../modules/modal";
 
 import firebase from "firebase";
 import Graph from "../components/Graph";
-import Modal from "./ModalContainer";
 
-function GraphContainer () {
-  const [modalPropsObj, setModalPropsObj] = useState({});
+function GraphContainer() {
 
   const { graph } = useSelector((state) => ({ graph: state.graph.graph })); // redux 의 graph 상태 구독
   const { isInit } = useSelector((state) => ({ isInit: state.graph.isInit })); // 초기에 데이터를 불러왔는지 확인하기 위한 변수
   const { isAdmin } = useSelector((state) => ({
     isAdmin: state.admin.isAdmin,
   }));
-
   const dispatch = useDispatch();
 
   let options = {
@@ -34,7 +32,7 @@ function GraphContainer () {
         // 선택한 노드의 라벨(이름) 을 변경함.
         onClickFunction: function (e) {
           let dataObj = { currentNodeLabel: e.target.data().label }; // 현재 클릭한 노드의 label값을 currentNodeLabel라는 객체 속성으로 추가하여 객체를 만든다.
-          setModalPropsObj({ modalType: "이름변경", data: dataObj }); // 모달타입을 "이름변경"으로 세팅함.
+          dispatch(setModalPropsObj({ modalType: "이름변경", data: dataObj })); // 모달타입을 "이름변경"으로 세팅함.
           dispatch(setModal(true)); // 모달을 open 한다.
         },
       },
@@ -49,7 +47,7 @@ function GraphContainer () {
         // 선택한 노드와 모달에서 선택한 타겟 노드를 연결하는 간선을 추가함
         onClickFunction: function (e) {
           let dataObj = { selectNodeId: e.target.id() }; // 현재 클릭한 노드의 id값을 selectNodeId라는 객체 속성으로 추가하여 객체를 만든다.
-          setModalPropsObj({ modalType: "간선추가", data: dataObj }); // 모달타입을 "간선추가"로 세팅함.
+          dispatch(setModalPropsObj({ modalType: "간선추가", data: dataObj })); // 모달타입을 "간선추가"로 세팅함.
           dispatch(setModal(true));
         },
       },
@@ -64,7 +62,7 @@ function GraphContainer () {
         // 선택한 노드 뒤에 리프 노드를 추가함.
         onClickFunction: function (e) {
           let dataObj = { selectNodeId: e.target.id() }; // 현재 클릭한 노드의 id값을 selectNodeId라는 객체 속성으로 추가하여 객체를 만든다.
-          setModalPropsObj({ modalType: "리프노드추가", data: dataObj }); // 모달타입을 "리프노드추가"로 세팅함.
+          dispatch(setModalPropsObj({ modalType: "리프노드추가", data: dataObj })); // 모달타입을 "리프노드추가"로 세팅함.
           dispatch(setModal(true));
         },
       },
@@ -89,7 +87,7 @@ function GraphContainer () {
             connectedNodes: newList,
             deleteTargetEdge: e.target.edges().id(),
           };
-          setModalPropsObj({ modalType: "간선에노드추가", data: dataObj });
+          dispatch(setModalPropsObj({ modalType: "간선에노드추가", data: dataObj }));
         },
       },
 
@@ -105,7 +103,7 @@ function GraphContainer () {
           let dataObj = {
             selectEdgeId: e.target.edges().id(), // 현재 클릭한 간선의 id값을 selectEdgeId 에 저장함.
           };
-          setModalPropsObj({ modalType: "간선삭제", data: dataObj });
+          dispatch(setModalPropsObj({ modalType: "간선삭제", data: dataObj }));
           dispatch(setModal(true));
         },
       },
@@ -115,7 +113,7 @@ function GraphContainer () {
         content: "노드 삭제",
         tooltipText: "노드 삭제",
         selector: "node",
-        onClickFunction: function (e) { },
+        onClickFunction: function (e) {},
         disabled: false, //항목을 사용 안 함으로 만들 것인지 여부
         show: isAdmin, // 항목 표시 여부
         hasTrailingDivider: false, // 항목에 후행 구분선이 있는지 여부
@@ -140,10 +138,10 @@ function GraphContainer () {
               let dataObj = {
                 deleteNodeList: list, // 삭제대상인 자식 노드 Id 들이 담겨있음. 이를 이용 하여 자식노드 및 연관 엣지를 삭제할 때 사용한다.
               };
-              setModalPropsObj({
+              dispatch(setModalPropsObj({
                 modalType: "하위노드모두삭제",
                 data: dataObj,
-              });
+              }));
               dispatch(setModal(true));
             },
             disabled: false, //항목을 사용 안 함으로 만들 것인지 여부
@@ -221,7 +219,7 @@ function GraphContainer () {
               dataObj["parentNodes"] = parentNodes;
               dataObj["currentNodeId"] = e.target.id();
 
-              setModalPropsObj({ modalType: "현재노드만삭제", data: dataObj });
+              dispatch(setModalPropsObj({ modalType: "현재노드만삭제", data: dataObj }));
               dispatch(setModal(true));
             },
             disabled: false,
@@ -276,7 +274,7 @@ function GraphContainer () {
           dispatch(setIsInit(true)); // 초기데이터 로드를 마무리 하였음. loadDone 을 true로 변경해줌.
         }
       });
-  }, [dispatch]);
+  }, []);
 
   /* 
 loadDone 조건 없이 graph값이 변경될 때 마다 graph 값을 update 하라고 하면 
@@ -284,7 +282,6 @@ loadDone 조건 없이 graph값이 변경될 때 마다 graph 값을 update 하�
 이를 방지하기위해 초기에 db에서 데이터를 잘 가져왔는지 여부를 확인하기 위한 loadDone 변수를 추가하였다.
 이렇게 되면 graph값이 바뀌었을 때 update 하여도 데이터가 모두 날아갈 가능성은 없다.
 */
-
   useEffect(() => {
     // 초기 데이터 로딩이 완료된 상태라면. null 방지
     if (isInit) firebase.database().ref().update(graph); // graph 데이터가 바뀔때마다 데이터베이스에 update해줌.
@@ -293,7 +290,6 @@ loadDone 조건 없이 graph값이 변경될 때 마다 graph 값을 update 하�
   return (
     <>
       <Graph graph={graph} options={options} />
-      <Modal modalPropsObj={modalPropsObj} graph={graph}></Modal>
     </>
   );
 }

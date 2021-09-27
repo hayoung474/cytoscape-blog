@@ -1,19 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Modal from "../components/Modal";
 import { setModal } from "../modules/modal";
 import { setGraph } from "../modules/graph";
-import { useDispatch } from "react-redux";
 import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
-function ModalContainer ({ modalPropsObj, graph }) {
-
+function ModalContainer() {
   const dispatch = useDispatch();
+
   const [nodeLabel, setNodeLabel] = useState(""); // 노드의 label 값을 저장하기 위한 변수
   const [targetNodeId, setTargetNodeId] = useState(""); // 노드 추가 및 간선 추가
+  const { graph } = useSelector((state) => ({ graph: state.graph.graph })); // redux 의 graph 상태 구독
+  const { modalPropsObj } = useSelector((state) => ({modalPropsObj: state.modal.modalPropsObj})); // redux 의 modalPropsObj 상태 구독
 
   //   /* "이름변경" 기능을 위한 함수 */
   const changeLabel = () => {
     let newGraph = { ...graph }; // spread 함수를 사용하여 useEffect가 발동되도록 함 !
+    // (spread를 통해 값을 복사하는 것을 습관화 하여야 할 듯 ,,, 안그러면 자꾸 useEffect가 발동이 안되네 ㅠ )
     newGraph.nodes.forEach((item) => {
       if (item.data.label === modalPropsObj.data.currentNodeLabel) {
         // 만약에 현재 선택한 라벨과 동일한 라벨을 가진 노드를 찾았다면

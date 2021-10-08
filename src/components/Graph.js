@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState, useMemo } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import Cytoscape from "cytoscape";
 import contextMenus from "cytoscape-context-menus";
 import CoseBillkent from "cytoscape-cose-bilkent";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import "cytoscape-context-menus/cytoscape-context-menus.css";
 
 Cytoscape.use(CoseBillkent);
@@ -11,13 +11,19 @@ Cytoscape.use(contextMenus);
 
 // 2. App.js 로 부터 넘어온 graph 데이터를 출력한다.
 // 3. 우클릭 메뉴로 Modal.js 를 제어한다.
-function Graph ({ graph, options }) {
+
+function Graph({ graph, options }) {
+  // tooptip의 좌표 및 tag, url 저장
+  let url = "";
+  let tag = "";
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
   // graph의 layout 설정
   const layout = {
     name: "cose",
-    ready: function () { },
-    stop: function () { },
-    animate: true,
+    ready: function () {},
+    stop: function () {},
+    animate: false,
     animationEasing: undefined,
     animationDuration: 1000,
     avoidOverlap: true,
@@ -69,7 +75,7 @@ function Graph ({ graph, options }) {
   const predecessorsColor = "#1e90ff"; // 하위 node & edge color
 
   // 배경 흐리게
-  function setDimStyle (target_cy, style) {
+  function setDimStyle(target_cy, style) {
     target_cy.nodes().forEach(function (target) {
       target.style(style);
     });
@@ -79,7 +85,7 @@ function Graph ({ graph, options }) {
   }
 
   // hover
-  function setFocus (
+  function setFocus(
     target_element,
     successorColor,
     predecessorsColor,
@@ -128,12 +134,12 @@ function Graph ({ graph, options }) {
   }
 
   // 노드 갈수록 흐리게
-  function setOpacityElement (target_element, degree) {
+  function setOpacityElement(target_element, degree) {
     target_element.style("opacity", degree);
   }
 
   // 마우스 뗐을때
-  function setResetFocus (target_cy) {
+  function setResetFocus(target_cy) {
     target_cy.nodes().forEach(function (target) {
       let rank = pageRank.rank("#" + target.id());
       target.style("background-color", nodeColor);
@@ -154,97 +160,122 @@ function Graph ({ graph, options }) {
   }
 
   return (
-    <CustomCytoscapeComponent
-      elements={CytoscapeComponent.normalizeElements(graph)}
-      // 그래프 스타일링
-      stylesheet={[
-        {
-          selector: "node",
-          style: {
-            // 노드색
-            backgroundColor: nodeColor,
-            label: "data(label)",
-            width: (el) => {
-              return nodeMaxSize * pageRank.rank("#" + el.id()) + nodeMinSize;
+    <>
+      <CustomCytoscapeComponent
+        elements={CytoscapeComponent.normalizeElements(graph)}
+        // 그래프 스타일링
+        stylesheet={[
+          {
+            selector: "node",
+            style: {
+              // 노드색
+              backgroundColor: nodeColor,
+              label: "data(label)",
+              width: (el) => {
+                return nodeMaxSize * pageRank.rank("#" + el.id()) + nodeMinSize;
+              },
+              height: (el) => {
+                return nodeMaxSize * pageRank.rank("#" + el.id()) + nodeMinSize;
+              },
+              fontSize: (el) => {
+                return fontMaxSize * pageRank.rank("#" + el.id()) + fontMinSize;
+              },
+              // 글자색
+              color: nodeColor,
             },
-            height: (el) => {
-              return nodeMaxSize * pageRank.rank("#" + el.id()) + nodeMinSize;
-            },
-            fontSize: (el) => {
-              return fontMaxSize * pageRank.rank("#" + el.id()) + fontMinSize;
-            },
-            // 글자색
-            color: nodeColor,
           },
-        },
-        {
-          selector: "edge",
-          style: {
-            width: edgeWidth,
-            lineColor: edgeColor,
-            sourceArrowColor: edgeColor,
+          {
+            selector: "edge",
+            style: {
+              width: edgeWidth,
+              lineColor: edgeColor,
+              sourceArrowColor: edgeColor,
+            },
           },
-        },
-      ]}
-      // 레이아웃
-      layout={layout}
-      // 이벤트 바인딩
-      cy={(cy) => {
-        // 우클릭 메뉴 등록
-        cy.contextMenus(options);
+        ]}
+        // 레이아웃
+        layout={layout}
+        // 이벤트 바인딩
+        cy={(cy) => {
+          // 우클릭 메뉴 등록
+          cy.contextMenus(options);
 
-        // 노드가 추가될 때 마다 호출되는 트리거
-        cy.on("add", "node", (e) => {
-          // 그래프에 새로운 값이 세팅될 수 있도록 이전 graph값을 제거해주는 초기화 작업이 필요함.
-          graph = {};
-        });
-
-        // 노드에 마우스 hover시 호출
-        cy.on("tapstart mouseover", "node", (e) => {
-          // 얘는 멀쩡한데 tapend 랑 mouseout은 왜 그런지 ,,
-          // 이 이벤트 함수도 똑같이 2번 발동됨.
-
-          document.querySelector("body").style.cursor = "pointer";
-          document.querySelector("html").style.cursor = "pointer";
-
-          // 색처리
-          setDimStyle(cy, {
-            backgroundColor: dimColor,
-            lineColor: dimColor,
-            sourceArrowColor: dimColor,
-            color: dimColor,
+          // 노드가 추가될 때 마다 호출되는 트리거
+          cy.on("add", "node", (e) => {
+            // 그래프에 새로운 값이 세팅될 수 있도록 이전 graph값을 제거해주는 초기화 작업이 필요함.
+            graph = {};
           });
-          setFocus(
-            e.target,
-            successorColor,
-            predecessorsColor,
-            edgeActiveWidth
-          );
-        });
 
-        // 노드에 마우스 out시
-        cy.on("tapend mouseout", "node", (e) => {
-          e.preventDefault();
-          // 이벤트 함수가 2번 발동되는 이유를 모르겠음.
-          // 또한 2번 실행되는 동안 graph 데이터가 초기값으로 돌아가는 경우 발생
-          document.querySelector("body").style.cursor = "default";
-          document.querySelector("html").style.cursor = "default";
-          if (Object.keys(graph).length !== 0) {
-            // 빈 객체는 아직 그래프 출력 준비가 덜 된 것으로 간주하고 함수를 실행시키지않음. 반면 빈 객체가 아니라면 출력 준비가 다 된 것으로 간주하고 함수를 실행시킴
-            setResetFocus(e.cy);
-          }
-        });
+          // 노드에 마우스 hover시 호출
+          cy.on("tapstart mouseover", "node", (e) => {
+            // 얘는 멀쩡한데 tapend 랑 mouseout은 왜 그런지 ,,
+            // 이 이벤트 함수도 똑같이 2번 발동됨.
 
-        // 윈도우 리사이즈 시 반응형 이벤트 추가
-        let resizeTimer;
-        window.addEventListener("resize", function () {
-          this.clearTimeout(resizeTimer);
-          resizeTimer = this.setTimeout(function () {
-            cy.fit();
-          }, 200);
-        });
-      }}
-    />
+            document.querySelector("body").style.cursor = "pointer";
+            document.querySelector("html").style.cursor = "pointer";
+
+            // 색처리
+            setDimStyle(cy, {
+              backgroundColor: dimColor,
+              lineColor: dimColor,
+              sourceArrowColor: dimColor,
+              color: dimColor,
+            });
+            setFocus(
+              e.target,
+              successorColor,
+              predecessorsColor,
+              edgeActiveWidth
+            );
+          });
+          cy.on("tapstart", "node", (e) => {
+            const { x, y } = e.target.position();
+            tag = e.target.data().label;
+            url = "http://www.naver.com";
+            setPosition({ x: x, y: y });
+
+            console.log(position, tag, url);
+            // setTooltipData({
+            //   position: { x: x, y: y },
+            //   url: url,
+            //   tag: label,
+            // });
+          });
+
+          // 노드에 마우스 out시
+          cy.on("tapend mouseout", "node", (e) => {
+            e.preventDefault();
+            // 이벤트 함수가 2번 발동되는 이유를 모르겠음.
+            // 또한 2번 실행되는 동안 graph 데이터가 초기값으로 돌아가는 경우 발생
+            document.querySelector("body").style.cursor = "default";
+            document.querySelector("html").style.cursor = "default";
+            if (Object.keys(graph).length !== 0) {
+              // 빈 객체는 아직 그래프 출력 준비가 덜 된 것으로 간주하고 함수를 실행시키지않음. 반면 빈 객체가 아니라면 출력 준비가 다 된 것으로 간주하고 함수를 실행시킴
+              setResetFocus(e.cy);
+            }
+          });
+
+          // 윈도우 리사이즈 시 반응형 이벤트 추가
+          let resizeTimer;
+          window.addEventListener("resize", function () {
+            this.clearTimeout(resizeTimer);
+            resizeTimer = this.setTimeout(function () {
+              cy.fit();
+            }, 200);
+          });
+        }}
+      />
+      <TooltipComponent position={position}>
+        <p>
+          <a href="https://github.com/eungyeole/velog-readme-stats">
+            <img
+              src="https://velog-readme-stats.vercel.app/api?name=sinakim&tag=파이썬"
+              alt="sinakim's velog"
+            />
+          </a>
+        </p>
+      </TooltipComponent>
+    </>
   );
 }
 
@@ -254,8 +285,8 @@ export default React.memo(Graph, (prev, next) => {
     야매코드긴 한데,
     만약에 변하기전 상태의 props(prev)의 options 값의 menuItems의 첫번째 값의 show 상태가 true 일 경우. 
     즉, 이미 관리자 모드로 진입하여 메뉴를 사용할 수 있는 상태가 되었을 경우
-    그래프 리렌더링을 하지 않는다.
-  */
+  //   그래프 리렌더링을 하지 않는다.
+  // */
   if (prev.options.menuItems[0].show === true) {
     return next.options && prev.graph === next.graph;
   } else {
@@ -268,4 +299,26 @@ export default React.memo(Graph, (prev, next) => {
 const CustomCytoscapeComponent = styled(CytoscapeComponent)`
   width: 100vw;
   height: 100vh;
+`;
+
+const TooltipComponent = styled.div`
+  width: 100px;
+  height: 100px;
+  background-color: red;
+  position: absolute;
+  z-index: 999;
+
+  right: ${(props) => props.position.x};
+  top: ${(props) => props.position.y};
+
+  ${(props) =>
+    props.position.x !== 0
+      ? css`
+          display: block;
+          z-index: 99999;
+        `
+      : css`
+          display: none;
+          z-index: 0;
+        `};
 `;

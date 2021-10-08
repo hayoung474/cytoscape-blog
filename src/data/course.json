@@ -1,4 +1,13 @@
-
-{"course":[
-
-]}
+{
+  "course": [
+    {
+      "nodeId": "node_1_python"
+    },
+    {
+      "nodeId": "node_2_codeStructure"
+    },
+    {
+      "nodeId": "node_3_function"
+    }
+  ]
+}

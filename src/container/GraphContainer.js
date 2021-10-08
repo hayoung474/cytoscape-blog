@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setModalPropsObj } from "../modules/modal";
 import { setGraph, setIsInit } from "../modules/graph";
@@ -294,4 +294,8 @@ loadDone 조건 없이 graph값이 변경될 때 마다 graph 값을 update 하�
   );
 }
 
-export default GraphContainer;
+// React.memo 사용. 이 함수에서 받아오는 props를 감지하기 위해 React.memo를 사용함.
+export default React.memo(GraphContainer, (prev, next) => {
+  console.log(prev.grpah === next.graph)
+  return prev.grpah === next.graph;
+});

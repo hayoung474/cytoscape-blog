@@ -1,8 +1,8 @@
-const SET_MODAL = "modal/SET_MODAL";
-const SET_MODAL_PROPS_OBJ = "modal/SET_MODAL_PROPS_OBJ";
+const SET_MODAL = 'modal/SET_MODAL';
+const SET_MODAL_PROPS_OBJ = 'modal/SET_MODAL_PROPS_OBJ';
 
-export const setModal = (state) => ({ type: SET_MODAL, state });
-export const setModalPropsObj = (state) => ({
+export const setModal = state => ({ type: SET_MODAL, state });
+export const setModalPropsObj = state => ({
   type: SET_MODAL_PROPS_OBJ,
   state,
 });

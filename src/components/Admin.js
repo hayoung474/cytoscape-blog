@@ -1,9 +1,9 @@
-import React from "react";
-import styled from "styled-components"
+import React from 'react';
+import styled from 'styled-components';
 
-function Admin ({ adminLogin }) {
-    /* 왼쪽 상단에 투명버튼으로 되어있는 관리자 로그인 버튼 */
-    return <AdminSetButton onClick={adminLogin} />
+function Admin({ adminLogin }) {
+  /* 왼쪽 상단에 투명버튼으로 되어있는 관리자 로그인 버튼 */
+  return <AdminSetButton onClick={adminLogin} />;
 }
 
 const AdminSetButton = styled.button`

@@ -1,9 +1,8 @@
-const SET_GRAPH = "graph/SET_GRAPH";
-const SET_ISINIT = "graph/SET_ISINIT";
+const SET_GRAPH = 'graph/SET_GRAPH';
+const SET_ISINIT = 'graph/SET_ISINIT';
 
-export const setGraph = (state) => ({ type: SET_GRAPH, state });
-export const setIsInit = (state) => ({ type: SET_ISINIT, state });
-
+export const setGraph = state => ({ type: SET_GRAPH, state });
+export const setIsInit = state => ({ type: SET_ISINIT, state });
 
 const initialState = {
   graph: { nodes: [], edges: [] }, // 초기 graph 데이터,
@@ -13,7 +12,7 @@ const initialState = {
 export default function modal(state = initialState, action) {
   switch (action.type) {
     case SET_GRAPH:
-        console.log(action.state)
+      console.log(action.state);
       return {
         ...state,
         graph: action.state,

@@ -6,7 +6,6 @@ import { setModal } from '../modules/modal';
 // 4. Graph.js 가 부모 컴포넌트이며, Graph.js 의 값에 따라 Modal의 표시값이 달라진다.
 function Modal({
   // Graph.js 로 부터 넘어온 props
-  header,
   execution_function,
   children,
   modalType,

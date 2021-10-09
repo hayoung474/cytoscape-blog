@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
-function InfoModal() {
+function InfoModal({ closeInfoModal }) {
   return (
     <>
       <ModalContainer></ModalContainer>
-      <Dim />
+      <Dim onClick={closeInfoModal} />
     </>
   );
 }

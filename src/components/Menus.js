@@ -1,9 +1,19 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
+import { setInfoModal } from '../modules/infoModal';
 
 function Menus() {
+  const dispatch = useDispatch();
+
+  const { infoModal } = useSelector(state => ({ infoModal: state.infoModal.infoModal }));
+
+  const openInfoModal = () => {
+    dispatch(setInfoModal(true));
+  };
+
   return (
-    <FloatingActionButton>
+    <FloatingActionButton infoModal={infoModal} onClick={openInfoModal}>
       <CustomButton color="#000" className="mainButton">
         +
       </CustomButton>
@@ -40,7 +50,8 @@ const FloatingActionButton = styled.div`
   position: fixed;
   bottom: 10px;
   right: 10px;
-  z-index: 999;
+  z-index: ${props => (props.infoModal === true ? '0' : '1')};
+
   display: flex;
   flex-direction: column-reverse;
   place-items: flex-end;
@@ -89,7 +100,6 @@ const CustomButton = styled.button`
   width: 60px;
   height: 60px;
   text-align: center;
-  //background: #eee;
   color: white;
   border-radius: 50%;
   border: 0;

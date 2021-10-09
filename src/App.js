@@ -1,11 +1,11 @@
 import React from "react";
 import Graph from "./container/GraphContainer";
-import AdminBtn from "./container/AdminContainer";
+import AdminBtn from "./container/AdminContainer"
 import Menus from "./components/Menus";
-import Modal from "./container/ModalContainer";
+import Modal from './container/ModalContainer'
 
-function App() {
-  // 1. firebase 로 부터 데이터를 받아와 정제하여 graph에 세팅함.
+function App () { // 1. firebase 로 부터 데이터를 받아와 정제하여 graph에 세팅함.
+
 
   return (
     <>
@@ -22,3 +22,4 @@ function App() {
 }
 
 export default App;
+

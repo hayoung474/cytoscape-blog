@@ -1,7 +1,7 @@
-import React from "react";
-import styled from "styled-components";
-import { useSelector, useDispatch } from "react-redux";
-import { setModal } from "../modules/modal";
+import React from 'react';
+import styled from 'styled-components';
+import { useSelector, useDispatch } from 'react-redux';
+import { setModal } from '../modules/modal';
 
 // 4. Graph.js 가 부모 컴포넌트이며, Graph.js 의 값에 따라 Modal의 표시값이 달라진다.
 function Modal({
@@ -14,8 +14,8 @@ function Modal({
   setTargetNodeId,
 }) {
   const dispatch = useDispatch();
-  const { modal } = useSelector((state) => ({ modal: state.modal.modal }));
-  const { graph } = useSelector((state) => ({ graph: state.graph.graph })); // redux 의 graph 상태 구독
+  const { modal } = useSelector(state => ({ modal: state.modal.modal }));
+  const { graph } = useSelector(state => ({ graph: state.graph.graph })); // redux 의 graph 상태 구독
 
   return (
     <>
@@ -24,20 +24,18 @@ function Modal({
         <ModalContent>
           <ModalHeader>{modalType}</ModalHeader>
           <ModalBody>{children}</ModalBody>
-          {(modalType === "이름변경" ||
-            modalType === "리프노드추가" ||
-            modalType === "간선에노드추가") && (
+          {(modalType === '이름변경' || modalType === '리프노드추가' || modalType === '간선에노드추가') && (
             <ModalInput
               placeholder="Node Label"
               type="text"
-              onChange={(e) => {
+              onChange={e => {
                 setNodeLabel(e.target.value);
               }}
             ></ModalInput>
           )}
-          {modalType === "간선추가" && (
+          {modalType === '간선추가' && (
             <ModalSelect
-              onChange={(e) => {
+              onChange={e => {
                 setTargetNodeId(e.target.options[e.target.selectedIndex].value);
               }}
             >
@@ -125,7 +123,7 @@ const DarkBackground = styled.div`
   height: 100%;
   background: rgba(0, 0, 0, 0.8);
 
-  display: ${(props) => (props.modal ? "block" : "none")};
+  display: ${props => (props.modal ? 'block' : 'none')};
 `;
 
 export default Modal;

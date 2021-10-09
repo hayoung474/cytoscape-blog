@@ -1,5 +1,5 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
 function Menus() {
   return (
@@ -74,12 +74,12 @@ const FloatingActionButton = styled.div`
   }
 `;
 const CustomButton = styled.button`
-  background: ${(props) => props.color || "#eee"};
+  background: ${props => props.color || '#eee'};
   &:hover {
-    background: lighten(${(props) => props.color || "#eee"}, 10%);
+    background: lighten(${props => props.color || '#eee'}, 10%);
   }
   &:active {
-    background: darken(${(props) => props.color || "#eee"}, 10%);
+    background: darken(${props => props.color || '#eee'}, 10%);
   }
 
   display: inline-block;

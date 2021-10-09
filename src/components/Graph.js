@@ -15,16 +15,8 @@ function Graph({ graph, options }) {
   // graph의 layout 설정
   const layout = {
     name: 'cose',
-    ready: function () {},
-    stop: function () {},
-    animate: true,
-    animationEasing: undefined,
-    animationDuration: 1000,
+    animate: false,
     avoidOverlap: true,
-    animateFilter: function (node, i) {
-      return true;
-    },
-    animationThreshold: 250,
     refresh: 20,
     fit: true,
     padding: 30,
@@ -248,5 +240,5 @@ export default React.memo(Graph, (prev, next) => {
 
 const CustomCytoscapeComponent = styled(CytoscapeComponent)`
   width: 100vw;
-  height: 100vh;
+  height: calc(100vh - 75px);
 `;

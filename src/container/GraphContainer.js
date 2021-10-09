@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setModalPropsObj } from '../modules/modal';
 import { setGraph, setIsInit } from '../modules/graph';
@@ -267,7 +267,7 @@ function GraphContainer() {
           dispatch(setIsInit(true)); // 초기데이터 로드를 마무리 하였음. loadDone 을 true로 변경해줌.
         }
       });
-  }, []);
+  }, [dispatch]);
 
   /* 
 loadDone 조건 없이 graph값이 변경될 때 마다 graph 값을 update 하라고 하면 

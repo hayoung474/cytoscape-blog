@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Modal from '../components/Modal';
 import { setModal } from '../modules/modal';
 import { setGraph } from '../modules/graph';

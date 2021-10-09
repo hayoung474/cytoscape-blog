@@ -4,6 +4,7 @@ import AdminBtn from './container/AdminContainer';
 import Menus from './components/Menus';
 import Modal from './container/ModalContainer';
 import Header from './components/Header.js';
+import InfoModal from './container/InfoModalContainer';
 
 import { createGlobalStyle } from 'styled-components';
 
@@ -23,6 +24,8 @@ function App() {
       <Graph />
       {/* 모달 */}
       <Modal />
+      {/* 소개 모달 (블로그 주인 소개, 블로그 주인 치팅 사이트 소개) */}
+      <InfoModal />
     </>
   );
 }

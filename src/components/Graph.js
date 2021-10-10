@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import CytoscapeComponent from 'react-cytoscapejs';
 import Cytoscape from 'cytoscape';
 import contextMenus from 'cytoscape-context-menus';
@@ -12,6 +12,8 @@ Cytoscape.use(contextMenus);
 // 2. App.js 로 부터 넘어온 graph 데이터를 출력한다.
 // 3. 우클릭 메뉴로 Modal.js 를 제어한다.
 function Graph({ graph, options }) {
+
+
   // graph의 layout 설정
   const layout = {
     name: 'cose',

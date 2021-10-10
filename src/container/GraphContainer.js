@@ -30,7 +30,7 @@ function GraphContainer() {
         // 해당 메뉴를 클릭했을 때 수행할 기능
         // 선택한 노드의 라벨(이름) 을 변경함.
         onClickFunction: function (e) {
-          let dataObj = { currentNodeLabel: e.target.data().label }; // 현재 클릭한 노드의 label값을 currentNodeLabel라는 객체 속성으로 추가하여 객체를 만든다.
+          let dataObj = { selectNodeId: e.target.id() }; // 현재 클릭한 노드의 label값을 currentNodeLabel라는 객체 속성으로 추가하여 객체를 만든다.
           dispatch(setModalPropsObj({ modalType: '이름변경', data: dataObj })); // 모달타입을 "이름변경"으로 세팅함.
           dispatch(setModal(true)); // 모달을 open 한다.
         },
@@ -71,7 +71,7 @@ function GraphContainer() {
         content: '간선에 노드 추가',
         tooltipText: '간선에 노드 추가',
         selector: 'edge', // 간선에 우클릭 하였을 경우 활성화 됨.
-        coreAsWell: true,
+        coreAsWell: isAdmin,
         show: isAdmin,
         // 간선에 노드를 추가함.
         onClickFunction: function (e) {
@@ -238,6 +238,8 @@ function GraphContainer() {
             setGraph를 사용하여 graph 값을 변경해줌 
            */
           const loadData = snapshot.val();
+
+          console.log(loadData)
           const loadEdgeData = loadData['edges'];
           const loadNodeData = loadData['nodes'];
 
@@ -263,11 +265,13 @@ function GraphContainer() {
           tempGraph['nodes'] = tempNodes;
           tempGraph['edges'] = tempEdges;
 
+          console.log(tempGraph)
+
           dispatch(setGraph(tempGraph)); // 그래프 세팅
           dispatch(setIsInit(true)); // 초기데이터 로드를 마무리 하였음. loadDone 을 true로 변경해줌.
         }
       });
-  }, [dispatch]);
+  }, []);
 
   /* 
 loadDone 조건 없이 graph값이 변경될 때 마다 graph 값을 update 하라고 하면 

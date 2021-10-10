@@ -15,15 +15,16 @@ function ModalContainer() {
 
   //   /* "이름변경" 기능을 위한 함수 */
   const changeLabel = () => {
-    let newGraph = { ...graph }; // spread 함수를 사용하여 useEffect가 발동되도록 함 !
-    // (spread를 통해 값을 복사하는 것을 습관화 하여야 할 듯 ,,, 안그러면 자꾸 useEffect가 발동이 안되네 ㅠ )
+    let newGraph = { ...graph };
+    console.log("g허허",graph)
     newGraph.nodes.forEach(item => {
-      if (item.data.label === modalPropsObj.data.currentNodeLabel) {
+      if (item.data.id === modalPropsObj.data.selectNodeId) {
+        console.log(item.data.label,nodeLabel)
         // 만약에 현재 선택한 라벨과 동일한 라벨을 가진 노드를 찾았다면
         item.data.label = nodeLabel; // 그 노드의 라벨을 변경하고자 하는 새로운 라벨 이름으로 변경함
       }
     });
-
+    console.log("바뀐값",newGraph)
     dispatch(setGraph(newGraph)); // graph 자체를 덮어씌움
     dispatch(setModal(false));
   };

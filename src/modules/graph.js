@@ -12,7 +12,6 @@ const initialState = {
 export default function modal(state = initialState, action) {
   switch (action.type) {
     case SET_GRAPH:
-      console.log(action.state);
       return {
         ...state,
         graph: action.state,

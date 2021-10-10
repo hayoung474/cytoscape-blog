@@ -1,8 +1,8 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { GrClose } from 'react-icons/gr';
 
-function InfoModal({ closeInfoModal, userInfo }) {
+function InfoModal({ closeInfoModal, userInfo, userInfo2, userLink }) {
   return (
     <>
       <ModalContainer>
@@ -11,10 +11,18 @@ function InfoModal({ closeInfoModal, userInfo }) {
         <Container>
           <ProfileImgContainer />
           <UserName>SinaKim</UserName>
-          <UserInfo>{userInfo}</UserInfo>
+          <UserInfo infoNum={1}>{userInfo}</UserInfo>
         </Container>
 
-        <Container></Container>
+        <Container>
+          <UserInfo infoNum={2}>{userInfo2}</UserInfo>
+          <div>
+            <p style={{ fontSize: '20px', margin: '0' }}>저에 대해서 더 알고 싶으시다면!</p>
+            {userLink.map((el, idx) => (
+              <div key={idx}>{el.name}</div>
+            ))}
+          </div>
+        </Container>
       </ModalContainer>
 
       <Dim onClick={closeInfoModal} />
@@ -58,10 +66,10 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 `;
 
 const ProfileImgContainer = styled.div`
-  margin-top: 60px;
   width: 360px;
   height: 360px;
   background-image: url('https://raw.githubusercontent.com/sina-Kim/sina-Kim.github.io/master/assets/images/sina-bear.jpg?token=APFSJOF5PUIX7EBFA4SASKLBNPOWS');
@@ -77,9 +85,11 @@ const UserName = styled.p`
 `;
 
 const UserInfo = styled.p`
-  margin: 2rem 2rem 2rem 2rem;
-  font-size: 20px;
+  margin: ${props => (props.infoNum === 1 ? css`2rem 0 0 0` : css`0`)};
+  text-align: center;
+  font-size: 24px;
   white-space: pre-line;
+  line-height: ${props => (props.infoNum === 2 ? css`2.5rem;` : css``)};
 `;
 
 export default InfoModal;

@@ -4,6 +4,7 @@ import { setModal } from '../modules/modal';
 import { setGraph } from '../modules/graph';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import cryptoRandomString from 'crypto-random-string';
 
 function ModalContainer() {
   const dispatch = useDispatch();
@@ -46,7 +47,7 @@ function ModalContainer() {
 
   //   /* "간선에 노드 추가" 기능을 위한 함수 */
   const addToEdgeNode = () => {
-    const newNodeId = Math.random().toString(36).substr(2, 11); // 랜덤스트링 생성 구문
+    const newNodeId = cryptoRandomString({length: 20}); // 랜덤스트링 생성 구문
     let newGraph = { ...graph };
 
     // 두 노드가 연결된 엣지 제거
@@ -80,7 +81,7 @@ function ModalContainer() {
 
   //   /* "노드추가" 기능을 위한 함수 */
   const addNode = () => {
-    const newNodeId = Math.random().toString(36).substr(2, 11);
+    const newNodeId = cryptoRandomString({length: 20}); // 랜덤스트링 생성 구문
     const targetNodeId = modalPropsObj.data.selectNodeId;
     let newGraph = { ...graph };
     newGraph['nodes'].push({ data: { id: newNodeId, label: nodeLabel } });

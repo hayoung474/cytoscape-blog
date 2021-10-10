@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 
-function Header() {
+function Header({ adminLogin }) {
   return (
     <HeaderWrapper>
-      <Title>SinaKim's velog</Title>
+      <Title onClick={adminLogin}>SinaKim's velog</Title>
     </HeaderWrapper>
   );
 }

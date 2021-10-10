@@ -1,11 +1,8 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { GrClose } from 'react-icons/gr';
 
-function InfoModal({ closeInfoModal }) {
-  const userInfo = `주인 소개주인 소개주인 소개주인 소개주인 소개주인 소개주인 소개주인 소개주인 소개주인 소개
-  주인 소개주인 소개주인 소개주인 소개주인 소개
-  주인 소개주인 소개주인 소개주인 소개주인 소개`;
+function InfoModal({ closeInfoModal, userInfo }) {
   return (
     <>
       <ModalContainer>

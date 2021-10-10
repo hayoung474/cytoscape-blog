@@ -24,7 +24,7 @@ function Modal({
         <ModalContent>
           <ModalHeader>{modalType}</ModalHeader>
           <ModalBody>{children}</ModalBody>
-          {(modalType === '이름변경' || modalType === '리프노드추가' || modalType === '간선에노드추가') && (
+          {(modalType === '이름변경' || modalType === '리프노드추가' || modalType === '간선에노드추가' || modalType === '새노드추가') && (
             <ModalInput
               placeholder="Node Label"
               type="text"
@@ -39,9 +39,10 @@ function Modal({
                 setTargetNodeId(e.target.options[e.target.selectedIndex].value);
               }}
             >
+              <option value="" selected="selected" hidden="hidden">연결할 간선을 선택하세요</option>
               {graph.nodes.map((item, index) => {
                 return (
-                  <option value={item.data.id} key={index}>
+                  <option value={item.data.id} key={index}> 
                     {item.data.label}
                   </option>
                 );

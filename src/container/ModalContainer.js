@@ -86,8 +86,8 @@ function ModalContainer() {
     dispatch(setModal(false));
   };
 
-  //   /* "노드추가" 기능을 위한 함수 */
-  const addNode = () => {
+  //   /* "리프노드추가" 기능을 위한 함수 */
+  const addLeafNode = () => {
     const newNodeId = cryptoRandomString({length: 20}); // 랜덤스트링 생성 구문
     const targetNodeId = modalPropsObj.data.selectNodeId;
     let newGraph = { ...graph };
@@ -99,6 +99,15 @@ function ModalContainer() {
         target: targetNodeId,
       },
     });
+    dispatch(setGraph(newGraph));
+    dispatch(setModal(false));
+  };
+
+  // 새 노드 추가를 위한 함수
+  const addNode = () => {
+    const newNodeId = cryptoRandomString({length: 20}); // 랜덤스트링 생성 구문
+    let newGraph = { ...graph };
+    newGraph['nodes'].push({ data: { id: newNodeId, label: nodeLabel } });
     dispatch(setGraph(newGraph));
     dispatch(setModal(false));
   };
@@ -199,14 +208,15 @@ function ModalContainer() {
           (modalPropsObj.modalType === '간선삭제' && deleteEdge) ||
           (modalPropsObj.modalType === '하위노드모두삭제' && deleteNodeAll) ||
           (modalPropsObj.modalType === '현재노드만삭제' && deleteNodeCurrent) ||
-          (modalPropsObj.modalType === '리프노드추가' && addNode)
+          (modalPropsObj.modalType === '리프노드추가' && addLeafNode) ||
+          (modalPropsObj.modalType === '새노드추가' && addNode)
         }
         setNodeLabel={setNodeLabel}
         setTargetNodeId={setTargetNodeId}
       >
         {/* 모달 body 부분.*/}
-        {modalPropsObj.modalType === '리프노드추가' && <>추가할 노드의 이름을 작성해주세요</>}
-        {modalPropsObj.modalType === '간선추가' && <>해당 노드와 연결할 노드를 선택하세요</>}
+        {(modalPropsObj.modalType === '리프노드추가' || modalPropsObj.modalType === '새노드추가') && <>추가할 노드의 이름을 작성해주세요</>}
+        {modalPropsObj.modalType === '간선추가' && <>해당 노드와 연결할 노드를 선택하세요. 선택한 노드가 부모노드가 됩니다.</>}
         {modalPropsObj.modalType === '간선삭제' && <>해당 간선을 삭제하시겠습니까?</>}
         {modalPropsObj.modalType === '간선에노드추가' && <>추가할 노드의 이름을 작성해주세요</>}
         {modalPropsObj.modalType === '이름변경' && <>변경할 노드의 이름을 작성해주세요</>}

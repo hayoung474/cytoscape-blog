@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react';
+import React, { useEffect, useState } from 'react';
 import CytoscapeComponent from 'react-cytoscapejs';
 import Cytoscape from 'cytoscape';
 import contextMenus from 'cytoscape-context-menus';
@@ -12,12 +12,8 @@ Cytoscape.use(contextMenus);
 // 2. App.js 로 부터 넘어온 graph 데이터를 출력한다.
 // 3. 우클릭 메뉴로 Modal.js 를 제어한다.
 function Graph({ graph, options }) {
-
-  useEffect(()=>{
-    console.log(graph)
-  },[graph])
-
-
+  const [recommendCourse, setRecommendCourse] = useState(['node_4_set', 'node_3_sequence', 'node_2_varAndType']);
+  const [recommendMode, setTecommendMode] = useState(true);
 
   // graph의 layout 설정
   const layout = {
@@ -75,6 +71,11 @@ function Graph({ graph, options }) {
     target_cy.edges().forEach(function (target) {
       target.style(style);
     });
+  }
+
+  function recommendCourseStyleSet(target_element) {
+    target_element.style('color', 'red');
+    target_element.style('width', '20px');
   }
 
   // hover
@@ -170,16 +171,45 @@ function Graph({ graph, options }) {
             sourceArrowColor: edgeColor,
           },
         },
+        {
+          selector: '.recommend-mode',
+          style: {
+            backgroundColor: '#FFFF00',
+            width: el => {
+              return nodeMaxSize * pageRank.rank('#' + el.id()) * 5 + nodeMinSize;
+            },
+            height: el => {
+              return nodeMaxSize * pageRank.rank('#' + el.id()) * 5 + nodeMinSize;
+            },
+            fontSize: fontActiveSize
+          },
+        },
       ]}
       // 레이아웃
       layout={layout}
       // 이벤트 바인딩
       cy={cy => {
+        /* 추천코스 스타일시트 설정을 위한 클래스 추가 */
+        if (recommendMode === true) {
+          for (let i = 0; i < recommendCourse.length; i++) {
+            cy.$('#' + recommendCourse[i]).addClass('recommend-mode');
+          }
+        }
+        else if (recommendMode === false){
+          // 기존 추천리스트의 클래스를 제거한 후
+          for (let i = 0; i < recommendCourse.length; i++) {
+            cy.$('#' + recommendCourse[i]).removeClass('recommend-mode');
+          }
+          // 추천리스트 초기화
+          setRecommendCourse([])
+
+        }
+
         // 우클릭 메뉴 등록
         cy.contextMenus(options);
 
         // 노드가 추가될 때 마다 호출되는 트리거
-        cy.on('add', 'node', e => {
+        cy.on('add data', 'node', e => {
           // 그래프에 새로운 값이 세팅될 수 있도록 이전 graph값을 제거해주는 초기화 작업이 필요함.
           graph = {};
         });
@@ -230,9 +260,9 @@ function Graph({ graph, options }) {
 
 // // React.memo 사용. 이 함수에서 받아오는 props를 감지하기 위해 React.memo를 사용함.
 // export default React.memo(Graph, (prev, next) => {
-//   /* 
+//   /*
 //     야매코드긴 한데,
-//     만약에 변하기전 상태의 props(prev)의 options 값의 menuItems의 첫번째 값의 show 상태가 true 일 경우. 
+//     만약에 변하기전 상태의 props(prev)의 options 값의 menuItems의 첫번째 값의 show 상태가 true 일 경우.
 //     즉, 이미 관리자 모드로 진입하여 메뉴를 사용할 수 있는 상태가 되었을 경우
 //     그래프 리렌더링을 하지 않는다.
 //   */
@@ -244,7 +274,7 @@ function Graph({ graph, options }) {
 //     return false; // 그렇기에 리렌더링을 1번 해준다. 이 과정을 지나고 나면 다시 이 분기로 돌아오지 않는다. (새로고침 시 돌아옴 )
 //   }
 // });
-export default Graph
+export default Graph;
 const CustomCytoscapeComponent = styled(CytoscapeComponent)`
   width: 100vw;
   height: calc(100vh - 75px);

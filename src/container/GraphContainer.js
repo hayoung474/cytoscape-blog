@@ -239,8 +239,6 @@ function GraphContainer() {
             setGraph를 사용하여 graph 값을 변경해줌 
            */
           const loadData = snapshot.val();
-
-          console.log(loadData);
           const loadEdgeData = loadData['edges'];
           const loadNodeData = loadData['nodes'];
 
@@ -251,7 +249,9 @@ function GraphContainer() {
           let node;
 
           let tempObj = {};
-          let tempGraph = {};
+          let tempGraph = { nodes: [], edges: [] };
+
+          dispatch(setGraph(tempGraph)); // 그래프 세팅
 
           for (edge in loadEdgeData) {
             tempObj = loadEdgeData[edge];
@@ -266,6 +266,7 @@ function GraphContainer() {
           tempGraph['nodes'] = tempNodes;
           tempGraph['edges'] = tempEdges;
 
+          console.log(tempGraph);
           dispatch(setGraph(tempGraph)); // 그래프 세팅
           dispatch(setIsInit(true)); // 초기데이터 로드를 마무리 하였음. loadDone 을 true로 변경해줌.
         }

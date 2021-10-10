@@ -13,6 +13,11 @@ Cytoscape.use(contextMenus);
 // 3. 우클릭 메뉴로 Modal.js 를 제어한다.
 function Graph({ graph, options }) {
 
+  useEffect(()=>{
+    console.log(graph)
+  },[graph])
+
+
 
   // graph의 layout 설정
   const layout = {
@@ -223,23 +228,23 @@ function Graph({ graph, options }) {
   );
 }
 
-// React.memo 사용. 이 함수에서 받아오는 props를 감지하기 위해 React.memo를 사용함.
-export default React.memo(Graph, (prev, next) => {
-  /* 
-    야매코드긴 한데,
-    만약에 변하기전 상태의 props(prev)의 options 값의 menuItems의 첫번째 값의 show 상태가 true 일 경우. 
-    즉, 이미 관리자 모드로 진입하여 메뉴를 사용할 수 있는 상태가 되었을 경우
-    그래프 리렌더링을 하지 않는다.
-  */
-  if (prev.options.menuItems[0].show === true) {
-    return next.options && prev.graph === next.graph;
-  } else {
-    // 그게 아니라면 아직 관리자 상태가 아니므로 바뀐 options값을 적용해주기 위해 리렌더링을 1번 해준다.
-    // 이 조건분기 없이 return prev.grpah === next.graph 하게 되면, 관리자모드로 진입하여도 그래프가 리렌더링 되지 않아 메뉴를 사용할 수 없게된다.
-    return false; // 그렇기에 리렌더링을 1번 해준다. 이 과정을 지나고 나면 다시 이 분기로 돌아오지 않는다. (새로고침 시 돌아옴 )
-  }
-});
-
+// // React.memo 사용. 이 함수에서 받아오는 props를 감지하기 위해 React.memo를 사용함.
+// export default React.memo(Graph, (prev, next) => {
+//   /* 
+//     야매코드긴 한데,
+//     만약에 변하기전 상태의 props(prev)의 options 값의 menuItems의 첫번째 값의 show 상태가 true 일 경우. 
+//     즉, 이미 관리자 모드로 진입하여 메뉴를 사용할 수 있는 상태가 되었을 경우
+//     그래프 리렌더링을 하지 않는다.
+//   */
+//   if (prev.options.menuItems[0].show === true) {
+//     return next.options && prev.graph === next.graph;
+//   } else {
+//     // 그게 아니라면 아직 관리자 상태가 아니므로 바뀐 options값을 적용해주기 위해 리렌더링을 1번 해준다.
+//     // 이 조건분기 없이 return prev.grpah === next.graph 하게 되면, 관리자모드로 진입하여도 그래프가 리렌더링 되지 않아 메뉴를 사용할 수 없게된다.
+//     return false; // 그렇기에 리렌더링을 1번 해준다. 이 과정을 지나고 나면 다시 이 분기로 돌아오지 않는다. (새로고침 시 돌아옴 )
+//   }
+// });
+export default Graph
 const CustomCytoscapeComponent = styled(CytoscapeComponent)`
   width: 100vw;
   height: calc(100vh - 75px);

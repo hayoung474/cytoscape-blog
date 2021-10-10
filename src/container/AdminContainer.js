@@ -11,7 +11,8 @@ function AdminContainer() {
   const adminLogin = () => {
     let password = prompt('password');
     // 임시로 1234
-    if (password === '1234') dispatch(setAdmin(true));
+    if (password === '로그인') dispatch(setAdmin(true));
+    if (password === "로그아웃") dispatch(setAdmin(false));
   };
 
   return <Admin adminLogin={adminLogin} />;

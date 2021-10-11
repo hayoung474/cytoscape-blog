@@ -229,13 +229,15 @@ export default React.memo(Graph, (prev, next) => {
     즉, 이미 관리자 모드로 진입하여 메뉴를 사용할 수 있는 상태가 되었을 경우
     그래프 리렌더링을 하지 않는다.
   */
-  if (prev.options.menuItems[0].show === true) {
-    return next.options && prev.graph === next.graph;
-  } else {
-    // 그게 아니라면 아직 관리자 상태가 아니므로 바뀐 options값을 적용해주기 위해 리렌더링을 1번 해준다.
-    // 이 조건분기 없이 return prev.grpah === next.graph 하게 되면, 관리자모드로 진입하여도 그래프가 리렌더링 되지 않아 메뉴를 사용할 수 없게된다.
-    return false; // 그렇기에 리렌더링을 1번 해준다. 이 과정을 지나고 나면 다시 이 분기로 돌아오지 않는다. (새로고침 시 돌아옴 )
-  }
+    return prev.grpah === next.graph
+  // console.log(prev, next)
+  // if (prev.options.menuItems[0].show !== next.options.menuItems[0].show) {
+  //   return true;
+  // } else {
+  //   // 그게 아니라면 아직 관리자 상태가 아니므로 바뀐 options값을 적용해주기 위해 리렌더링을 1번 해준다.
+  //   // 이 조건분기 없이 return prev.grpah === next.graph 하게 되면, 관리자모드로 진입하여도 그래프가 리렌더링 되지 않아 메뉴를 사용할 수 없게된다.
+  //   return false; // 그렇기에 리렌더링을 1번 해준다. 이 과정을 지나고 나면 다시 이 분기로 돌아오지 않는다. (새로고침 시 돌아옴 )
+  // }
 });
 
 const CustomCytoscapeComponent = styled(CytoscapeComponent)`

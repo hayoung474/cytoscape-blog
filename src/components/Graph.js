@@ -229,7 +229,7 @@ export default React.memo(Graph, (prev, next) => {
     즉, 이미 관리자 모드로 진입하여 메뉴를 사용할 수 있는 상태가 되었을 경우
     그래프 리렌더링을 하지 않는다.
   */
-    return prev.grpah === next.graph
+  return prev.grpah === next.graph;
   // console.log(prev, next)
   // if (prev.options.menuItems[0].show !== next.options.menuItems[0].show) {
   //   return true;

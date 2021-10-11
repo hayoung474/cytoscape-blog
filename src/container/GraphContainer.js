@@ -15,7 +15,6 @@ function GraphContainer() {
   }));
   const dispatch = useDispatch();
 
-
   let options = {
     evtType: 'cxttap',
 
@@ -226,9 +225,9 @@ function GraphContainer() {
     ],
   };
 
-  useEffect(()=>{
-    console.log(options)
-  },[options])
+  useEffect(() => {
+    console.log(options);
+  }, [options]);
 
   useEffect(() => {
     firebase // firebase 에 접근하여 데이터를 받아오는 구문

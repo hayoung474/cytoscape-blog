@@ -12,7 +12,10 @@ Cytoscape.use(contextMenus);
 // 2. App.js 로 부터 넘어온 graph 데이터를 출력한다.
 // 3. 우클릭 메뉴로 Modal.js 를 제어한다.
 function Graph({ graph, options }) {
-  const [recommendCourse, setRecommendCourse] = useState(['node_4_set', 'node_3_sequence', 'node_2_varAndType']);
+  const [recommendCourse, setRecommendCourse] = useState({
+    node: ['node_1_python', 'node_2_package', 'node_3_3rdParty'],
+    edge: ['node_1_python->node_2_package', 'node_2_package->node_3_3rdParty'],
+  });
   const [recommendMode, setTecommendMode] = useState(true);
 
   // graph의 layout 설정
@@ -62,6 +65,7 @@ function Graph({ graph, options }) {
   const nodeActiveColor = '#ffa502';
   const successorColor = '#ff6348'; // 상위 node & edge color
   const predecessorsColor = '#1e90ff'; // 하위 node & edge color
+  const recommendColor = '#c1e1c5';
 
   // 배경 흐리게
   function setDimStyle(target_cy, style) {
@@ -71,11 +75,6 @@ function Graph({ graph, options }) {
     target_cy.edges().forEach(function (target) {
       target.style(style);
     });
-  }
-
-  function recommendCourseStyleSet(target_element) {
-    target_element.style('color', 'red');
-    target_element.style('width', '20px');
   }
 
   // hover
@@ -172,16 +171,24 @@ function Graph({ graph, options }) {
           },
         },
         {
-          selector: '.recommend-mode',
+          selector: '.recommend-mode-node',
           style: {
-            backgroundColor: '#FFFF00',
+            backgroundColor: recommendColor,
             width: el => {
-              return nodeMaxSize * pageRank.rank('#' + el.id()) * 5 + nodeMinSize;
+              return nodeMaxSize * pageRank.rank('#' + el.id()) * 2 + nodeMinSize;
             },
             height: el => {
-              return nodeMaxSize * pageRank.rank('#' + el.id()) * 5 + nodeMinSize;
+              return nodeMaxSize * pageRank.rank('#' + el.id()) * 2 + nodeMinSize;
             },
-            fontSize: fontActiveSize
+            fontSize: fontActiveSize,
+          },
+        },
+        {
+          selector: '.recommend-mode-edge',
+          style: {
+            lineColor: recommendColor,
+            width: '5px',
+            sourceArrowColor: recommendColor,
           },
         },
       ]}
@@ -191,25 +198,26 @@ function Graph({ graph, options }) {
       cy={cy => {
         /* 추천코스 스타일시트 설정을 위한 클래스 추가 */
         if (recommendMode === true) {
-          for (let i = 0; i < recommendCourse.length; i++) {
-            cy.$('#' + recommendCourse[i]).addClass('recommend-mode');
-          }
-        }
-        else if (recommendMode === false){
+          recommendCourse.node.forEach(item => {
+            cy.elements('node[id = "' + item + '"]').addClass('recommend-mode-node');
+          });
+          recommendCourse.edge.forEach(item => {
+            cy.elements('edge[id = "' + item + '"]').addClass('recommend-mode-edge');
+          });
+        } else if (recommendMode === false) {
           // 기존 추천리스트의 클래스를 제거한 후
-          for (let i = 0; i < recommendCourse.length; i++) {
-            cy.$('#' + recommendCourse[i]).removeClass('recommend-mode');
-          }
-          // 추천리스트 초기화
-          setRecommendCourse([])
+          cy.edges().classes('');
+          cy.nodes().classes('');
 
+          // 추천리스트 초기화
+          setRecommendCourse({ node: [], edge: [] });
         }
 
         // 우클릭 메뉴 등록
         cy.contextMenus(options);
 
         // 노드가 추가될 때 마다 호출되는 트리거
-        cy.on('add data', 'node', e => {
+        cy.on('add', 'node', e => {
           // 그래프에 새로운 값이 세팅될 수 있도록 이전 graph값을 제거해주는 초기화 작업이 필요함.
           graph = {};
         });

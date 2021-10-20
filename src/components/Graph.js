@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo, useCallback } from 'react';
 import CytoscapeComponent from 'react-cytoscapejs';
 import Cytoscape from 'cytoscape';
 import contextMenus from 'cytoscape-context-menus';
@@ -11,7 +11,7 @@ Cytoscape.use(contextMenus);
 
 // 2. App.js 로 부터 넘어온 graph 데이터를 출력한다.
 // 3. 우클릭 메뉴로 Modal.js 를 제어한다.
-function Graph({ graph, options }) {
+function Graph({ graph, options, isAdmin }) {
   // graph의 layout 설정
   const layout = {
     name: 'cose',
@@ -43,6 +43,7 @@ function Graph({ graph, options }) {
   const cyForRank = Cytoscape({
     elements: CytoscapeComponent.normalizeElements(graph),
   });
+
   const pageRank = cyForRank.elements().pageRank();
 
   const nodeMaxSize = 50;
@@ -61,17 +62,17 @@ function Graph({ graph, options }) {
   const predecessorsColor = '#1e90ff'; // 하위 node & edge color
 
   // 배경 흐리게
-  function setDimStyle(target_cy, style) {
+  const setDimStyle = useCallback((target_cy, style) => {
     target_cy.nodes().forEach(function (target) {
       target.style(style);
     });
     target_cy.edges().forEach(function (target) {
       target.style(style);
     });
-  }
+  }, []);
 
   // hover
-  function setFocus(target_element, successorColor, predecessorsColor, edgeWidth) {
+  const setFocus = useCallback((target_element, successorColor, predecessorsColor, edgeWidth) => {
     target_element.style('background-color', nodeActiveColor);
     target_element.style('color', nodeColor);
     target_element.successors().each(function (e) {
@@ -103,142 +104,130 @@ function Graph({ graph, options }) {
     target_element.style('width', Math.max(parseFloat(target_element.style('width')), nodeActiveSize));
     target_element.style('height', Math.max(parseFloat(target_element.style('height')), nodeActiveSize));
     target_element.style('font-size', Math.max(parseFloat(target_element.style('font-size')), fontActiveSize));
-  }
+  }, []);
 
   // 노드 갈수록 흐리게
-  function setOpacityElement(target_element, degree) {
+  const setOpacityElement = useCallback((target_element, degree) => {
     target_element.style('opacity', degree);
-  }
+  }, []);
 
   // 마우스 뗐을때
-  function setResetFocus(target_cy) {
-    target_cy.nodes().forEach(function (target) {
-      let rank = pageRank.rank('#' + target.id());
-      target.style('background-color', nodeColor);
-      target.style('width', nodeMaxSize * rank + nodeMinSize);
-      target.style('height', nodeMaxSize * rank + nodeMinSize);
-      target.style('font-size', fontMaxSize * rank + fontMinSize);
-      target.style('color', nodeColor);
-      target.style('opacity', 1);
-      target.style('opacity', 1);
-      target.style('color', nodeColor);
-    });
-    target_cy.edges().forEach(function (target) {
-      target.style('line-color', edgeColor);
-      target.style('source-arrow-color', edgeColor);
-      target.style('width', edgeWidth);
-      target.style('opacity', 1);
-    });
-  }
-
-  return (
-    <CustomCytoscapeComponent
-      elements={CytoscapeComponent.normalizeElements(graph)}
-      // 그래프 스타일링
-      stylesheet={[
-        {
-          selector: 'node',
-          style: {
-            // 노드색
-            backgroundColor: nodeColor,
-            label: 'data(label)',
-            width: el => {
-              return nodeMaxSize * pageRank.rank('#' + el.id()) + nodeMinSize;
-            },
-            height: el => {
-              return nodeMaxSize * pageRank.rank('#' + el.id()) + nodeMinSize;
-            },
-            fontSize: el => {
-              return fontMaxSize * pageRank.rank('#' + el.id()) + fontMinSize;
-            },
-            // 글자색
-            color: nodeColor,
-          },
-        },
-        {
-          selector: 'edge',
-          style: {
-            width: edgeWidth,
-            lineColor: edgeColor,
-            sourceArrowColor: edgeColor,
-          },
-        },
-      ]}
-      // 레이아웃
-      layout={layout}
-      // 이벤트 바인딩
-      cy={cy => {
-        // 우클릭 메뉴 등록
-        cy.contextMenus(options);
-
-        // 노드가 추가될 때 마다 호출되는 트리거
-        cy.on('add', 'node', e => {
-          // 그래프에 새로운 값이 세팅될 수 있도록 이전 graph값을 제거해주는 초기화 작업이 필요함.
-          graph = {};
-        });
-
-        // 노드에 마우스 hover시 호출
-        cy.on('tapstart mouseover', 'node', e => {
-          // 얘는 멀쩡한데 tapend 랑 mouseout은 왜 그런지 ,,
-          // 이 이벤트 함수도 똑같이 2번 발동됨.
-
-          document.querySelector('body').style.cursor = 'pointer';
-          document.querySelector('html').style.cursor = 'pointer';
-
-          // 색처리
-          setDimStyle(cy, {
-            backgroundColor: dimColor,
-            lineColor: dimColor,
-            sourceArrowColor: dimColor,
-            color: dimColor,
-          });
-          setFocus(e.target, successorColor, predecessorsColor, edgeActiveWidth);
-        });
-
-        // 노드에 마우스 out시
-        cy.on('tapend mouseout', 'node', e => {
-          e.preventDefault();
-          // 이벤트 함수가 2번 발동되는 이유를 모르겠음.
-          // 또한 2번 실행되는 동안 graph 데이터가 초기값으로 돌아가는 경우 발생
-          document.querySelector('body').style.cursor = 'default';
-          document.querySelector('html').style.cursor = 'default';
-          if (Object.keys(graph).length !== 0) {
-            // 빈 객체는 아직 그래프 출력 준비가 덜 된 것으로 간주하고 함수를 실행시키지않음. 반면 빈 객체가 아니라면 출력 준비가 다 된 것으로 간주하고 함수를 실행시킴
-            setResetFocus(e.cy);
-          }
-        });
-
-        // 윈도우 리사이즈 시 반응형 이벤트 추가
-        let resizeTimer;
-        window.addEventListener('resize', function () {
-          this.clearTimeout(resizeTimer);
-          resizeTimer = this.setTimeout(function () {
-            cy.fit();
-          }, 200);
-        });
-      }}
-    />
+  const setResetFocus = useCallback(
+    target_cy => {
+      target_cy.nodes().forEach(function (target) {
+        let rank = pageRank.rank('#' + target.id());
+        target.style('background-color', nodeColor);
+        target.style('width', nodeMaxSize * rank + nodeMinSize);
+        target.style('height', nodeMaxSize * rank + nodeMinSize);
+        target.style('font-size', fontMaxSize * rank + fontMinSize);
+        target.style('color', nodeColor);
+        target.style('opacity', 1);
+        target.style('opacity', 1);
+        target.style('color', nodeColor);
+      });
+      target_cy.edges().forEach(function (target) {
+        target.style('line-color', edgeColor);
+        target.style('source-arrow-color', edgeColor);
+        target.style('width', edgeWidth);
+        target.style('opacity', 1);
+      });
+    },
+    [pageRank],
   );
+
+  return useMemo(() => {
+    return (
+      <CustomCytoscapeComponent
+        elements={CytoscapeComponent.normalizeElements(graph)}
+        // 그래프 스타일링
+        stylesheet={[
+          {
+            selector: 'node',
+            style: {
+              // 노드색
+              backgroundColor: nodeColor,
+              label: 'data(label)',
+              width: el => {
+                return nodeMaxSize * pageRank.rank('#' + el.id()) + nodeMinSize;
+              },
+              height: el => {
+                return nodeMaxSize * pageRank.rank('#' + el.id()) + nodeMinSize;
+              },
+              fontSize: el => {
+                return fontMaxSize * pageRank.rank('#' + el.id()) + fontMinSize;
+              },
+              // 글자색
+              color: nodeColor,
+            },
+          },
+          {
+            selector: 'edge',
+            style: {
+              width: edgeWidth,
+              lineColor: edgeColor,
+              sourceArrowColor: edgeColor,
+            },
+          },
+        ]}
+        // 레이아웃
+        layout={layout}
+        // 이벤트 바인딩
+        cy={cy => {
+          // 우클릭 메뉴 등록
+          cy.contextMenus(options);
+
+          // 노드가 추가될 때 마다 호출되는 트리거
+          cy.on('add', 'node', e => {
+            // 그래프에 새로운 값이 세팅될 수 있도록 이전 graph값을 제거해주는 초기화 작업이 필요함.
+            graph = {};
+          });
+
+          // 노드에 마우스 hover시 호출
+          cy.on('tapstart mouseover', 'node', e => {
+            // 얘는 멀쩡한데 tapend 랑 mouseout은 왜 그런지 ,,
+            // 이 이벤트 함수도 똑같이 2번 발동됨.
+
+            document.querySelector('body').style.cursor = 'pointer';
+            document.querySelector('html').style.cursor = 'pointer';
+
+            // 색처리
+            setDimStyle(cy, {
+              backgroundColor: dimColor,
+              lineColor: dimColor,
+              sourceArrowColor: dimColor,
+              color: dimColor,
+            });
+            setFocus(e.target, successorColor, predecessorsColor, edgeActiveWidth);
+          });
+
+          // 노드에 마우스 out시
+          cy.on('tapend mouseout', 'node', e => {
+            e.preventDefault();
+            // 이벤트 함수가 2번 발동되는 이유를 모르겠음.
+            // 또한 2번 실행되는 동안 graph 데이터가 초기값으로 돌아가는 경우 발생
+            document.querySelector('body').style.cursor = 'default';
+            document.querySelector('html').style.cursor = 'default';
+            if (Object.keys(graph).length !== 0) {
+              // 빈 객체는 아직 그래프 출력 준비가 덜 된 것으로 간주하고 함수를 실행시키지않음. 반면 빈 객체가 아니라면 출력 준비가 다 된 것으로 간주하고 함수를 실행시킴
+              setResetFocus(e.cy);
+            }
+          });
+
+          // 윈도우 리사이즈 시 반응형 이벤트 추가
+          let resizeTimer;
+          window.addEventListener('resize', function () {
+            this.clearTimeout(resizeTimer);
+            resizeTimer = this.setTimeout(function () {
+              cy.fit();
+            }, 200);
+          });
+        }}
+      />
+    );
+  }, [graph, isAdmin]);
 }
 
-// React.memo 사용. 이 함수에서 받아오는 props를 감지하기 위해 React.memo를 사용함.
-export default React.memo(Graph, (prev, next) => {
-  /* 
-    야매코드긴 한데,
-    만약에 변하기전 상태의 props(prev)의 options 값의 menuItems의 첫번째 값의 show 상태가 true 일 경우. 
-    즉, 이미 관리자 모드로 진입하여 메뉴를 사용할 수 있는 상태가 되었을 경우
-    그래프 리렌더링을 하지 않는다.
-  */
-  return prev.grpah === next.graph;
-  // console.log(prev, next)
-  // if (prev.options.menuItems[0].show !== next.options.menuItems[0].show) {
-  //   return true;
-  // } else {
-  //   // 그게 아니라면 아직 관리자 상태가 아니므로 바뀐 options값을 적용해주기 위해 리렌더링을 1번 해준다.
-  //   // 이 조건분기 없이 return prev.grpah === next.graph 하게 되면, 관리자모드로 진입하여도 그래프가 리렌더링 되지 않아 메뉴를 사용할 수 없게된다.
-  //   return false; // 그렇기에 리렌더링을 1번 해준다. 이 과정을 지나고 나면 다시 이 분기로 돌아오지 않는다. (새로고침 시 돌아옴 )
-  // }
-});
+export default Graph;
 
 const CustomCytoscapeComponent = styled(CytoscapeComponent)`
   width: 100vw;

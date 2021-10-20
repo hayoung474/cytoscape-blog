@@ -286,7 +286,7 @@ loadDone 조건 없이 graph값이 변경될 때 마다 graph 값을 update 하�
 
   return (
     <>
-      <Graph graph={graph} options={options} />
+      <Graph graph={graph} options={options} isAdmin={isAdmin} />
     </>
   );
 }

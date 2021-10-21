@@ -241,7 +241,10 @@ function GraphContainer() {
   };
 
   useEffect(() => {
-    console.log('graph바뀜');
+    console.log(options);
+  }, [options]);
+
+  useEffect(() => {
     firebase // firebase 에 접근하여 데이터를 받아오는 구문
       .database()
       .ref()
@@ -301,7 +304,7 @@ loadDone 조건 없이 graph값이 변경될 때 마다 graph 값을 update 하�
 
   return (
     <>
-      <Graph graph={graph} options={options} />
+      <Graph graph={graph} options={options} isAdmin={isAdmin} />
     </>
   );
 }

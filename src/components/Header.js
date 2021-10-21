@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 
-function Header() {
+function Header({ adminToggle, title }) {
   return (
     <HeaderWrapper>
-      <Title>SinaKim's velog</Title>
+      <Title onClick={adminToggle}>{title}</Title>
     </HeaderWrapper>
   );
 }

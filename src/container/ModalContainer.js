@@ -14,18 +14,12 @@ function ModalContainer() {
   const { graph } = useSelector(state => ({ graph: state.graph.graph })); // redux 의 graph 상태 구독
   const { modalPropsObj } = useSelector(state => ({ modalPropsObj: state.modal.modalPropsObj })); // redux 의 modalPropsObj 상태 구독
 
- 
-  useEffect(()=>{
-    console.log(graph)
-  },[graph])
 
   //   /* "이름변경" 기능을 위한 함수 */
   const changeLabel = () => {
     let newGraph = { ...graph };
-    console.log("g허허",graph)
     newGraph.nodes.forEach(item => {
       if (item.data.id === modalPropsObj.data.selectNodeId) {
-        console.log(item.data.label,nodeLabel)
         // 만약에 현재 선택한 라벨과 동일한 라벨을 가진 노드를 찾았다면
         item.data.label = nodeLabel; // 그 노드의 라벨을 변경하고자 하는 새로운 라벨 이름으로 변경함
       }

@@ -10,15 +10,12 @@ Cytoscape.use(CoseBillkent);
 Cytoscape.use(contextMenus);
 
 function Graph({ graph, options, isAdmin }) {
-  const [recommendCourse, setRecommendCourse] = useState({
-    node: ['node_1_python', 'node_2_package', 'node_3_3rdParty'],
-    edge: ['node_1_python->node_2_package', 'node_2_package->node_3_3rdParty'],
-  });
-  const [recommendMode, setRecommendMode] = useState(true);
-
-  useEffect(()=>{
-    console.log("test",graph)
-  },[graph])
+  // 추천코스 부분. 주석처리 
+  // const [recommendCourse, setRecommendCourse] = useState({
+  //   node: ['node_1_python', 'node_2_package', 'node_3_3rdParty'],
+  //   edge: ['node_1_python->node_2_package', 'node_2_package->node_3_3rdParty'],
+  // });
+  // const [recommendMode, setRecommendMode] = useState(true);
 
   // graph의 layout 설정
   const layout = {
@@ -177,48 +174,48 @@ function Graph({ graph, options, isAdmin }) {
               sourceArrowColor: edgeColor,
             },
           },
-          {
-            selector: '.recommend-mode-node',
-            style: {
-              backgroundColor: recommendColor,
-              width: el => {
-                return nodeMaxSize * pageRank.rank('#' + el.id()) * 2 + nodeMinSize;
-              },
-              height: el => {
-                return nodeMaxSize * pageRank.rank('#' + el.id()) * 2 + nodeMinSize;
-              },
-              fontSize: fontActiveSize,
-            },
-          },
-          {
-            selector: '.recommend-mode-edge',
-            style: {
-              lineColor: recommendColor,
-              width: '5px',
-              sourceArrowColor: recommendColor,
-            },
-          },
+          // {
+          //   selector: '.recommend-mode-node',
+          //   style: {
+          //     backgroundColor: recommendColor,
+          //     width: el => {
+          //       return nodeMaxSize * pageRank.rank('#' + el.id()) * 2 + nodeMinSize;
+          //     },
+          //     height: el => {
+          //       return nodeMaxSize * pageRank.rank('#' + el.id()) * 2 + nodeMinSize;
+          //     },
+          //     fontSize: fontActiveSize,
+          //   },
+          // },
+          // {
+          //   selector: '.recommend-mode-edge',
+          //   style: {
+          //     lineColor: recommendColor,
+          //     width: '5px',
+          //     sourceArrowColor: recommendColor,
+          //   },
+          // },
         ]}
         // 레이아웃
         layout={layout}
         // 이벤트 바인딩
         cy={cy => {
           /* 추천코스 스타일시트 설정을 위한 클래스 추가 */
-          if (recommendMode === true) {
-            recommendCourse.node.forEach(item => {
-              cy.elements('node[id = "' + item + '"]').addClass('recommend-mode-node');
-            });
-            recommendCourse.edge.forEach(item => {
-              cy.elements('edge[id = "' + item + '"]').addClass('recommend-mode-edge');
-            });
-          } else if (recommendMode === false) {
-            // 기존 추천리스트의 클래스를 제거한 후
-            cy.edges().classes('');
-            cy.nodes().classes('');
+          // if (recommendMode === true) {
+          //   recommendCourse.node.forEach(item => {
+          //     cy.elements('node[id = "' + item + '"]').addClass('recommend-mode-node');
+          //   });
+          //   recommendCourse.edge.forEach(item => {
+          //     cy.elements('edge[id = "' + item + '"]').addClass('recommend-mode-edge');
+          //   });
+          // } else if (recommendMode === false) {
+          //   // 기존 추천리스트의 클래스를 제거한 후
+          //   cy.edges().classes('');
+          //   cy.nodes().classes('');
 
-            // 추천리스트 초기화
-            setRecommendCourse({ node: [], edge: [] });
-          }
+          //   // 추천리스트 초기화
+          //   setRecommendCourse({ node: [], edge: [] });
+          // }
 
           // 우클릭 메뉴 등록
           cy.contextMenus(options);
@@ -287,29 +284,16 @@ function Graph({ graph, options, isAdmin }) {
         }}
       />
     );
-  }, [graph, isAdmin,options]);
+  }, [graph, isAdmin]);
 }
 
 // React.memo 사용. 이 함수에서 받아오는 props를 감지하기 위해 React.memo를 사용함.
-export default React.memo(Graph, (prev, next) => {
-  /*
-    야매코드긴 한데,
-    만약에 변하기전 상태의 props(prev)의 options 값의 menuItems의 첫번째 값의 show 상태가 true 일 경우.
-    즉, 이미 관리자 모드로 진입하여 메뉴를 사용할 수 있는 상태가 되었을 경우
-    그래프 리렌더링을 하지 않는다.
-  */
-  if(prev.options.menuItems[0].show === next.options.menuItems[0].show){
-    return true;
-  }
-  // if (prev.options.menuItems[0].show === true) {
-  //   return next.options && prev.graph === next.graph;
-  // } else {
-  //   // 그게 아니라면 아직 관리자 상태가 아니므로 바뀐 options값을 적용해주기 위해 리렌더링을 1번 해준다.
-  //   // 이 조건분기 없이 return prev.grpah === next.graph 하게 되면, 관리자모드로 진입하여도 그래프가 리렌더링 되지 않아 메뉴를 사용할 수 없게된다.
-  //   return false; // 그렇기에 리렌더링을 1번 해준다. 이 과정을 지나고 나면 다시 이 분기로 돌아오지 않는다. (새로고침 시 돌아옴 )
-  // }
-});
-// export default Graph;
+// export default React.memo(Graph, (prev, next) => {
+//   if(prev.options.menuItems[0].show === next.options.menuItems[0].show){
+//     return true;
+//   }
+// });
+export default Graph;
 
 const CustomCytoscapeComponent = styled(CytoscapeComponent)`
   width: 100vw;

@@ -8,8 +8,6 @@ import InfoModal from './container/InfoModalContainer';
 import { createGlobalStyle } from 'styled-components';
 
 function App() {
-  // 1. firebase 로 부터 데이터를 받아와 정제하여 graph에 세팅함.
-
   return (
     <>
       <GlobalStyle />

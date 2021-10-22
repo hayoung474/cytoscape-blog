@@ -241,10 +241,6 @@ function GraphContainer() {
   };
 
   useEffect(() => {
-    console.log(options);
-  }, [options]);
-
-  useEffect(() => {
     firebase // firebase 에 접근하여 데이터를 받아오는 구문
       .database()
       .ref()
@@ -284,7 +280,6 @@ function GraphContainer() {
           tempGraph['nodes'] = tempNodes;
           tempGraph['edges'] = tempEdges;
 
-          console.log(tempGraph);
           dispatch(setGraph(tempGraph)); // 그래프 세팅
           dispatch(setIsInit(true)); // 초기데이터 로드를 마무리 하였음. loadDone 을 true로 변경해줌.
         }

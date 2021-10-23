@@ -12,7 +12,7 @@ function HeaderContainer() {
 
   const adminToggle = () => {
     if (!isAdmin) {
-      if (prompt('관리자 페이지로 이동하기 위해 비밀번호를 입력해주세요.') === '1772012756') {
+      if (prompt('관리자 페이지로 이동하기 위해 비밀번호를 입력해주세요.') === '1234') {
         dispatch(setAdmin(true));
         setTitle("SinaKim's velog(관리자)");
       }

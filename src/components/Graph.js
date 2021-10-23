@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useCallback, useState } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import CytoscapeComponent from 'react-cytoscapejs';
 import Cytoscape from 'cytoscape';
 import contextMenus from 'cytoscape-context-menus';
@@ -9,8 +9,9 @@ import 'cytoscape-context-menus/cytoscape-context-menus.css';
 Cytoscape.use(CoseBillkent);
 Cytoscape.use(contextMenus);
 
+// 2. App.js 로 부터 넘어온 graph 데이터를 출력한다.
+// 3. 우클릭 메뉴로 Modal.js 를 제어한다.
 function Graph({ graph, options, isAdmin }) {
-  console.log(graph);
   // graph의 layout 설정
   const layout = {
     name: 'cose',
@@ -59,7 +60,6 @@ function Graph({ graph, options, isAdmin }) {
   const nodeActiveColor = '#ffa502';
   const successorColor = '#ff6348'; // 상위 node & edge color
   const predecessorsColor = '#1e90ff'; // 하위 node & edge color
-  const recommendColor = '#c1e1c5';
 
   // 배경 흐리게
   const setDimStyle = useCallback((target_cy, style) => {
@@ -182,22 +182,6 @@ function Graph({ graph, options, isAdmin }) {
             graph = {};
           });
 
-          // 노드에 마우스 hover시 호출
-          cy.on('tapstart mouseover', 'node', e => {
-            // 얘는 멀쩡한데 tapend 랑 mouseout은 왜 그런지 ,,
-            // 이 이벤트 함수도 똑같이 2번 발동됨.
-
-            document.querySelector('body').style.cursor = 'pointer';
-            document.querySelector('html').style.cursor = 'pointer';
-
-            // 색처리
-            setDimStyle(cy, {
-              backgroundColor: dimColor,
-              lineColor: dimColor,
-              sourceArrowColor: dimColor,
-              color: dimColor,
-            });
-          });
           // 노드에 마우스 hover시 호출
           cy.on('tapstart mouseover', 'node', e => {
             // 얘는 멀쩡한데 tapend 랑 mouseout은 왜 그런지 ,,

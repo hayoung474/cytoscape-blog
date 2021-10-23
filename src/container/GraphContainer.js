@@ -21,16 +21,30 @@ function GraphContainer() {
     // 우클릭 시 나오는 메뉴 리스트
     menuItems: [
       {
-        id: 'modify-node', // 메뉴들의 구분을 위한 고유한 id (메뉴 id)
-        content: '이름 변경', // 사용자에게 보여지는 메뉴 이름
-        tooltipText: '현재 노드 이름 변경', // 메뉴에 마우스 hover 했을 때 띄울 tooltip (hidden)
-        selector: 'node', // 무엇을 우클릭 하면 활성화 되는지 => 노드에 우클릭을 하였을 경우 활성화 됨.
+        id: 'add-node', // 메뉴들의 구분을 위한 고유한 id (메뉴 id)
+        content: '새 노드 추가', // 사용자에게 보여지는 메뉴 이름
+        tooltipText: '새 노드 추가', // 메뉴에 마우스 hover 했을 때 띄울 tooltip (hidden)
+        selector: 'core', // 
         coreAsWell: true,
         show: isAdmin, // 항목 표시 여부. 관리자의 경우만 해당 메뉴를 활성화 하도록 함.
         // 해당 메뉴를 클릭했을 때 수행할 기능
         // 선택한 노드의 라벨(이름) 을 변경함.
         onClickFunction: function (e) {
-          let dataObj = { currentNodeLabel: e.target.data().label }; // 현재 클릭한 노드의 label값을 currentNodeLabel라는 객체 속성으로 추가하여 객체를 만든다.
+          dispatch(setModalPropsObj({ modalType: '새노드추가'})); // 모달타입을 "이름변경"으로 세팅함.
+          dispatch(setModal(true)); // 모달을 open 한다.
+        },
+      },
+      {
+        id: 'modify-node', // 메뉴들의 구분을 위한 고유한 id (메뉴 id)
+        content: '이름 변경', // 사용자에게 보여지는 메뉴 이름
+        tooltipText: '현재 노드 이름 변경', // 메뉴에 마우스 hover 했을 때 띄울 tooltip (hidden)
+        selector: 'node', // 무엇을 우클릭 하면 활성화 되는지 => 노드에 우클릭을 하였을 경우 활성화 됨.
+        coreAsWell: false,
+        show: isAdmin, // 항목 표시 여부. 관리자의 경우만 해당 메뉴를 활성화 하도록 함.
+        // 해당 메뉴를 클릭했을 때 수행할 기능
+        // 선택한 노드의 라벨(이름) 을 변경함.
+        onClickFunction: function (e) {
+          let dataObj = { selectNodeId: e.target.id() };
           dispatch(setModalPropsObj({ modalType: '이름변경', data: dataObj })); // 모달타입을 "이름변경"으로 세팅함.
           dispatch(setModal(true)); // 모달을 open 한다.
         },
@@ -41,7 +55,7 @@ function GraphContainer() {
         content: '간선 추가',
         tooltipText: '간선 추가',
         selector: 'node',
-        coreAsWell: true,
+        coreAsWell: false,
         show: isAdmin,
         // 선택한 노드와 모달에서 선택한 타겟 노드를 연결하는 간선을 추가함
         onClickFunction: function (e) {
@@ -52,11 +66,11 @@ function GraphContainer() {
       },
 
       {
-        id: 'add-node',
-        content: '노드 추가',
+        id: 'add-leaf-node',
+        content: '리프 노드 추가',
         tooltipText: '리프 노드 뒤에 노드 추가',
         selector: 'node',
-        coreAsWell: true,
+        coreAsWell: false,
         show: isAdmin,
         // 선택한 노드 뒤에 리프 노드를 추가함.
         onClickFunction: function (e) {
@@ -71,7 +85,7 @@ function GraphContainer() {
         content: '간선에 노드 추가',
         tooltipText: '간선에 노드 추가',
         selector: 'edge', // 간선에 우클릭 하였을 경우 활성화 됨.
-        coreAsWell: true,
+        coreAsWell: false,
         show: isAdmin,
         // 간선에 노드를 추가함.
         onClickFunction: function (e) {
@@ -95,7 +109,7 @@ function GraphContainer() {
         content: '간선 삭제',
         tooltipText: '해당 간선을 삭제',
         selector: 'edge',
-        coreAsWell: true,
+        coreAsWell: false,
         show: isAdmin,
         onClickFunction: function (e) {
           // 선택한 간선을 삭제함.
@@ -106,7 +120,6 @@ function GraphContainer() {
           dispatch(setModal(true));
         },
       },
-
       {
         id: 'remove-node',
         content: '노드 삭제',

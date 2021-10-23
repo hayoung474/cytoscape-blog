@@ -38,10 +38,12 @@ function Modal({
                 setTargetNodeId(e.target.options[e.target.selectedIndex].value);
               }}
             >
-              <option value="" selected="selected" hidden="hidden">연결할 간선을 선택하세요</option>
+              <option value="" selected="selected" hidden="hidden">
+                연결할 간선을 선택하세요
+              </option>
               {graph.nodes.map((item, index) => {
                 return (
-                  <option value={item.data.id} key={index}> 
+                  <option value={item.data.id} key={index}>
                     {item.data.label}
                   </option>
                 );

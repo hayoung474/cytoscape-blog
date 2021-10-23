@@ -10,13 +10,7 @@ Cytoscape.use(CoseBillkent);
 Cytoscape.use(contextMenus);
 
 function Graph({ graph, options, isAdmin }) {
-  // 추천코스 부분. 주석처리 
-  // const [recommendCourse, setRecommendCourse] = useState({
-  //   node: ['node_1_python', 'node_2_package', 'node_3_3rdParty'],
-  //   edge: ['node_1_python->node_2_package', 'node_2_package->node_3_3rdParty'],
-  // });
-  // const [recommendMode, setRecommendMode] = useState(true);
-
+  console.log(graph);
   // graph의 layout 설정
   const layout = {
     name: 'cose',
@@ -174,49 +168,11 @@ function Graph({ graph, options, isAdmin }) {
               sourceArrowColor: edgeColor,
             },
           },
-          // {
-          //   selector: '.recommend-mode-node',
-          //   style: {
-          //     backgroundColor: recommendColor,
-          //     width: el => {
-          //       return nodeMaxSize * pageRank.rank('#' + el.id()) * 2 + nodeMinSize;
-          //     },
-          //     height: el => {
-          //       return nodeMaxSize * pageRank.rank('#' + el.id()) * 2 + nodeMinSize;
-          //     },
-          //     fontSize: fontActiveSize,
-          //   },
-          // },
-          // {
-          //   selector: '.recommend-mode-edge',
-          //   style: {
-          //     lineColor: recommendColor,
-          //     width: '5px',
-          //     sourceArrowColor: recommendColor,
-          //   },
-          // },
         ]}
         // 레이아웃
         layout={layout}
         // 이벤트 바인딩
         cy={cy => {
-          /* 추천코스 스타일시트 설정을 위한 클래스 추가 */
-          // if (recommendMode === true) {
-          //   recommendCourse.node.forEach(item => {
-          //     cy.elements('node[id = "' + item + '"]').addClass('recommend-mode-node');
-          //   });
-          //   recommendCourse.edge.forEach(item => {
-          //     cy.elements('edge[id = "' + item + '"]').addClass('recommend-mode-edge');
-          //   });
-          // } else if (recommendMode === false) {
-          //   // 기존 추천리스트의 클래스를 제거한 후
-          //   cy.edges().classes('');
-          //   cy.nodes().classes('');
-
-          //   // 추천리스트 초기화
-          //   setRecommendCourse({ node: [], edge: [] });
-          // }
-
           // 우클릭 메뉴 등록
           cy.contextMenus(options);
 
@@ -287,12 +243,6 @@ function Graph({ graph, options, isAdmin }) {
   }, [graph, isAdmin]);
 }
 
-// React.memo 사용. 이 함수에서 받아오는 props를 감지하기 위해 React.memo를 사용함.
-// export default React.memo(Graph, (prev, next) => {
-//   if(prev.options.menuItems[0].show === next.options.menuItems[0].show){
-//     return true;
-//   }
-// });
 export default Graph;
 
 const CustomCytoscapeComponent = styled(CytoscapeComponent)`

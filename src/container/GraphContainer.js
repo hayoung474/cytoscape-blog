@@ -67,18 +67,17 @@ function GraphContainer() {
       },
 
       {
-        id:'add-node',
-        content:'새 노드 추가',
-        tooltipText:'새 노드 추가',
-        selector:'core',
-        coreAsWell:true,
-        show:isAdmin,
+        id: 'add-node',
+        content: '새 노드 추가',
+        tooltipText: '새 노드 추가',
+        selector: 'core',
+        coreAsWell: true,
+        show: isAdmin,
         // 완전한 새로운 노드 추가
         onClickFunction: function (e) {
-          dispatch(setModalPropsObj({modalType: '새노드추가'})); // 모달타입을 "새노드추가"로 세팅함.
+          dispatch(setModalPropsObj({ modalType: '새노드추가' })); // 모달타입을 "새노드추가"로 세팅함.
           dispatch(setModal(true));
         },
-
       },
 
       {

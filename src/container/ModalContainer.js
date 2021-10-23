@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react';
+import React, { useEffect } from 'react';
 import Modal from '../components/Modal';
 import { setModal } from '../modules/modal';
 import { setGraph } from '../modules/graph';
@@ -14,7 +14,6 @@ function ModalContainer() {
   const { graph } = useSelector(state => ({ graph: state.graph.graph })); // redux 의 graph 상태 구독
   const { modalPropsObj } = useSelector(state => ({ modalPropsObj: state.modal.modalPropsObj })); // redux 의 modalPropsObj 상태 구독
 
-
   //   /* "이름변경" 기능을 위한 함수 */
   const changeLabel = () => {
     let newGraph = { ...graph };
@@ -24,11 +23,10 @@ function ModalContainer() {
         item.data.label = nodeLabel; // 그 노드의 라벨을 변경하고자 하는 새로운 라벨 이름으로 변경함
       }
     });
-    
+
     dispatch(setGraph(newGraph)); // graph 자체를 덮어씌움
     dispatch(setModal(false));
-    window.location.replace("/") // 강제 새로고침
-
+    window.location.replace('/'); // 강제 새로고침
   };
 
   //   /* "간선추가" 기능을 위한 함수 */
@@ -48,7 +46,7 @@ function ModalContainer() {
 
   //   /* "간선에 노드 추가" 기능을 위한 함수 */
   const addToEdgeNode = () => {
-    const newNodeId = cryptoRandomString({length: 20}); // 랜덤스트링 생성 구문
+    const newNodeId = cryptoRandomString({ length: 20 }); // 랜덤스트링 생성 구문
     let newGraph = { ...graph };
 
     // 두 노드가 연결된 엣지 제거
@@ -82,7 +80,7 @@ function ModalContainer() {
 
   //   /* "리프노드추가" 기능을 위한 함수 */
   const addLeafNode = () => {
-    const newNodeId = cryptoRandomString({length: 20}); // 랜덤스트링 생성 구문
+    const newNodeId = cryptoRandomString({ length: 20 }); // 랜덤스트링 생성 구문
     const targetNodeId = modalPropsObj.data.selectNodeId;
     let newGraph = { ...graph };
     newGraph['nodes'].push({ data: { id: newNodeId, label: nodeLabel } });
@@ -99,7 +97,7 @@ function ModalContainer() {
 
   // 새 노드 추가를 위한 함수
   const addNode = () => {
-    const newNodeId = cryptoRandomString({length: 20}); // 랜덤스트링 생성 구문
+    const newNodeId = cryptoRandomString({ length: 20 }); // 랜덤스트링 생성 구문
     let newGraph = { ...graph };
     newGraph['nodes'].push({ data: { id: newNodeId, label: nodeLabel } });
     dispatch(setGraph(newGraph));

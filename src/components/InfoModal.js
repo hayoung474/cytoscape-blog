@@ -4,29 +4,31 @@ import { GrClose } from 'react-icons/gr';
 
 import Link from './Link';
 
-function InfoModal({ closeInfoModal, userInfo, userInfo2, userLink }) {
+function InfoModal({ closeInfoModal, userInfo, userInfo2, userLink, isAdmin }) {
   return (
     <>
       <ModalContainer>
         <CustomGrClose onClick={closeInfoModal} />
-
-        <Container>
-          <ProfileImgContainer />
-          <UserName>SinaKim</UserName>
-          <UserInfo infoNum={1}>{userInfo}</UserInfo>
-        </Container>
-
-        <Container>
-          <UserInfo infoNum={2}>{userInfo2}</UserInfo>
-          <div>
-            <AboutMe>저에 대해서 더 알고 싶으시다면!</AboutMe>
-            <LinkContainer>
-              {userLink.map((link, idx) => (
-                <Link key={idx} name={link.name} url={link.url} ImgComp={link.ImgComp} />
-              ))}
-            </LinkContainer>
-          </div>
-        </Container>
+        {isAdmin ? null : (
+          <>
+            <Container>
+              <ProfileImgContainer />
+              <UserName>SinaKim</UserName>
+              <UserInfo infoNum={1}>{userInfo}</UserInfo>
+            </Container>
+            <Container>
+              <UserInfo infoNum={2}>{userInfo2}</UserInfo>
+              <div>
+                <AboutMe>저에 대해서 더 알고 싶으시다면!</AboutMe>
+                <LinkContainer>
+                  {userLink.map((link, idx) => (
+                    <Link key={idx} name={link.name} url={link.url} ImgComp={link.ImgComp} />
+                  ))}
+                </LinkContainer>
+              </div>
+            </Container>
+          </>
+        )}
       </ModalContainer>
 
       <Dim onClick={closeInfoModal} />

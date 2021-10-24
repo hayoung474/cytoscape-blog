@@ -8,6 +8,7 @@ import { AiFillMail } from 'react-icons/ai';
 
 function InfoModalContainer() {
   const dispatch = useDispatch();
+  const { isAdmin } = useSelector(state => ({ isAdmin: state.admin.isAdmin }));
 
   const [userInfo, setUserInfo] = useState('안녕하세요 🐻, 시나브로 나아가고 있습니다.');
   const [userInfo2, setUserInfo2] = useState(`저는 딥러닝, 컴퓨터 비전에 흥미가 있는,
@@ -27,7 +28,13 @@ function InfoModalContainer() {
 
   const { infoModal } = useSelector(state => ({ infoModal: state.infoModal.infoModal }));
 
-  return <>{infoModal ? <InfoModal userInfo={userInfo} userInfo2={userInfo2} userLink={userLink} closeInfoModal={closeInfoModal} /> : null}</>;
+  return (
+    <>
+      {infoModal ? (
+        <InfoModal userInfo={userInfo} userInfo2={userInfo2} userLink={userLink} closeInfoModal={closeInfoModal} isAdmin={isAdmin} />
+      ) : null}
+    </>
+  );
 }
 
 export default InfoModalContainer;

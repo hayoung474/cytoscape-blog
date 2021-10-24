@@ -45,7 +45,7 @@ const ModalContainer = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   border-radius: 28px;
-  z-index: 1;
+  z-index: 11;
   display: flex;
   justify-content: space-between;
 `;
@@ -57,6 +57,7 @@ const Dim = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
+  z-index:10;
 `;
 
 const CustomGrClose = styled(GrClose)`

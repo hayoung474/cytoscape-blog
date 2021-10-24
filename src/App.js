@@ -1,6 +1,6 @@
 import React from 'react';
 import Graph from './container/GraphContainer';
-import Menus from './components/Menus';
+import MenuButtons from './components/MenuButtons';
 import Modal from './container/ModalContainer';
 import Header from './container/HeaderContainer';
 import InfoModal from './container/InfoModalContainer';
@@ -14,7 +14,7 @@ function App() {
       {/* 헤더 */}
       <Header />
       {/* 우측 하단의 코스를 숨겨놓은 버튼 */}
-      <Menus />
+      <MenuButtons />
       {/* 메인 그래프 */}
       <Graph />
       {/* 모달 */}

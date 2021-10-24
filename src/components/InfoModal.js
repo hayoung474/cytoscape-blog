@@ -59,9 +59,9 @@ const Dim = styled.div`
 
 const CustomGrClose = styled(GrClose)`
   font-size: 32px;
-  position: absolute;
-  top: 1%;
-  right: 1%;
+  position: fixed;
+  top: 2%;
+  right: 2%;
   cursor: pointer;
 `;
 

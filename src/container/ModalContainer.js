@@ -46,7 +46,7 @@ function ModalContainer() {
 
   //   /* "간선에 노드 추가" 기능을 위한 함수 */
   const addToEdgeNode = () => {
-    const newNodeId = cryptoRandomString({ length: 10 }); // 랜덤스트링 생성 구문
+    const newNodeId = Math.random().toString(36).substr(2, 11); // 랜덤스트링 생성 구문
     let newGraph = { ...graph };
 
     // 두 노드가 연결된 엣지 제거
@@ -80,7 +80,7 @@ function ModalContainer() {
 
   //   /* "리프노드추가" 기능을 위한 함수 */
   const addLeafNode = () => {
-    const newNodeId = cryptoRandomString({ length: 10 }); // 랜덤스트링 생성 구문
+    const newNodeId = Math.random().toString(36).substr(2, 11); // 랜덤스트링 생성 구문
     const targetNodeId = modalPropsObj.data.selectNodeId;
     let newGraph = { ...graph };
     newGraph['nodes'].push({ data: { id: newNodeId, label: nodeLabel } });
@@ -97,7 +97,7 @@ function ModalContainer() {
 
   // 새 노드 추가를 위한 함수
   const addNode = () => {
-    const newNodeId = cryptoRandomString({ length: 10 }); // 랜덤스트링 생성 구문
+    const newNodeId = Math.random().toString(36).substr(2, 11); // 랜덤스트링 생성 구문
     let newGraph = { ...graph };
     newGraph['nodes'].push({ data: { id: newNodeId, label: nodeLabel } });
     dispatch(setGraph(newGraph));
@@ -157,23 +157,7 @@ function ModalContainer() {
         });
       });
     }
-    // if (
-    //   modalPropsObj.data.parentEdges.length !== 0 &&
-    //   modalPropsObj.data.childEdges.length !== 0
-    // ) {
-    //   // parent 노드와 child 노드를 연결함.
-    //   modalPropsObj.data.parentNodes.forEach((parentNode) => {
-    //     modalPropsObj.childNodes.forEach((childNode) => {
-    //       newGraph["edges"].push({
-    //         data: {
-    //           id: childNode + "->" + parentNode,
-    //           source: childNode,
-    //           target: parentNode,
-    //         },
-    //       });
-    //     });
-    //   });
-    // }
+
     dispatch(setGraph(newGraph));
     dispatch(setModal(false));
   };

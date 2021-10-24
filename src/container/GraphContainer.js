@@ -24,13 +24,13 @@ function GraphContainer() {
         id: 'add-node', // 메뉴들의 구분을 위한 고유한 id (메뉴 id)
         content: '새 노드 추가', // 사용자에게 보여지는 메뉴 이름
         tooltipText: '새 노드 추가', // 메뉴에 마우스 hover 했을 때 띄울 tooltip (hidden)
-        selector: 'core', // 
+        selector: 'core', //
         coreAsWell: true,
         show: isAdmin, // 항목 표시 여부. 관리자의 경우만 해당 메뉴를 활성화 하도록 함.
         // 해당 메뉴를 클릭했을 때 수행할 기능
         // 선택한 노드의 라벨(이름) 을 변경함.
         onClickFunction: function (e) {
-          dispatch(setModalPropsObj({ modalType: '새노드추가'})); // 모달타입을 "이름변경"으로 세팅함.
+          dispatch(setModalPropsObj({ modalType: '새노드추가' })); // 모달타입을 "이름변경"으로 세팅함.
           dispatch(setModal(true)); // 모달을 open 한다.
         },
       },

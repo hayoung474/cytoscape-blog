@@ -72,7 +72,7 @@ const Container = styled.div`
 const ProfileImgContainer = styled.div`
   width: 360px;
   height: 360px;
-  background-image: url('https://raw.githubusercontent.com/sina-Kim/sina-Kim.github.io/master/assets/images/sina-bear.jpg?token=APFSJOF5PUIX7EBFA4SASKLBNPOWS');
+  background-image: url('https://sina-kim.github.io/assets/images/sina-bear.jpg');
   background-size: contain;
   background-repeat: no-repeat;
 `;

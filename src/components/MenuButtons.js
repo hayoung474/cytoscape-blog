@@ -91,7 +91,7 @@ const ToggleButton = styled.button`
 `;
 
 const SubButton = styled.button`
-  display: ${props => (props.visible === true ? "block" : "none")};
+  visibility: ${props => (props.visible === true ? "visiable" : "hidden")};
   position: absolute;
   z-index: 9;
   right: 1em;

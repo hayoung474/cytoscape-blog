@@ -3,6 +3,9 @@ import InfoModal from '../components/InfoModal';
 import { useSelector, useDispatch } from 'react-redux';
 import { setInfoModal } from '../modules/infoModal';
 
+import { BsLinkedin, BsGithub } from 'react-icons/bs';
+import { AiFillMail } from 'react-icons/ai';
+
 function InfoModalContainer() {
   const dispatch = useDispatch();
 
@@ -13,9 +16,9 @@ function InfoModalContainer() {
   언젠가 개발자가 될 sinaKim 입니다!`);
 
   const [userLink, setUserLink] = useState([
-    { name: 'Github', link: 'github.com/sina-Kim' },
-    { name: 'Linkedin', link: 'linkedin.com/in/sinakim97/' },
-    { name: 'Mail', link: 'sinabero3271@kakao.com' },
+    { name: 'Github', url: 'https://github.com/sina-Kim', ImgComp: BsGithub },
+    { name: 'LinkedIn', url: 'https://linkedin.com/in/sinakim97/', ImgComp: BsLinkedin },
+    { name: 'EMail', url: 'mailto:sinabero3271@kakao.com', ImgComp: AiFillMail },
   ]);
 
   const closeInfoModal = () => {

@@ -1,38 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import { GrClose } from 'react-icons/gr';
 
 import Link from './Link';
 
-function InfoModal({ closeInfoModal, userName, userInfo, userInfo2, userLink, isAdmin }) {
+function InfoModal({ inputs,onChange, onSubmit, userName, userInfo, userInfo2, userLink, isAdmin, closeInfoModal }) {
   return (
     <>
       <ModalContainer>
-        <CustomGrClose onClick={closeInfoModal} size="18" />
+        <CustomGrClose onClick={onSubmit} size="18" />
         {isAdmin ? (
           <>
             <Container>
               <ProfileImgContainer />
-              <MainTitleEditContainer>
-                <CustomButton>프로필사진 수정</CustomButton>
-              </MainTitleEditContainer>
+              <CustomInput name="userName" onChange={onChange} defaultValue={inputs.userName}></CustomInput>
+              <CustomTextArea name="userInfo" onChange={onChange} defaultValue={inputs.userInfo} infoNum={1}></CustomTextArea>
             </Container>
             <Container>
-              <EditContainer>
-                <p className="item">닉네임</p>
-                <p className="item">{userName}</p>
-                <CustomButton className="item">수정</CustomButton>
-              </EditContainer>
-              <EditContainer>
-                <p className="item">메인 타이틀</p>
-                <p className="item">{userInfo}</p>
-                <CustomButton className="item">수정</CustomButton>
-              </EditContainer>
-              <EditContainer>
-                <p className="item">서브 타이틀</p>
-                <p className="item">{userInfo2}</p>
-                <CustomButton className="item">수정</CustomButton>
-              </EditContainer>
+              <CustomTextArea name="userInfo2" onChange={onChange} defaultValue={inputs.userInfo2} infoNum={2}></CustomTextArea>
+              <CustomButton>프로필사진 수정</CustomButton>
+              <div>
+                <AboutMe>저에 대해서 더 알고 싶으시다면!</AboutMe>
+                <LinkContainer>
+                  {userLink.map((link, idx) => (
+                    <Link key={idx} name={link.name} url={link.url} ImgComp={link.ImgComp} />
+                  ))}
+                </LinkContainer>
+              </div>
             </Container>
           </>
         ) : (
@@ -62,38 +56,30 @@ function InfoModal({ closeInfoModal, userName, userInfo, userInfo2, userLink, is
   );
 }
 
-const MainTitleEditContainer = styled.div`
-  display: flex;
-  width: 360px;
-`;
 
-const EditContainer = styled.div`
-  display: flex;
-  width: 90%;
-  font-size: 20px;
-  .item:nth-child(1) {
-    width:30%;
-    font-weight:bold;
-  }
-  .item:nth-child(2) {
-    width:55%;
-    padding-right:1rem;
-  }
-  .item:nth-child(3) {
-    width:15%;
-  }
-`;
 const CustomInput = styled.input`
-  margin: 1rem 0 0 0;
-  font-weight: 700;
-  text-align: center;
+  width: 360px;
+  height: 35px;
   border-radius: 10px;
   border: solid 2px rgba(0, 0, 0, 0.1);
+  font-size: 20px;
+  text-align: center;
+  margin: 1rem 0 1rem 0;
+`;
+
+const CustomTextArea = styled.textarea`
+  border-radius: 10px;
+  width: 360px;
+  height: 250px;
+  border: solid 2px rgba(0, 0, 0, 0.1);
+  font-size: 20px;
+  padding-left: 1rem;
+  word-break: normal;
+  resize: none;
 `;
 const CustomButton = styled.button`
-  margin: 1rem 0 0 0;
-  width: 100%;
-
+  margin: 1rem 0 1rem 0;
+  width: 200px;
   height: 35px;
   border: none;
   border-radius: 10px;

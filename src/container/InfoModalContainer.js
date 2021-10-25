@@ -10,6 +10,7 @@ function InfoModalContainer() {
   const dispatch = useDispatch();
   const { isAdmin } = useSelector(state => ({ isAdmin: state.admin.isAdmin }));
 
+  const [userName,setUserName] = useState("sinaKim");
   const [userInfo, setUserInfo] = useState('안녕하세요 🐻, 시나브로 나아가고 있습니다.');
   const [userInfo2, setUserInfo2] = useState(`저는 딥러닝, 컴퓨터 비전에 흥미가 있는,
   소프트웨어 설계와 디자인 패턴에 푹 빠진,
@@ -31,7 +32,7 @@ function InfoModalContainer() {
   return (
     <>
       {infoModal ? (
-        <InfoModal userInfo={userInfo} userInfo2={userInfo2} userLink={userLink} closeInfoModal={closeInfoModal} isAdmin={isAdmin} />
+        <InfoModal userName={userName} userInfo={userInfo} userInfo2={userInfo2} userLink={userLink} closeInfoModal={closeInfoModal} isAdmin={isAdmin} />
       ) : null}
     </>
   );

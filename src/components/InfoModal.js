@@ -4,16 +4,42 @@ import { GrClose } from 'react-icons/gr';
 
 import Link from './Link';
 
-function InfoModal({ closeInfoModal, userInfo, userInfo2, userLink, isAdmin }) {
+function InfoModal({ closeInfoModal, userName, userInfo, userInfo2, userLink, isAdmin }) {
   return (
     <>
       <ModalContainer>
-        <CustomGrClose onClick={closeInfoModal} size="18"/>
-        {isAdmin ? null : (
+        <CustomGrClose onClick={closeInfoModal} size="18" />
+        {isAdmin ? (
           <>
             <Container>
               <ProfileImgContainer />
-              <UserName>SinaKim</UserName>
+              <MainTitleEditContainer>
+                <CustomButton>프로필사진 수정</CustomButton>
+              </MainTitleEditContainer>
+            </Container>
+            <Container>
+              <EditContainer>
+                <p className="item">닉네임</p>
+                <p className="item">{userName}</p>
+                <CustomButton className="item">수정</CustomButton>
+              </EditContainer>
+              <EditContainer>
+                <p className="item">메인 타이틀</p>
+                <p className="item">{userInfo}</p>
+                <CustomButton className="item">수정</CustomButton>
+              </EditContainer>
+              <EditContainer>
+                <p className="item">서브 타이틀</p>
+                <p className="item">{userInfo2}</p>
+                <CustomButton className="item">수정</CustomButton>
+              </EditContainer>
+            </Container>
+          </>
+        ) : (
+          <>
+            <Container>
+              <ProfileImgContainer />
+              <UserName>{userName}</UserName>
               <UserInfo infoNum={1}>{userInfo}</UserInfo>
             </Container>
             <Container>
@@ -36,6 +62,52 @@ function InfoModal({ closeInfoModal, userInfo, userInfo2, userLink, isAdmin }) {
   );
 }
 
+const MainTitleEditContainer = styled.div`
+  display: flex;
+  width: 360px;
+`;
+
+const EditContainer = styled.div`
+  display: flex;
+  width: 90%;
+  font-size: 20px;
+  .item:nth-child(1) {
+    width:30%;
+    font-weight:bold;
+  }
+  .item:nth-child(2) {
+    width:55%;
+    padding-right:1rem;
+  }
+  .item:nth-child(3) {
+    width:15%;
+  }
+`;
+const CustomInput = styled.input`
+  margin: 1rem 0 0 0;
+  font-weight: 700;
+  text-align: center;
+  border-radius: 10px;
+  border: solid 2px rgba(0, 0, 0, 0.1);
+`;
+const CustomButton = styled.button`
+  margin: 1rem 0 0 0;
+  width: 100%;
+
+  height: 35px;
+  border: none;
+  border-radius: 10px;
+  background-color: #62c7fa;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  &:hover {
+    background-color: #7cd3ff;
+  }
+  &:active {
+    background-color: #52c5ff;
+  }
+`;
 const ModalContainer = styled.div`
   background: white;
   position: fixed;
@@ -57,13 +129,13 @@ const Dim = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  z-index:10; // 모달이 켜져있을 경우 뒤에 버튼들 안눌리게 설정
+  z-index: 10; // 모달이 켜져있을 경우 뒤에 버튼들 안눌리게 설정
 `;
 
 const CustomGrClose = styled(GrClose)`
   font-size: 32px;
   position: fixed;
-  top: 2%;
+  top: 3%;
   right: 2%;
   cursor: pointer;
 `;

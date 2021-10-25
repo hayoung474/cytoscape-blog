@@ -8,7 +8,7 @@ function InfoModal({ closeInfoModal, userInfo, userInfo2, userLink, isAdmin }) {
   return (
     <>
       <ModalContainer>
-        <CustomGrClose onClick={closeInfoModal} />
+        <CustomGrClose onClick={closeInfoModal} size="18"/>
         {isAdmin ? null : (
           <>
             <Container>
@@ -45,7 +45,7 @@ const ModalContainer = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   border-radius: 28px;
-  z-index: 11;
+  z-index: 11; // 모달이 켜져있을 경우 뒤에 버튼들 안눌리게 설정
   display: flex;
   justify-content: space-between;
 `;
@@ -57,7 +57,7 @@ const Dim = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  z-index:10;
+  z-index:10; // 모달이 켜져있을 경우 뒤에 버튼들 안눌리게 설정
 `;
 
 const CustomGrClose = styled(GrClose)`

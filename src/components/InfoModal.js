@@ -74,7 +74,7 @@ const CustomInput = styled.input`
   height: 35px;
   border-radius: 10px;
   border: solid 2px rgba(0, 0, 0, 0.1);
-  font-size: 20px;
+  font-size: 14px;
   text-align: center;
   margin: 1rem 0 1rem 0;
 `;
@@ -84,30 +84,13 @@ const CustomTextArea = styled.textarea`
   width: 360px;
   height: 250px;
   border: solid 2px rgba(0, 0, 0, 0.1);
-  font-size: 20px;
+  font-size: 14px;
   padding-left: 1rem;
   word-break: normal;
   resize: none;
 `;
 const CustomFileInput = styled.input`
   display: none;
-  /* width:360px;
-margin : 1rem 0 0 0; */
-  /* margin: 1rem 0 1rem 0;
-  width: 200px;
-  height: 35px;
-  border: none;
-  border-radius: 10px;
-  background-color: #62c7fa;
-  font-size: 18px;
-  font-weight: bold;
-  color: white;
-  &:hover {
-    background-color: #7cd3ff;
-  }
-  &:active {
-    background-color: #52c5ff;
-  } */
 `;
 
 const ModalContainer = styled.div`

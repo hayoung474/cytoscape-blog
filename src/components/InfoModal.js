@@ -4,7 +4,7 @@ import { GrClose } from 'react-icons/gr';
 
 import Link from './Link';
 
-function InfoModal({ inputs,onChange, onSubmit, userName, userInfo, userInfo2, userLink, isAdmin, closeInfoModal }) {
+function InfoModal({ onChange, onSubmit, userName, userInfo, userInfo2, userLink,inputs, isAdmin, profileImg, handleChangeFile }) {
   return (
     <>
       <ModalContainer>
@@ -12,13 +12,24 @@ function InfoModal({ inputs,onChange, onSubmit, userName, userInfo, userInfo2, u
         {isAdmin ? (
           <>
             <Container>
-              <ProfileImgContainer />
-              <CustomInput name="userName" onChange={onChange} defaultValue={inputs.userName}></CustomInput>
-              <CustomTextArea name="userInfo" onChange={onChange} defaultValue={inputs.userInfo} infoNum={1}></CustomTextArea>
+              <label htmlFor="uploadFile">
+                <ProfileImgContainer editable url={inputs.profileImg || profileImg}>
+                  <div className="image" />
+                </ProfileImgContainer>
+              </label>
+
+              <CustomFileInput
+                name="profileImg"
+                onChange={handleChangeFile}
+                id="uploadFile"
+                type="file"
+                accept="image/gif,image/jpeg,image/png"
+              ></CustomFileInput>
+              <CustomInput name="userName" onChange={onChange} defaultValue={userName}></CustomInput>
+              <CustomTextArea name="userInfo" onChange={onChange} defaultValue={userInfo} infoNum={1}></CustomTextArea>
             </Container>
             <Container>
-              <CustomTextArea name="userInfo2" onChange={onChange} defaultValue={inputs.userInfo2} infoNum={2}></CustomTextArea>
-              <CustomButton>프로필사진 수정</CustomButton>
+              <CustomTextArea name="userInfo2" onChange={onChange} defaultValue={userInfo2} infoNum={2}></CustomTextArea>
               <div>
                 <AboutMe>저에 대해서 더 알고 싶으시다면!</AboutMe>
                 <LinkContainer>
@@ -32,7 +43,9 @@ function InfoModal({ inputs,onChange, onSubmit, userName, userInfo, userInfo2, u
         ) : (
           <>
             <Container>
-              <ProfileImgContainer />
+              <ProfileImgContainer url={profileImg}>
+                <div className="image"></div>
+              </ProfileImgContainer>
               <UserName>{userName}</UserName>
               <UserInfo infoNum={1}>{userInfo}</UserInfo>
             </Container>
@@ -51,11 +64,10 @@ function InfoModal({ inputs,onChange, onSubmit, userName, userInfo, userInfo2, u
         )}
       </ModalContainer>
 
-      <Dim onClick={closeInfoModal} />
+      <Dim onClick={onSubmit} />
     </>
   );
 }
-
 
 const CustomInput = styled.input`
   width: 360px;
@@ -77,8 +89,11 @@ const CustomTextArea = styled.textarea`
   word-break: normal;
   resize: none;
 `;
-const CustomButton = styled.button`
-  margin: 1rem 0 1rem 0;
+const CustomFileInput = styled.input`
+  display: none;
+  /* width:360px;
+margin : 1rem 0 0 0; */
+  /* margin: 1rem 0 1rem 0;
   width: 200px;
   height: 35px;
   border: none;
@@ -92,8 +107,9 @@ const CustomButton = styled.button`
   }
   &:active {
     background-color: #52c5ff;
-  }
+  } */
 `;
+
 const ModalContainer = styled.div`
   background: white;
   position: fixed;
@@ -137,9 +153,26 @@ const Container = styled.div`
 const ProfileImgContainer = styled.div`
   width: 360px;
   height: 360px;
-  background-image: url('https://sina-kim.github.io/assets/images/sina-bear.jpg');
-  background-size: contain;
-  background-repeat: no-repeat;
+  overflow: hidden;
+
+  .image {
+    background-image: url(${props => props.url});
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 100%;
+
+    ${({ editable }) =>
+      editable &&
+      css`
+        transition: all 0.3s ease-in-out;
+        &:hover {
+          cursor: pointer;
+          transform: scale(1.1);
+          filter: blur(5px);
+        }
+      `}
+  }
 `;
 
 const UserName = styled.p`

@@ -2,10 +2,8 @@ import React, { useState, useEffect } from 'react';
 import InfoModal from '../components/InfoModal';
 import { useSelector, useDispatch } from 'react-redux';
 import { setInfoModal } from '../modules/infoModal';
-
 import { BsLinkedin, BsGithub } from 'react-icons/bs';
 import { AiFillMail } from 'react-icons/ai';
-
 import firebase from 'firebase';
 
 function InfoModalContainer() {
@@ -13,12 +11,10 @@ function InfoModalContainer() {
   const { isAdmin } = useSelector(state => ({ isAdmin: state.admin.isAdmin }));
   const { infoModal } = useSelector(state => ({ infoModal: state.infoModal.infoModal }));
 
-  const [userName, setUserName] = useState('sinaKim');
-  const [userInfo, setUserInfo] = useState('안녕하세요 🐻, 시나브로 나아가고 있습니다.');
-  const [userInfo2, setUserInfo2] = useState(`저는 딥러닝, 컴퓨터 비전에 흥미가 있는,
-  소프트웨어 설계와 디자인 패턴에 푹 빠진,
-  더 나은 교육 환경 만들기에 관심이 있는,
-  언젠가 개발자가 될 sinaKim 입니다!`);
+  const [userName, setUserName] = useState('');
+  const [userInfo, setUserInfo] = useState('');
+  const [userInfo2, setUserInfo2] = useState('');
+  const [profileImg, setProfileImg] = useState('');
 
   const [userLink, setUserLink] = useState([
     { name: 'Github', url: 'https://github.com/sina-Kim', ImgComp: BsGithub },
@@ -27,10 +23,10 @@ function InfoModalContainer() {
   ]);
 
   const [inputs, setInputs] = useState({
-    userName: userName,
-    userInfo: userInfo,
-    userInfo2: userInfo2,
-    profileImg: 'profileImg',
+    userName: '',
+    userInfo: '',
+    userInfo2: '',
+    profileImg: null,
   });
 
   const closeInfoModal = () => {
@@ -41,34 +37,45 @@ function InfoModalContainer() {
     const { value, name } = e.target;
     setInputs({ ...inputs, [name]: value });
   };
+  const handleChangeFile = e => {
+    let reader = new FileReader();
+
+    reader.onloadend = () => {
+      // 2. 읽기가 완료되면 아래코드가 실행됩니다.
+      const base64 = reader.result;
+      if (base64) {
+        setInputs({ ...inputs, profileImg: base64.toString() }); // 파일 base64 상태 업데이트
+      }
+    };
+    if (e.target.files[0]) {
+      reader.readAsDataURL(e.target.files[0]); // 1. 파일을 읽어 버퍼에 저장합니다.
+      //setInputs({...inputs,profileImg:e.target.files[0]}); // 파일 상태 업데이트
+    }
+  };
 
   const onSubmit = () => {
     if (isAdmin) {
-      const prevData = { userName: userName, userInfo: userInfo, userInfo2: userInfo2, profileImg: 'profileImg' };
+      const prevData = { userName: userName, userInfo: userInfo, userInfo2: userInfo2, profileImg: profileImg };
       const nextData = { ...inputs };
-      console.log(prevData, nextData);
-      console.log(JSON.stringify(prevData) !== JSON.stringify(nextData));
       if (JSON.stringify(prevData) !== JSON.stringify(nextData)) {
         if (confirm('변경사항을 저장하시겠습니까?')) {
           firebase.database().ref('blogData/').set({
             userName: inputs.userName,
             userInfo: inputs.userInfo,
             userInfo2: inputs.userInfo2,
-            profileImg: 'profileImg',
+            profileImg: inputs.profileImg,
           });
-        }
-        else{
-          setInputs({ ...inputs, userName:userName,userInfo:userInfo,userInfo2:userInfo2 });
+        } else {
+          setInputs({ ...inputs, userName: userName, userInfo: userInfo, userInfo2: userInfo2, profileImg: profileImg }); // 저장을 하지 않을 경우 기존 값 그대로 두기
         }
       }
     }
-
-    closeInfoModal();
+    closeInfoModal(); // 모달 닫기
   };
 
   // DB가 변경되면 자동으로 값이 새로 세팅됨.
   useEffect(() => {
-    firebase
+    firebase // 데이터베이스에서 데이터 가져오기
       .database()
       .ref('blogData/')
       .on('value', snapshot => {
@@ -77,17 +84,18 @@ function InfoModalContainer() {
           setUserName(loadData['userName']);
           setUserInfo(loadData['userInfo']);
           setUserInfo2(loadData['userInfo2']);
-          console.log(loadData);
+          setProfileImg(loadData['profileImg']);
+          setInputs({ ...inputs, userName: userName, userInfo: userInfo, userInfo2: userInfo2, profileImg: profileImg });
         }
       });
-  }, []);
-
+  }, [infoModal]); // 모달이 켜졌을 때 수행
 
   return (
     <>
       {infoModal ? (
         <InfoModal
-          inputs={inputs}
+          handleChangeFile={handleChangeFile}
+          profileImg={profileImg}
           setInputs={setInputs}
           onSubmit={onSubmit}
           onChange={onChange}
@@ -95,8 +103,8 @@ function InfoModalContainer() {
           userInfo={userInfo}
           userInfo2={userInfo2}
           userLink={userLink}
-          closeInfoModal={closeInfoModal}
           isAdmin={isAdmin}
+          inputs={inputs}
         />
       ) : null}
     </>

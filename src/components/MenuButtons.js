@@ -43,7 +43,7 @@ function App() {
           visible={toggle}
           three
           onClick={() => {
-            parent.location = 'mailto:jhy901@naver.com';
+            parent.location = 'mailto:sinabero3271@kakao.com';
           }}
           title="블로그 주인에게 이메일 보내기"
         >

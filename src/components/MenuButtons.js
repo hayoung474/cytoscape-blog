@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo } from 'react';
 import styled, { css } from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { setInfoModal } from '../modules/infoModal';
@@ -9,8 +9,6 @@ import { AiOutlineMail } from 'react-icons/ai';
 function App() {
   const [toggle, setToggle] = useState(false);
   const dispatch = useDispatch();
-
-  const { infoModal } = useSelector(state => ({ infoModal: state.infoModal.infoModal }));
 
   const openInfoModal = () => {
     dispatch(setInfoModal(true));
@@ -91,7 +89,7 @@ const ToggleButton = styled.button`
 `;
 
 const SubButton = styled.button`
-  visibility: ${props => (props.visible === true ? "visiable" : "hidden")};
+  visibility: ${props => (props.visible === true ? 'visiable' : 'hidden')};
   position: absolute;
   z-index: 9;
   right: 1em;

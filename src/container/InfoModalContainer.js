@@ -50,13 +50,12 @@ function InfoModalContainer() {
     };
     if (e.target.files[0]) {
       reader.readAsDataURL(e.target.files[0]); // 1. 파일을 읽어 버퍼에 저장합니다.
-      //setInputs({...inputs,profileImg:e.target.files[0]}); // 파일 상태 업데이트
     }
   };
 
   const onSubmit = () => {
     if (isAdmin) {
-      const prevData = { userName: userName, userInfo: userInfo, userInfo2: userInfo2, profileImg: profileImg };
+      const prevData = { userName, userInfo, userInfo2, profileImg };
       const nextData = { ...inputs };
       if (JSON.stringify(prevData) !== JSON.stringify(nextData)) {
         if (confirm('변경사항을 저장하시겠습니까?')) {
@@ -67,7 +66,7 @@ function InfoModalContainer() {
             profileImg: inputs.profileImg,
           });
         } else {
-          setInputs({ ...inputs, userName: userName, userInfo: userInfo, userInfo2: userInfo2, profileImg: profileImg }); // 저장을 하지 않을 경우 기존 값 그대로 두기
+          setInputs({ ...inputs, userName, userInfo, userInfo, profileImg }); // 저장을 하지 않을 경우 기존 값 그대로 두기
         }
       }
     }
@@ -86,7 +85,7 @@ function InfoModalContainer() {
           setUserInfo(loadData['userInfo']);
           setUserInfo2(loadData['userInfo2']);
           setProfileImg(loadData['profileImg']);
-          setInputs({ ...inputs, userName: userName, userInfo: userInfo, userInfo2: userInfo2, profileImg: profileImg });
+          setInputs({ ...inputs, ...loadData });
         }
       });
   }, [infoModal]); // 모달이 켜졌을 때 수행

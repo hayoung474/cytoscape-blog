@@ -89,6 +89,7 @@ const ToggleButton = styled.button`
 `;
 
 const SubButton = styled.button`
+  cursor: pointer;
   visibility: ${props => (props.visible === true ? 'visiable' : 'hidden')};
   position: absolute;
   z-index: 9;
@@ -119,13 +120,11 @@ const SubButton = styled.button`
     css`
       background-color: #62c7fa;
       transform: translateX(-6em) translateY(-6em);
-      transition-delay: 0.1s;
     `};
   ${props =>
     props.three &&
     css`
       background-color: #b0f1ea;
       transform: translateX(-8em);
-      transition-delay: 0.2s;
     `};
 `;

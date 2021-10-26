@@ -36,6 +36,7 @@ function InfoModalContainer() {
   const onChange = e => {
     const { value, name } = e.target;
     setInputs({ ...inputs, [name]: value });
+    console.log("zz")
   };
 
   const handleChangeFile = e => {

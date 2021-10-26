@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled, { css } from 'styled-components';
 import { GrClose } from 'react-icons/gr';
 
 import Link from './Link';
 
-function InfoModal({ onChange, onSubmit, userName, userInfo, userInfo2, userLink,inputs, isAdmin, profileImg, handleChangeFile }) {
+function InfoModal({ onChange, onSubmit, userName, userInfo, userInfo2, userLink, inputs, isAdmin, profileImg, handleChangeFile }) {
   return (
     <>
       <ModalContainer>

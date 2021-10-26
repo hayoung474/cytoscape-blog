@@ -37,6 +37,7 @@ function InfoModalContainer() {
     const { value, name } = e.target;
     setInputs({ ...inputs, [name]: value });
   };
+
   const handleChangeFile = e => {
     let reader = new FileReader();
 

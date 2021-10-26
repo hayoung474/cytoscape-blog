@@ -5,7 +5,6 @@ const initialState = {
   infoModal: false,
 };
 
-
 export default function infoModal(state = initialState, action) {
   switch (action.type) {
     case SET_INFO_MODAL:

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setModalPropsObj } from '../modules/modal';
 import { setGraph, setIsInit } from '../modules/graph';
@@ -8,12 +8,15 @@ import firebase from 'firebase';
 import Graph from '../components/Graph';
 
 function GraphContainer() {
+  const dispatch = useDispatch();
+
   const { graph } = useSelector(state => ({ graph: state.graph.graph })); // redux 의 graph 상태 구독
   const { isInit } = useSelector(state => ({ isInit: state.graph.isInit })); // 초기에 데이터를 불러왔는지 확인하기 위한 변수
   const { isAdmin } = useSelector(state => ({
     isAdmin: state.admin.isAdmin,
   }));
-  const dispatch = useDispatch();
+
+  const [loadGraph, setLoadGraph] = useState(false);
 
   let options = {
     evtType: 'cxttap',
@@ -277,6 +280,7 @@ function GraphContainer() {
           tempGraph['edges'] = tempEdges;
 
           dispatch(setGraph(tempGraph)); // 그래프 세팅
+          setLoadGraph(prev => !prev);
           dispatch(setIsInit(true)); // 초기데이터 로드를 마무리 하였음. loadDone 을 true로 변경해줌.
         }
       });
@@ -295,7 +299,7 @@ loadDone 조건 없이 graph값이 변경될 때 마다 graph 값을 update 하�
 
   return (
     <>
-      <Graph graph={graph} options={options} isAdmin={isAdmin} />
+      <Graph graph={graph} options={options} isAdmin={isAdmin} showGraph={loadGraph} />
     </>
   );
 }

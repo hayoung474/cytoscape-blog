@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import InfoModal from '../components/InfoModal';
 import { useSelector, useDispatch } from 'react-redux';
 import { setInfoModal } from '../modules/infoModal';
@@ -29,32 +29,31 @@ function InfoModalContainer() {
     profileImg: null,
   });
 
-  const closeInfoModal = () => {
+  const closeInfoModal = useCallback(() => {
     dispatch(setInfoModal(false));
-  };
+  }, []);
 
-  const onChange = e => {
+  const onChange = useCallback(e => {
     const { value, name } = e.target;
-    setInputs({ ...inputs, [name]: value });
-    console.log("zz")
-  };
+    setInputs(prev => ({ ...prev, [name]: value }));
+  }, []);
 
-  const handleChangeFile = e => {
+  const handleChangeFile = useCallback(e => {
     let reader = new FileReader();
 
     reader.onloadend = () => {
       // 2. 읽기가 완료되면 아래코드가 실행됩니다.
       const base64 = reader.result;
       if (base64) {
-        setInputs({ ...inputs, profileImg: base64.toString() }); // 파일 base64 상태 업데이트
+        setInputs(prev => ({ ...prev, profileImg: base64.toString() })); // 파일 base64 상태 업데이트
       }
     };
     if (e.target.files[0]) {
       reader.readAsDataURL(e.target.files[0]); // 1. 파일을 읽어 버퍼에 저장합니다.
     }
-  };
+  }, []);
 
-  const onSubmit = () => {
+  const onSubmit = useCallback(() => {
     if (isAdmin) {
       const prevData = { userName, userInfo, userInfo2, profileImg };
       const nextData = { ...inputs };
@@ -72,7 +71,7 @@ function InfoModalContainer() {
       }
     }
     closeInfoModal(); // 모달 닫기
-  };
+  }, [inputs]);
 
   // DB가 변경되면 자동으로 값이 새로 세팅됨.
   useEffect(() => {
@@ -89,7 +88,7 @@ function InfoModalContainer() {
           setInputs({ ...inputs, ...loadData });
         }
       });
-  }, [infoModal]); // 모달이 켜졌을 때 수행
+  }, []); // 모달이 켜졌을 때 1번 수행
 
   return (
     <>

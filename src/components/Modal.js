@@ -1,62 +1,57 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
 import { setModal } from '../modules/modal';
 
 // 4. Graph.js 가 부모 컴포넌트이며, Graph.js 의 값에 따라 Modal의 표시값이 달라진다.
-function Modal({
-  // Graph.js 로 부터 넘어온 props
-  execution_function,
-  children,
-  modalType,
-  setNodeLabel,
-  setTargetNodeId,
-}) {
+function Modal({ execution_function, children, modalType, setNodeLabel, setTargetNodeId }) {
   const dispatch = useDispatch();
   const { modal } = useSelector(state => ({ modal: state.modal.modal }));
   const { graph } = useSelector(state => ({ graph: state.graph.graph })); // redux 의 graph 상태 구독
 
-  return (
-    <>
-      <DarkBackground modal={modal} onClick={() => dispatch(setModal(false))} />
-      {modal && (
-        <ModalContent>
-          <ModalHeader>{modalType}</ModalHeader>
-          <ModalBody>{children}</ModalBody>
-          {(modalType === '이름변경' || modalType === '리프노드추가' || modalType === '간선에노드추가' || modalType === '새노드추가') && (
-            <ModalInput
-              placeholder="Node Label"
-              type="text"
-              onChange={e => {
-                setNodeLabel(e.target.value);
-              }}
-            ></ModalInput>
-          )}
-          {modalType === '간선추가' && (
-            <ModalSelect
-              onChange={e => {
-                setTargetNodeId(e.target.options[e.target.selectedIndex].value);
-              }}
-            >
-              <option value="" selected="selected" hidden="hidden">
-                연결할 간선을 선택하세요
-              </option>
-              {graph.nodes.map((item, index) => {
-                return (
-                  <option value={item.data.id} key={index}>
-                    {item.data.label}
-                  </option>
-                );
-              })}
-            </ModalSelect>
-          )}
-          <ModalFooter>
-            <ModalButton onClick={execution_function}>Add</ModalButton>
-          </ModalFooter>
-        </ModalContent>
-      )}
-    </>
-  );
+  return useMemo(() => {
+    return (
+      <>
+        <DarkBackground modal={modal} onClick={() => dispatch(setModal(false))} />
+        {modal && (
+          <ModalContent>
+            <ModalHeader>{modalType}</ModalHeader>
+            <ModalBody>{children}</ModalBody>
+            {(modalType === '이름변경' || modalType === '리프노드추가' || modalType === '간선에노드추가' || modalType === '새노드추가') && (
+              <ModalInput
+                placeholder="Node Label"
+                type="text"
+                onChange={e => {
+                  setNodeLabel(e.target.value);
+                }}
+              ></ModalInput>
+            )}
+            {modalType === '간선추가' && (
+              <ModalSelect
+                onChange={e => {
+                  setTargetNodeId(e.target.options[e.target.selectedIndex].value);
+                }}
+              >
+                <option value="" selected="selected" hidden="hidden">
+                  연결할 간선을 선택하세요
+                </option>
+                {graph.nodes.map((item, index) => {
+                  return (
+                    <option value={item.data.id} key={index}>
+                      {item.data.label}
+                    </option>
+                  );
+                })}
+              </ModalSelect>
+            )}
+            <ModalFooter>
+              <ModalButton onClick={execution_function}>Add</ModalButton>
+            </ModalFooter>
+          </ModalContent>
+        )}
+      </>
+    );
+  }, [execution_function, children, modalType, setNodeLabel, setTargetNodeId]);
 }
 const ModalButton = styled.button`
   background-color: grey;

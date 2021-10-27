@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
 
 function Header({ adminToggle, title }) {
-  return (
-    <HeaderWrapper>
-      <Title onClick={adminToggle}>{title}</Title>
-    </HeaderWrapper>
-  );
+  return useMemo(() => {
+    return (
+      <HeaderWrapper>
+        <Title onClick={adminToggle}>{title}</Title>
+      </HeaderWrapper>
+    );
+  }, [title]);
 }
 
 const HeaderWrapper = styled.div`

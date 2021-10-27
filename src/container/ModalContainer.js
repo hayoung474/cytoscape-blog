@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useCallback } from 'react';
 import Modal from '../components/Modal';
 import { setModal } from '../modules/modal';
 import { setGraph } from '../modules/graph';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import cryptoRandomString from 'crypto-random-string';
 
 function ModalContainer() {
   const dispatch = useDispatch();
@@ -15,7 +14,7 @@ function ModalContainer() {
   const { modalPropsObj } = useSelector(state => ({ modalPropsObj: state.modal.modalPropsObj })); // redux 의 modalPropsObj 상태 구독
 
   //   /* "이름변경" 기능을 위한 함수 */
-  const changeLabel = () => {
+  const changeLabel = useCallback(() => {
     let newGraph = { ...graph };
     newGraph.nodes.forEach(item => {
       if (item.data.id === modalPropsObj.data.selectNodeId) {
@@ -27,10 +26,10 @@ function ModalContainer() {
     dispatch(setGraph(newGraph)); // graph 자체를 덮어씌움
     dispatch(setModal(false));
     window.location.replace('/'); // 강제 새로고침
-  };
+  }, [graph, modalPropsObj, nodeLabel]);
 
   //   /* "간선추가" 기능을 위한 함수 */
-  const addEdge = () => {
+  const addEdge = useCallback(() => {
     // 기존 노드와의 연결을 위한 엣지 추가를 위한  함수
     let newGraph = { ...graph };
     newGraph['edges'].push({
@@ -42,10 +41,10 @@ function ModalContainer() {
     });
     dispatch(setGraph(newGraph));
     dispatch(setModal(false));
-  };
+  }, [graph, modalPropsObj, targetNodeId]);
 
   //   /* "간선에 노드 추가" 기능을 위한 함수 */
-  const addToEdgeNode = () => {
+  const addToEdgeNode = useCallback(() => {
     const newNodeId = Math.random().toString(36).substr(2, 11); // 랜덤스트링 생성 구문
     let newGraph = { ...graph };
 
@@ -76,36 +75,36 @@ function ModalContainer() {
     });
     dispatch(setGraph(newGraph));
     dispatch(setModal(false));
-  };
+  }, [graph, modalPropsObj, nodeLabel]);
 
   //   /* "리프노드추가" 기능을 위한 함수 */
-  const addLeafNode = () => {
+  const addLeafNode = useCallback(() => {
     const newNodeId = Math.random().toString(36).substr(2, 11); // 랜덤스트링 생성 구문
-    const targetNodeId = modalPropsObj.data.selectNodeId;
+    const selectedNodeId = modalPropsObj.data.selectNodeId;
     let newGraph = { ...graph };
     newGraph['nodes'].push({ data: { id: newNodeId, label: nodeLabel } });
     newGraph['edges'].push({
       data: {
-        id: newNodeId + '->' + targetNodeId,
+        id: newNodeId + '->' + selectedNodeId,
         source: newNodeId,
-        target: targetNodeId,
+        target: selectedNodeId,
       },
     });
     dispatch(setGraph(newGraph));
     dispatch(setModal(false));
-  };
+  }, [modalPropsObj, graph, nodeLabel]);
 
   // 새 노드 추가를 위한 함수
-  const addNode = () => {
+  const addNode = useCallback(() => {
     const newNodeId = Math.random().toString(36).substr(2, 11); // 랜덤스트링 생성 구문
     let newGraph = { ...graph };
     newGraph['nodes'].push({ data: { id: newNodeId, label: nodeLabel } });
     dispatch(setGraph(newGraph));
     dispatch(setModal(false));
-  };
+  }, [graph, nodeLabel]);
 
   //   /* "노드삭제 > 하위노드 모두 삭제" 기능을 위한 함수 */
-  const deleteNodeAll = () => {
+  const deleteNodeAll = useCallback(() => {
     // nodeList의 id를 포함하는 모든 객체를 제거하도록 함.
     // deleteNodeList 에는 현재 선택한 노드를 포함한 하위노드들의 id값을 담고있음.
     let newGraph = { ...graph };
@@ -124,10 +123,10 @@ function ModalContainer() {
     });
     dispatch(setGraph(newGraph));
     dispatch(setModal(false));
-  };
+  }, [graph, modalPropsObj]);
 
   //   /* "노드삭제 > 현재 노드만 삭제" 기능을 위한 함수 */
-  const deleteNodeCurrent = () => {
+  const deleteNodeCurrent = useCallback(() => {
     // nodeList의 id를 포함하는 모든 객체를 제거하도록 함.
     let newGraph = { ...graph };
 
@@ -160,10 +159,10 @@ function ModalContainer() {
 
     dispatch(setGraph(newGraph));
     dispatch(setModal(false));
-  };
+  }, [graph, modalPropsObj]);
 
   //   /* "간선 삭제" 기능을 위한 함수 */
-  const deleteEdge = () => {
+  const deleteEdge = useCallback(() => {
     let newGraph = { ...graph };
     newGraph.edges.forEach((item, index) => {
       if (item.data.id === modalPropsObj.data.selectEdgeId) {
@@ -172,7 +171,7 @@ function ModalContainer() {
     });
     dispatch(setGraph(newGraph));
     dispatch(setModal(false));
-  };
+  }, [graph, modalPropsObj]);
   return (
     <>
       <Modal

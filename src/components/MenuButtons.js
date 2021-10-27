@@ -6,7 +6,7 @@ import { FaInternetExplorer } from 'react-icons/fa';
 import { BsInfoLg } from 'react-icons/bs';
 import { AiOutlineMail } from 'react-icons/ai';
 
-function App() {
+function MenuButtons() {
   const [toggle, setToggle] = useState(false);
   const dispatch = useDispatch();
 
@@ -52,7 +52,7 @@ function App() {
   }, [toggle]);
 }
 
-export default App;
+export default MenuButtons;
 
 const ToggleButton = styled.button`
   position: absolute;

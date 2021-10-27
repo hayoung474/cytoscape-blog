@@ -1,72 +1,74 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import styled, { css } from 'styled-components';
 import { GrClose } from 'react-icons/gr';
 
 import Link from './Link';
 
 function InfoModal({ onChange, onSubmit, userName, userInfo, userInfo2, userLink, inputs, isAdmin, profileImg, handleChangeFile }) {
-  return (
-    <>
-      <ModalContainer>
-        <CustomGrClose onClick={onSubmit} size="18" />
-        {isAdmin ? (
-          <>
-            <Container>
-              <label htmlFor="uploadFile">
-                <ProfileImgContainer editable url={inputs.profileImg || profileImg}>
-                  <div className="image" />
+  return useMemo(() => {
+    return (
+      <>
+        <ModalContainer>
+          <CustomGrClose onClick={onSubmit} size="18" />
+          {isAdmin ? (
+            <>
+              <Container>
+                <label htmlFor="uploadFile">
+                  <ProfileImgContainer editable url={inputs.profileImg || profileImg}>
+                    <div className="image" />
+                  </ProfileImgContainer>
+                </label>
+
+                <CustomFileInput
+                  name="profileImg"
+                  onChange={handleChangeFile}
+                  id="uploadFile"
+                  type="file"
+                  accept="image/gif,image/jpeg,image/png"
+                ></CustomFileInput>
+                <CustomInput name="userName" onChange={onChange} defaultValue={userName}></CustomInput>
+                <CustomTextArea name="userInfo" onChange={onChange} defaultValue={userInfo} infoNum={1}></CustomTextArea>
+              </Container>
+              <Container>
+                <CustomTextArea name="userInfo2" onChange={onChange} defaultValue={userInfo2} infoNum={2}></CustomTextArea>
+                <div>
+                  <AboutMe>저에 대해서 더 알고 싶으시다면!</AboutMe>
+                  <LinkContainer>
+                    {userLink.map((link, idx) => (
+                      <Link key={idx} name={link.name} url={link.url} ImgComp={link.ImgComp} />
+                    ))}
+                  </LinkContainer>
+                </div>
+              </Container>
+            </>
+          ) : (
+            <>
+              <Container>
+                <ProfileImgContainer url={profileImg}>
+                  <div className="image"></div>
                 </ProfileImgContainer>
-              </label>
+                <UserName>{userName}</UserName>
+                <UserInfo infoNum={1}>{userInfo}</UserInfo>
+              </Container>
+              <Container>
+                <UserInfo infoNum={2}>{userInfo2}</UserInfo>
+                <div>
+                  <AboutMe>저에 대해서 더 알고 싶으시다면!</AboutMe>
+                  <LinkContainer>
+                    {userLink.map((link, idx) => (
+                      <Link key={idx} name={link.name} url={link.url} ImgComp={link.ImgComp} />
+                    ))}
+                  </LinkContainer>
+                </div>
+              </Container>
+            </>
+          )}
+        </ModalContainer>
 
-              <CustomFileInput
-                name="profileImg"
-                onChange={handleChangeFile}
-                id="uploadFile"
-                type="file"
-                accept="image/gif,image/jpeg,image/png"
-              ></CustomFileInput>
-              <CustomInput name="userName" onChange={onChange} defaultValue={userName}></CustomInput>
-              <CustomTextArea name="userInfo" onChange={onChange} defaultValue={userInfo} infoNum={1}></CustomTextArea>
-            </Container>
-            <Container>
-              <CustomTextArea name="userInfo2" onChange={onChange} defaultValue={userInfo2} infoNum={2}></CustomTextArea>
-              <div>
-                <AboutMe>저에 대해서 더 알고 싶으시다면!</AboutMe>
-                <LinkContainer>
-                  {userLink.map((link, idx) => (
-                    <Link key={idx} name={link.name} url={link.url} ImgComp={link.ImgComp} />
-                  ))}
-                </LinkContainer>
-              </div>
-            </Container>
-          </>
-        ) : (
-          <>
-            <Container>
-              <ProfileImgContainer url={profileImg}>
-                <div className="image"></div>
-              </ProfileImgContainer>
-              <UserName>{userName}</UserName>
-              <UserInfo infoNum={1}>{userInfo}</UserInfo>
-            </Container>
-            <Container>
-              <UserInfo infoNum={2}>{userInfo2}</UserInfo>
-              <div>
-                <AboutMe>저에 대해서 더 알고 싶으시다면!</AboutMe>
-                <LinkContainer>
-                  {userLink.map((link, idx) => (
-                    <Link key={idx} name={link.name} url={link.url} ImgComp={link.ImgComp} />
-                  ))}
-                </LinkContainer>
-              </div>
-            </Container>
-          </>
-        )}
-      </ModalContainer>
-
-      <Dim onClick={onSubmit} />
-    </>
-  );
+        <Dim onClick={onSubmit} />
+      </>
+    );
+  }, [isAdmin, inputs, profileImg, userName, userInfo, userInfo2]);
 }
 
 const CustomInput = styled.input`
@@ -144,7 +146,7 @@ const ProfileImgContainer = styled.div`
     background-repeat: no-repeat;
     width: 100%;
     height: 100%;
-    background-position:center;
+    background-position: center;
 
     ${({ editable }) =>
       editable &&

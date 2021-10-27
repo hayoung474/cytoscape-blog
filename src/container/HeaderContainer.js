@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import Header from '../components/Header';
 import { useSelector, useDispatch } from 'react-redux';
 import { setAdmin } from '../modules/admin';
@@ -10,7 +10,7 @@ function HeaderContainer() {
 
   const [title, setTitle] = useState("SinaKim's velog");
 
-  const adminToggle = () => {
+  const adminToggle = useCallback(() => {
     if (!isAdmin) {
       if (prompt('관리자 페이지로 이동하기 위해 비밀번호를 입력해주세요.') === '1234') {
         dispatch(setAdmin(true));
@@ -22,7 +22,7 @@ function HeaderContainer() {
         setTitle("SinaKim's velog");
       }
     }
-  };
+  }, [isAdmin]);
 
   return <Header adminToggle={adminToggle} title={title} />;
 }

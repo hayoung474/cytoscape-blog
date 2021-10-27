@@ -280,11 +280,11 @@ function GraphContainer() {
           tempGraph['edges'] = tempEdges;
 
           dispatch(setGraph(tempGraph)); // 그래프 세팅
-          setLoadGraph(prev => !prev);
+          setLoadGraph(true);
           dispatch(setIsInit(true)); // 초기데이터 로드를 마무리 하였음. loadDone 을 true로 변경해줌.
         }
       });
-  }, [dispatch]);
+  }, []);
 
   /* 
 loadDone 조건 없이 graph값이 변경될 때 마다 graph 값을 update 하라고 하면 

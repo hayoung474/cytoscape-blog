@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import styled, { css } from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
+
 import { setInfoModal } from '../modules/infoModal';
 import { FaInternetExplorer } from 'react-icons/fa';
 import { BsInfoLg } from 'react-icons/bs';

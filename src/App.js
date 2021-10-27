@@ -13,7 +13,7 @@ function App() {
       <GlobalStyle />
       {/* 헤더 */}
       <Header />
-      {/* 우측 하단의 코스를 숨겨놓은 버튼 */}
+      {/* 우측 하단의 버튼 */}
       <MenuButtons />
       {/* 메인 그래프 */}
       <Graph />

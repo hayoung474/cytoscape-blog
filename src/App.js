@@ -5,6 +5,7 @@ import Graph from './container/GraphContainer';
 import MenuButtons from './components/MenuButtons';
 import Header from './container/HeaderContainer';
 
+// 라우터 기준으로 구분하는게 원래는 좋다..
 const Modal = loadable(() => import('./container/ModalContainer'));
 const InfoModal = loadable(() => import('./container/InfoModalContainer'));
 

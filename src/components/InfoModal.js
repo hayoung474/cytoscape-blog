@@ -104,7 +104,7 @@ const ModalContainer = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   border-radius: 28px;
-  z-index: 11; // 모달이 켜져있을 경우 뒤에 버튼들 안눌리게 설정
+  z-index: 2; // 모달이 켜져있을 경우 뒤에 버튼들 안눌리게 설정
   display: flex;
   justify-content: space-between;
 `;
@@ -116,7 +116,7 @@ const Dim = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 10; // 모달이 켜져있을 경우 뒤에 버튼들 안눌리게 설정
+  z-index: 1; // 모달이 켜져있을 경우 뒤에 버튼들 안눌리게 설정
 `;
 
 const CustomGrClose = styled(GrClose)`

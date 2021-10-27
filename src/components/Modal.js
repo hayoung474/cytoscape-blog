@@ -64,6 +64,7 @@ const ModalButton = styled.button`
 `;
 
 const ModalContent = styled.div`
+  z-index: 1;
   position: fixed;
   top: 50%;
   left: 50%;
@@ -113,6 +114,7 @@ const ModalSelect = styled.select`
 `;
 
 const DarkBackground = styled.div`
+  z-index: 1;
   position: fixed;
   left: 0;
   top: 0;

@@ -253,7 +253,7 @@ const LoadingBackground = styled.div`
   height: 100%;
   top: 0;
   background: #282c34;
-  z-index: 9;
+  z-index: 1;
 `;
 
 const load5 = keyframes`

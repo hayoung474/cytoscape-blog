@@ -57,7 +57,7 @@ export default MenuButtons;
 
 const ToggleButton = styled.button`
   position: absolute;
-  z-index: 9;
+  z-index: 1;
   right: 1em;
   bottom: 1em;
   background-color: #f44336;
@@ -93,7 +93,7 @@ const SubButton = styled.button`
   cursor: pointer;
   visibility: ${props => (props.visible === true ? 'visiable' : 'hidden')};
   position: absolute;
-  z-index: 9;
+  z-index: 1;
   right: 1em;
   bottom: 1em;
   opacity: ${props => (props.visible === true ? 1 : 0)};

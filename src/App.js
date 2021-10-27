@@ -1,15 +1,10 @@
 import React from 'react';
-// import loadable from '@loadable/component';
 
 import Graph from './container/GraphContainer';
 import MenuButtons from './components/MenuButtons';
 import Header from './container/HeaderContainer';
 import Modal from './container/ModalContainer';
 import InfoModal from './container/InfoModalContainer';
-
-// 라우터 기준으로 구분하는게 원래는 좋다..
-// const Modal = loadable(() => import('./container/ModalContainer'));
-// const InfoModal = loadable(() => import('./container/InfoModalContainer'));
 
 import { createGlobalStyle } from 'styled-components';
 import { useSelector } from 'react-redux';

@@ -8,19 +8,19 @@ import firebase from 'firebase';
 
 function InfoModalContainer() {
   const dispatch = useDispatch();
+
   const { isAdmin } = useSelector(state => ({ isAdmin: state.admin.isAdmin }));
-  const { infoModal } = useSelector(state => ({ infoModal: state.infoModal.infoModal }));
 
   const [userName, setUserName] = useState('');
   const [userInfo, setUserInfo] = useState('');
   const [userInfo2, setUserInfo2] = useState('');
   const [profileImg, setProfileImg] = useState('');
 
-  const [userLink, setUserLink] = useState([
+  const userLink = [
     { name: 'Github', url: 'https://github.com/sina-Kim', ImgComp: BsGithub },
     { name: 'LinkedIn', url: 'https://linkedin.com/in/sinakim97/', ImgComp: BsLinkedin },
     { name: 'EMail', url: 'mailto:sinabero3271@kakao.com', ImgComp: AiFillMail },
-  ]);
+  ];
 
   const [inputs, setInputs] = useState({
     userName: '',
@@ -88,26 +88,24 @@ function InfoModalContainer() {
           setInputs({ ...inputs, ...loadData });
         }
       });
+
+    console.log('on!');
   }, []); // 모달이 켜졌을 때 1번 수행
 
   return (
-    <>
-      {infoModal ? (
-        <InfoModal
-          handleChangeFile={handleChangeFile}
-          profileImg={profileImg}
-          setInputs={setInputs}
-          onSubmit={onSubmit}
-          onChange={onChange}
-          userName={userName}
-          userInfo={userInfo}
-          userInfo2={userInfo2}
-          userLink={userLink}
-          isAdmin={isAdmin}
-          inputs={inputs}
-        />
-      ) : null}
-    </>
+    <InfoModal
+      handleChangeFile={handleChangeFile}
+      profileImg={profileImg}
+      setInputs={setInputs}
+      onSubmit={onSubmit}
+      onChange={onChange}
+      userName={userName}
+      userInfo={userInfo}
+      userInfo2={userInfo2}
+      userLink={userLink}
+      isAdmin={isAdmin}
+      inputs={inputs}
+    />
   );
 }
 

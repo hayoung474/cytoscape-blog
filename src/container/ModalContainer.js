@@ -12,6 +12,7 @@ function ModalContainer() {
   const [targetNodeId, setTargetNodeId] = useState(''); // 노드 추가 및 간선 추가
   const { graph } = useSelector(state => ({ graph: state.graph.graph })); // redux 의 graph 상태 구독
   const { modalPropsObj } = useSelector(state => ({ modalPropsObj: state.modal.modalPropsObj })); // redux 의 modalPropsObj 상태 구독
+  const { modal } = useSelector(state => ({ modal: state.modal.modal }));
 
   //   /* "이름변경" 기능을 위한 함수 */
   const changeLabel = useCallback(() => {
@@ -174,40 +175,42 @@ function ModalContainer() {
   }, [graph, modalPropsObj]);
   return (
     <>
-      <Modal
-        modalType={modalPropsObj.modalType}
-        execution_function={
-          (modalPropsObj.modalType === '이름변경' && changeLabel) ||
-          (modalPropsObj.modalType === '간선에노드추가' && addToEdgeNode) ||
-          (modalPropsObj.modalType === '간선추가' && addEdge) ||
-          (modalPropsObj.modalType === '간선삭제' && deleteEdge) ||
-          (modalPropsObj.modalType === '하위노드모두삭제' && deleteNodeAll) ||
-          (modalPropsObj.modalType === '현재노드만삭제' && deleteNodeCurrent) ||
-          (modalPropsObj.modalType === '리프노드추가' && addLeafNode) ||
-          (modalPropsObj.modalType === '새노드추가' && addNode)
-        }
-        setNodeLabel={setNodeLabel}
-        setTargetNodeId={setTargetNodeId}
-      >
-        {/* 모달 body 부분.*/}
-        {(modalPropsObj.modalType === '리프노드추가' || modalPropsObj.modalType === '새노드추가') && <>추가할 노드의 이름을 작성해주세요</>}
-        {modalPropsObj.modalType === '간선추가' && <>해당 노드와 연결할 노드를 선택하세요. 선택한 노드가 부모노드가 됩니다.</>}
-        {modalPropsObj.modalType === '간선삭제' && <>해당 간선을 삭제하시겠습니까?</>}
-        {modalPropsObj.modalType === '간선에노드추가' && <>추가할 노드의 이름을 작성해주세요</>}
-        {modalPropsObj.modalType === '이름변경' && <>변경할 노드의 이름을 작성해주세요</>}
-        {modalPropsObj.modalType === '하위노드모두삭제' && (
-          <>
-            해당 노드를 포함한 하위 노드 및 연결된 엣지가 모두 삭제됩니다.
-            <h3>삭제하시겠습니까?</h3>
-          </>
-        )}
-        {modalPropsObj.modalType === '현재노드만삭제' && (
-          <>
-            해당 노드 및 연결된 엣지가 모두 삭제 되고 하위 노드는 상위 노드에 포함됩니다.
-            <h3>삭제하시겠습니까?</h3>
-          </>
-        )}
-      </Modal>
+      {modal && (
+        <Modal
+          modalType={modalPropsObj.modalType}
+          execution_function={
+            (modalPropsObj.modalType === '이름변경' && changeLabel) ||
+            (modalPropsObj.modalType === '간선에노드추가' && addToEdgeNode) ||
+            (modalPropsObj.modalType === '간선추가' && addEdge) ||
+            (modalPropsObj.modalType === '간선삭제' && deleteEdge) ||
+            (modalPropsObj.modalType === '하위노드모두삭제' && deleteNodeAll) ||
+            (modalPropsObj.modalType === '현재노드만삭제' && deleteNodeCurrent) ||
+            (modalPropsObj.modalType === '리프노드추가' && addLeafNode) ||
+            (modalPropsObj.modalType === '새노드추가' && addNode)
+          }
+          setNodeLabel={setNodeLabel}
+          setTargetNodeId={setTargetNodeId}
+        >
+          {/* 모달 body 부분.*/}
+          {(modalPropsObj.modalType === '리프노드추가' || modalPropsObj.modalType === '새노드추가') && <>추가할 노드의 이름을 작성해주세요</>}
+          {modalPropsObj.modalType === '간선추가' && <>해당 노드와 연결할 노드를 선택하세요. 선택한 노드가 부모노드가 됩니다.</>}
+          {modalPropsObj.modalType === '간선삭제' && <>해당 간선을 삭제하시겠습니까?</>}
+          {modalPropsObj.modalType === '간선에노드추가' && <>추가할 노드의 이름을 작성해주세요</>}
+          {modalPropsObj.modalType === '이름변경' && <>변경할 노드의 이름을 작성해주세요</>}
+          {modalPropsObj.modalType === '하위노드모두삭제' && (
+            <>
+              해당 노드를 포함한 하위 노드 및 연결된 엣지가 모두 삭제됩니다.
+              <h3>삭제하시겠습니까?</h3>
+            </>
+          )}
+          {modalPropsObj.modalType === '현재노드만삭제' && (
+            <>
+              해당 노드 및 연결된 엣지가 모두 삭제 되고 하위 노드는 상위 노드에 포함됩니다.
+              <h3>삭제하시겠습니까?</h3>
+            </>
+          )}
+        </Modal>
+      )}
     </>
   );
 }

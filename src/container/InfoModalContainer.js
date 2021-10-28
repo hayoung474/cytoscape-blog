@@ -10,6 +10,7 @@ function InfoModalContainer() {
   const dispatch = useDispatch();
 
   const { isAdmin } = useSelector(state => ({ isAdmin: state.admin.isAdmin }));
+  const { infoModal } = useSelector(state => ({ infoModal: state.infoModal.infoModal }));
 
   const [userName, setUserName] = useState('');
   const [userInfo, setUserInfo] = useState('');
@@ -88,24 +89,26 @@ function InfoModalContainer() {
           setInputs({ ...inputs, ...loadData });
         }
       });
-
-    console.log('on!');
   }, []); // 모달이 켜졌을 때 1번 수행
 
   return (
-    <InfoModal
-      handleChangeFile={handleChangeFile}
-      profileImg={profileImg}
-      setInputs={setInputs}
-      onSubmit={onSubmit}
-      onChange={onChange}
-      userName={userName}
-      userInfo={userInfo}
-      userInfo2={userInfo2}
-      userLink={userLink}
-      isAdmin={isAdmin}
-      inputs={inputs}
-    />
+    <>
+      {infoModal && (
+        <InfoModal
+          handleChangeFile={handleChangeFile}
+          profileImg={profileImg}
+          setInputs={setInputs}
+          onSubmit={onSubmit}
+          onChange={onChange}
+          userName={userName}
+          userInfo={userInfo}
+          userInfo2={userInfo2}
+          userLink={userLink}
+          isAdmin={isAdmin}
+          inputs={inputs}
+        />
+      )}
+    </>
   );
 }
 

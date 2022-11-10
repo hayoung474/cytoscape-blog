@@ -1,6 +1,3 @@
-velog의 게시물들을 그래프 형식으로 표현하는 웹 페이지 구현
-친한 우리의 지인(https://github.com/sina-Kim)을 위한 프로젝트
+### 마인드맵 표현 서비스
 
-팀원 :
-박건웅(https://github.com/gunwoongPark)
-전하영(https://github.com/hayoung474)
+Cytoscape.js 를 활용한 학습한 기술의 연관도를 마인드맵으로 표현 웹 서비스
